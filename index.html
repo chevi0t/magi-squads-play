@@ -88,6 +88,13 @@ button span { float: right; font-size: 20px; line-height: 16px; }
 .lock-box i:nth-child(4) { left: 16px; top: 16px; border-left: 0; border-top: 0; }
 .lock-box span { position: absolute; left: -16px; top: 32px; font: 9px ui-monospace, monospace; letter-spacing: .2em; color: #ffc077; }
 .lock-box.hidden-target i { border-color: #ffc07766; }
+.lock-box.melee::before, .lock-box.counter::before { left: -14px; top: -14px; width: 28px; height: 28px; box-sizing: border-box; border: 2px solid #ff6fa8; transform: rotate(45deg); }
+.lock-box.melee i { border-color: #ff6fa8; }
+.lock-box.melee span { color: #ff6fa8; left: -18px; }
+.lock-box.counter::before { border-color: #ffffff; animation: counter-blink .2s steps(2) infinite; }
+.lock-box.counter i { border-color: #ffffff; }
+.lock-box.counter span { color: #ffffff; left: -22px; }
+@keyframes counter-blink { 50% { opacity: .35; } }
 .duel { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); width: 300px; display: flex; align-items: baseline; justify-content: space-between; font-size: 11px; letter-spacing: .08em; }
 .duel strong { font: 22px ui-monospace, monospace; margin: 0 6px; }
 .duel .me { color: #9ff4e4; }.duel .them { color: #d9c2ff; }
@@ -177,6 +184,7 @@ button span { float: right; font-size: 20px; line-height: 16px; }
         <div><dt><kbd>Space</kbd> / <kbd>Ctrl</kbd></dt><dd>上昇 / 急降下（Ctrl+W はブラウザがタブを閉じるので、<kbd>C</kbd> でも急降下できる）</dd></div>
         <div><dt><kbd>Shift</kbd></dt><dd>クイックブースト（入力方向へ一気に踏み込む。使い切るとオーバーヒート）。地面やビルのすぐ近くでは、蹴ってゲージを使わずに出せる（オーバーヒート中も）</dd></div>
         <div><dt>左クリック</dt><dd>魔法弾を連射（ロック中は目標の中心へ）</dd></div>
+        <div><dt>近接</dt><dd>ロック中の相手が近い（30m 以内、照準の枠が桃色の「MELEE」）ときに左クリックを押し直すと、構えてから踏み込んで殴る。相手はクイックブースト（ステップ）か右クリック（受けられる補助）で防げる。2人が同時に殴ると相殺の衝撃波で周りの弾が消え、引き離される。ガードできたら、すぐ左クリックでカウンター（枠が白い「COUNTER」、必ずダウン）</dd></div>
         <div><dt>右クリック</dt><dd>押している間、補助（全方位の膜・零速の膜・光学迷彩・位相潜行など、キャラで違う）</dd></div>
         <div><dt>移動しながら撃つ</dt><dd>前・横（A/D だけ）・後ろ（S）・止まっている（よく曲がる遅い弾）・前へクイックブーストした直後（重い弾）で撃ち方が変わる（キャラで違う）</dd></div>
         <div><dt>右＋左クリック</dt><dd>同時押しで合わせ技（キャラで違う。撃てない補助なら、張っている間に左を押しても出る）</dd></div>
@@ -206,7 +214,7 @@ button span { float: right; font-size: 20px; line-height: 16px; }
     <div class="objective"><i></i><span id="objective">光のリングを目印に、自由に飛行できます</span></div>
     <div id="contact" class="contact" hidden>接触</div>
     <div class="floor-note">地理データ：東京都ほか／国土交通省 Project PLATEAU ほか（CC BY 4.0、加工）</div>
-    <div class="key-hint">左クリック 射撃 <em>·</em> 右クリック 補助 <em>·</em> 右+左 合わせ技 <em>·</em> F 副武器 <em>·</em> E 特別 <em>·</em> Q ロック切替 <em>·</em> SHIFT クイックブースト（壁際は蹴る） <em>·</em> CTRL/C 急降下 <em>·</em> ESC 停止</div>
+    <div class="key-hint">左クリック 射撃・近接 <em>·</em> 右クリック 補助 <em>·</em> 右+左 合わせ技 <em>·</em> F 副武器 <em>·</em> E 特別 <em>·</em> Q ロック切替 <em>·</em> SHIFT クイックブースト（壁際は蹴る） <em>·</em> CTRL/C 急降下 <em>·</em> ESC 停止</div>
   </div>
   <!-- three.js: The MIT License
 
@@ -1395,7 +1403,9 @@ const CHARACTERS = Object.freeze({
     },
     bot: {
       near: 30, far: 60, fire: 90,
-      tune: { heightMin: 0, heightMax: 15, floorMargin: 20, turnRate: 1.3, burst: 0.9, rest: 1.4, dodgeChance: 0.12, shieldChance: 0.15, kickDodgeChance: 0.15, kickHop: 0, lungeChance: 0, holdChance: 0.45, wallSeek: 0.2, castDelay: [3, 7], boltReact: 0.4, react: [0.8, 1.6] },
+      tune: { heightMin: 0, heightMax: 15, floorMargin: 20, turnRate: 1.3, burst: 0.9, rest: 1.4, dodgeChance: 0.12, shieldChance: 0.15, kickDodgeChance: 0.15, kickHop: 0, lungeChance: 0, holdChance: 0.45, wallSeek: 0.2, castDelay: [3, 7], boltReact: 0.4, react: [0.8, 1.6],
+        // 近接はほとんど防げず、たまにしか殴らない。
+        meleeChance: 0.2, meleeReact: [0.4, 0.8], meleeGuard: 0.1, meleeStep: 0.1, meleeClash: 0, meleeCounter: 0.3 },
     },
   },
 });
@@ -2173,6 +2183,178 @@ function passesWithin(a, b, c, r) {
 
 return { BRAKE, PRISM, DECOY, SURGE, STILLNESS, REPLAY, ASSAULT, COMBO, COMBO_WINDOW, SUB_COOLDOWN, specialActive, attackBlocked, canSpecial, useSpecial, comboPressed, canCombo, useCombo, useSub, prismPoint, stepAbilities };
 })();
+modules['melee.mjs'] = (() => {
+// 近接（ユーザー指定 2026-10-28「殴り掛かってステップかガードされなかったら通る、攻撃が被ると衝撃波が出て周囲弾をけしつつ攻撃相殺と離隔確保、ガード出来たらカウンター入れられる」）。描画は持たない。
+// ロック中の相手が近ければ、左クリック（押し直し）で少し構えて（光る）から、相手へ曲がりながら踏み込んで殴る。
+// - 相手がクイックブースト（ステップ）すると、踏み込みは曲がるのをやめて外れる。
+// - 相手が右クリックで受けていればガードされ、こちらははじかれて少し動けない。ガードした側はすぐ左でカウンター（必ずダウン）。
+// - 2人が同時に殴りかかる（構えか踏み込みが重なる）と相殺：衝撃波で周りの弾と誘導弾を消し、2人を引き離す。
+// 自分も Bot も同じ決まり。数値はすべて提案。
+const { surge } = modules['flight-model.mjs'];
+const { TARGET, hittable, warded } = modules['combat.mjs'];
+
+const MELEE = Object.freeze({
+  range: 30,          // ロック中の相手がこの距離より近ければ、左クリックで殴りかかる（m）
+  windup: 0.15,       // 殴りかかる前に構える秒（光って見える。ここで相手が気づける）
+  lungeSpeed: 110,    // 踏み込みの速さ（m/s）。いつもの速さ（72）より速く、クイックブースト（150）より遅い
+  lungeTime: 0.6,     // 踏み込む最長の秒。この間に届かなければ空振り
+  turn: 6,            // 踏み込みが相手へ曲がる速さ（ラジアン/秒）
+  reach: 3.5,         // この距離まで寄れば当たる（m）
+  damage: 30,
+  stagger: 30,
+  knock: 60,          // 当たった相手を押し出す速さ（m/s）
+  whiff: 0.5,         // 空振りした後、動けない秒
+  recoil: 0.7,        // ガードではじかれた後、動けない秒（この間にカウンターが入る）
+  guardCost: 20,      // ガードで受けると補助のゲージが減る
+  counterWindow: 0.7, // ガードしてからカウンターを出せる秒
+  counterReach: 20,   // カウンターが届く距離（m）
+  counterSpeed: 200,  // カウンターの踏み込みの速さ（m/s）
+  counterDamage: 40,  // カウンターは必ずダウンさせる
+  clashRadius: 30,    // 相殺の衝撃波：この半径の弾・誘導弾を消す（m）
+  clashPush: 110,     // 相殺で2人を引き離す速さ（m/s）
+  clashPushTime: 0.35,
+  cooldown: 0.9,      // 次に殴りかかれるまでの秒
+});
+
+const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
+const length = v => Math.hypot(v.x, v.y, v.z);
+const unit = v => { const n = length(v) || 1; return { x: v.x / n, y: v.y / n, z: v.z / n }; };
+
+// 殴りを受け止められる補助（全方位の膜・硬い膜・零速の膜）を張っているか。光学迷彩と位相潜行は受けない（迷彩はロックされず、潜行はすり抜ける）。
+const meleeGuard = t => !!t.shield?.active && ['shield', 'still'].includes(t.shield.spec?.kind ?? 'shield');
+
+// 近接の最中（構え・踏み込み・空振り・はじかれ）か。最中は移動と射撃の入力を受けない。
+const inMelee = f => !!f.melee;
+
+// 殴りかかれる相手か：ロック中で見えていて、近い。
+function meleeTarget(f) {
+  const lock = f.lock, t = lock?.target;
+  if (!t || !lock.visible || !t.alive) return null;
+  return length(sub(t.position, f.position)) < MELEE.range ? t : null;
+}
+
+// 左クリックを見る（stepFighter から、移動の前に）。押し直した瞬間に、カウンターか殴りかかりを始める。
+// blocked は撃てない状態（詠唱・潜行など）、holding は張ったまま撃てない補助を張っているか（カウンターだけは張ったまま出せる）。
+// 近接を始めたか、近接の最中なら true（そのフレームは撃たない）。
+function startMelee(f, fire, blocked, holding) {
+  const pressed = !!fire && !f.fireWas;
+  f.fireWas = !!fire;
+  if (f.melee) return true;
+  if (!pressed || blocked || f.state.downT > 0) return false;
+  const foe = f.meleeCounterT > 0 ? f.meleeCounterTarget : null;
+  if (foe?.alive && length(sub(foe.position, f.position)) < MELEE.counterReach) {
+    f.meleeCounterT = 0;
+    f.melee = { phase: 'lunge', t: MELEE.lungeTime, target: foe, homing: true, counter: true, dir: null, kick: true };
+    return true;
+  }
+  const t = meleeTarget(f);
+  if (!t || holding || f.meleeCooldown > 0) return false;
+  f.melee = { phase: 'windup', t: MELEE.windup, target: t, homing: true, counter: false, dir: null };
+  return true;
+}
+
+// 踏み込みの間、相手へ曲がりながら進む（stepFlight の前に）。ステップを見た後は、その時の相手の方へまっすぐ。
+function driveMelee(f, dt) {
+  const m = f.melee;
+  if (!m || m.phase !== 'lunge') return;
+  const s = f.state, speed = m.counter ? MELEE.counterSpeed : MELEE.lungeSpeed;
+  let dir = m.dir ?? (s.dashT > 0 && s.dashSpeed ? s.dashDir : unit(sub(m.target.position, s.position)));
+  if (m.homing && m.target.alive) {
+    const want = unit(sub(m.target.position, s.position)), c = Math.max(-1, Math.min(1, dir.x * want.x + dir.y * want.y + dir.z * want.z));
+    const angle = Math.acos(c), turn = Math.min(angle, MELEE.turn * dt);
+    if (angle > 1e-6) {
+      const side = unit({ x: want.x - dir.x * c, y: want.y - dir.y * c, z: want.z - dir.z * c }), cos = Math.cos(turn), sin = Math.sin(turn);
+      dir = { x: dir.x * cos + side.x * sin, y: dir.y * cos + side.y * sin, z: dir.z * cos + side.z * sin };
+    }
+  }
+  surge(s, dir, speed, Math.max(dt, m.t));
+  // 踏み込みの始まりは、いきなりその速さで飛び出す。
+  if (m.kick) { m.kick = false; s.velocity = { x: dir.x * speed, y: dir.y * speed, z: dir.z * speed }; }
+}
+
+// 動けなくする：踏み込みと押し出しを止める。
+function halt(f) { Object.assign(f.state, { velocity: { x: 0, y: 0, z: 0 }, dashT: 0, dashSpeed: null }); }
+
+// 近接を進める（stepFighter の後、弾を進める前に）。fighters は戦っている魔法少女、arena は bolts・missiles を持つ。
+// 返す物：hits（stepBolts と同じ形。applyHits に渡す。melee: true）と、events（'start'・'counter-start'（構えた・カウンターを出した）・'hit'・'counter'・'guard'・'clash'・'whiff'。at は起きた所）。
+function stepMelee(fighters, arena, dt) {
+  const hits = [], events = [];
+  for (const f of fighters) {
+    f.meleeCooldown = Math.max(0, (f.meleeCooldown ?? 0) - dt);
+    f.meleeCounterT = Math.max(0, (f.meleeCounterT ?? 0) - dt);
+  }
+  const attacking = (a, b) => ['windup', 'lunge'].includes(a.melee?.phase) && a.melee.target === b && !a.melee.counter;
+  for (const f of fighters) {
+    const m = f.melee;
+    if (!m) continue;
+    if (!f.alive || f.state.downT > 0) { f.melee = null; continue; }
+    m.t -= dt;
+    const t = m.target;
+    if (!m.seen) { m.seen = true; if (t) events.push({ kind: m.counter ? 'counter-start' : 'start', at: { ...f.position }, owner: f, foe: t }); }
+    // ステップ（相手のクイックブースト）を見たら、曲がるのをやめて、その時の相手の方へまっすぐ進む。カウンターははじかれて動けない相手へ出すので切れない。
+    if (m.target && m.homing && !m.counter && ((t.state?.drive === 'dash' && !attacking(t, f)) || !t.alive || t.cloaked)) {
+      m.homing = false;
+      m.dir = unit(sub(t.position, f.position));
+    }
+    if (m.phase === 'windup') { if (m.t <= 0) Object.assign(m, { phase: 'lunge', t: MELEE.lungeTime, kick: true }); continue; }
+    if (m.phase !== 'lunge') { if (m.t <= 0) f.melee = null; continue; }
+    const d = length(sub(t.position, f.position));
+    // 相殺：お互いに殴りかかっていて（相手は構えでもよい）、ぶつかる所まで来た。
+    if (!m.counter && attacking(t, f) && d < MELEE.reach * 2) {
+      const at = { x: (f.position.x + t.position.x) / 2, y: (f.position.y + t.position.y) / 2, z: (f.position.z + t.position.z) / 2 };
+      let cleared = 0;
+      for (const list of [arena.bolts ?? [], arena.missiles ?? []]) for (const b of list) {
+        if (b.alive && length(sub(b.position, at)) < MELEE.clashRadius) { b.alive = false; cleared++; }
+      }
+      for (const [a, b] of [[f, t], [t, f]]) {
+        a.melee = null;
+        a.meleeCooldown = MELEE.cooldown;
+        const away = sub(a.position, b.position);
+        surge(a.state, length(away) > 1e-6 ? away : { x: 1, y: 0, z: 0 }, MELEE.clashPush, MELEE.clashPushTime);
+      }
+      events.push({ kind: 'clash', at, owner: f, foe: t, cleared });
+      continue;
+    }
+    if (d <= MELEE.reach && hittable(t, f)) {
+      const at = { ...t.position };
+      if (warded(t)) { f.melee = { phase: 'whiff', t: MELEE.whiff }; f.meleeCooldown = MELEE.cooldown; hits.push({ kind: 'shield', target: t, owner: f, at }); continue; }
+      if (!m.counter && meleeGuard(t)) {
+        // ガード：はじかれて動けない。受けた側は少しの間カウンターを出せる。
+        t.shield.charge = Math.max(0, t.shield.charge - MELEE.guardCost);
+        if (t.shield.charge <= 0) Object.assign(t.shield, { broken: true, active: false });
+        f.melee = { phase: 'recoil', t: MELEE.recoil };
+        f.meleeCooldown = MELEE.recoil + MELEE.cooldown;
+        halt(f);
+        t.meleeCounterT = MELEE.counterWindow;
+        t.meleeCounterTarget = f;
+        events.push({ kind: 'guard', at, owner: t, foe: f });
+        continue;
+      }
+      f.melee = null;
+      f.meleeCooldown = MELEE.cooldown;
+      halt(f);
+      if (t.kind === 'decoy') { t.alive = false; hits.push({ kind: 'decoy', target: t, owner: f, at }); continue; }
+      const damage = m.counter ? MELEE.counterDamage : MELEE.damage;
+      t.hp -= damage;
+      const destroyed = t.hp <= 0;
+      if (destroyed) { t.hp = 0; t.alive = false; t.respawnT = t.respawn ?? TARGET.respawn; }
+      // 当たった相手を、踏み込んだ向きへ押し出す。
+      if (t.state && !destroyed) { t.melee = null; surge(t.state, sub(t.position, f.position), MELEE.knock, 0.25); }
+      hits.push({ kind: 'target', target: t, owner: f, destroyed, stagger: MELEE.stagger, heavy: m.counter, melee: true, at });
+      events.push({ kind: m.counter ? 'counter' : 'hit', at, owner: f, foe: t });
+      continue;
+    }
+    if (m.t <= 0) {
+      f.melee = { phase: 'whiff', t: MELEE.whiff };
+      f.meleeCooldown = MELEE.whiff + MELEE.cooldown;
+      events.push({ kind: 'whiff', at: { ...f.position }, owner: f, foe: t });
+    }
+  }
+  return { hits, events };
+}
+
+return { MELEE, meleeGuard, inMelee, meleeTarget, startMelee, driveMelee, stepMelee };
+})();
 modules['duel.mjs'] = (() => {
 // 1vs1 の試合：魔法少女（自分と敵）の体力・撃墜・復帰と、勝ち負け。描画は持たない。
 // 魔法少女は飛び方（flight-model）・ロックオン・魔法弾・シールド（combat）を同じ物で持ち、Bot も同じ決まりで動く。
@@ -2182,6 +2364,7 @@ const { ARCANA, casting, createArcana, stepArcana } = modules['arcana.mjs'];
 const { createLauncher, launch } = modules['missiles.mjs'];
 const { ASSAULT, BRAKE, COMBO, REPLAY, attackBlocked, comboPressed, useCombo, useSpecial, useSub } = modules['abilities.mjs'];
 const { CHARACTERS, DASH_FORM_TIME, stance } = modules['characters.mjs'];
+const { driveMelee, startMelee } = modules['melee.mjs'];
 
 const FIGHTER = Object.freeze({
   hp: 250,          // 魔法弾 25 発で撃墜
@@ -2215,6 +2398,8 @@ function createFighter({ name, start, team, character = null, special = null }) 
     clock: 0, phased: false, cloaked: false, recoverT: 0, counterT: 0, stillT: 0, assaultT: 0, assaultEnd: false, replay: [], replayT: 0, echoes: [], lockMemory: null, lastInput: null,
     // 合わせ技（右と左の同時押し）。
     held: null, comboT: 0, comboEvent: null, mirroring: false, wall: null, slowT: 0,
+    // 近接（melee.mjs）。
+    melee: null, meleeCooldown: 0, meleeCounterT: 0, meleeCounterTarget: null, fireWas: false,
     // ロックオンと弾は目標の position・velocity・dashing を読む。
     get position() { return this.state.position; },
     get velocity() { return this.state.velocity; },
@@ -2233,7 +2418,8 @@ function equip(fighter, character, special = null) {
 // 基地の上空へ戻す。体力・ゲージ・シールドは満タン、ロックは外す。
 function respawn(fighter, guard = FIGHTER.guard) {
   Object.assign(fighter, { state: createFlightState(fighter.start), hp: fighter.maxHp ?? FIGHTER.hp, alive: true, respawnT: 0, guardT: guard, stagger: 0, staggerT: 0,
-    phased: false, cloaked: false, recoverT: 0, counterT: 0, stillT: 0, assaultT: 0, assaultEnd: false, replay: [], echoes: [], lockMemory: null, mirroring: false, wall: null, slowT: 0 });
+    phased: false, cloaked: false, recoverT: 0, counterT: 0, stillT: 0, assaultT: 0, assaultEnd: false, replay: [], echoes: [], lockMemory: null, mirroring: false, wall: null, slowT: 0,
+    melee: null, meleeCooldown: 0, meleeCounterT: 0, meleeCounterTarget: null });
   Object.assign(fighter.shield, createShield(fighter.shield.spec));
   // 大魔法のゲージは撃墜されても残す（詠唱は途切れる）。
   fighter.arcana.castT = 0;
@@ -2242,7 +2428,7 @@ function respawn(fighter, guard = FIGHTER.guard) {
   releaseLock(fighter.lock);
 }
 
-// 1フレーム分、魔法少女を動かす。自分も Bot も同じ手順：特別 → ロック → 視点の追従 → 補助 → 飛行 → 合わせ技 → 副武器 → 射撃。
+// 1フレーム分、魔法少女を動かす。自分も Bot も同じ手順：特別 → ロック → 視点の追従 → 補助 → 近接 → 飛行 → 合わせ技 → 副武器 → 射撃。
 // controls は { input（WASD などの移動）, cycle（Q）, fire（左クリック）, shield（右クリック、補助）, missile（F を押した瞬間、副武器）, arcana（E を押した瞬間、特別の枠）}。
 // world は stepFlight に渡す空域、sees(a, b) は街に遮られていないか。撃った弾を返す。missiles は誘導弾、rains は流星雨を入れる配列。
 // arena は試合で共有する物（abilities.mjs）：デコイ・プリズム・街の線の判定など。
@@ -2254,8 +2440,7 @@ function stepFighter(fighter, controls, dt, world, targets, bolts, sees, missile
   const field = { bolts, missiles, rains, sees, free: world?.free, ...arena };
   if (controls.arcana) useSpecial(fighter, field);
   const still = casting(fighter);
-  const input = still ? {} : controls.input || {};
-  fighter.lastInput = input;
+  let input = still ? {} : controls.input || {};
   updateLock(fighter.lock, fighter.state, targets, { cycle: !!controls.cycle }, dt, sees);
   trackLock(fighter.lock, fighter.state, dt);
   if (fighter.lock.target && fighter.lock.visible) fighter.lockMemory = { target: fighter.lock.target, t: fighter.clock };
@@ -2265,6 +2450,10 @@ function stepFighter(fighter, controls, dt, world, targets, bolts, sees, missile
   const inside = wasPhased && world?.free && !world.free(fighter.state.position, FLIGHT.radius * 0.9);
   fighter.phased = (kind === 'phase' && fighter.shield.active) || fighter.assaultT > 0 || !!inside;
   const air = fighter.phased ? { ...world, collide: null, free: null } : world;
+  // 近接：ロック中の相手が近いときに左を押し直すと殴りかかる。最中は移動と射撃の入力を受けない（踏み込みで進む）。
+  const meleeFire = startMelee(fighter, !still && controls.fire, attackBlocked(fighter), guardHolds(fighter.shield));
+  if (fighter.melee) { input = {}; driveMelee(fighter, dt); }
+  fighter.lastInput = input;
   // 潜行強襲の間は、進みたい向きへブーストより速く進む（ゲージは使わない）。
   if (fighter.assaultT > 0 && (input.forward || input.back || input.left || input.right || input.up || input.down)) surge(fighter.state, wishDirection(fighter.state, input), ASSAULT.speed, 0.1);
   // 零速の波を受けている間は遅くなる。pace はキャラの飛ぶ速さの倍率（チュートリアルのボスは遅い）。
@@ -2274,8 +2463,10 @@ function stepFighter(fighter, controls, dt, world, targets, bolts, sees, missile
   if (wasPhased && !fighter.phased) fighter.recoverT = fighter.shield.spec?.recover ?? 0;
   // 合わせ技（右と左の同時押し）。詠唱中は出せない。
   const both = !still && !!controls.fire && !!controls.shield;
-  useCombo(fighter, comboPressed(fighter, still ? {} : controls), both, targets, { ...field, dt });
-  const blocked = attackBlocked(fighter) || guardHolds(fighter.shield);
+  // 近接に使った押し下げでは出さない（ガードからのカウンターは右を押したまま左を押す）。
+  const pressed = comboPressed(fighter, still ? {} : controls);
+  useCombo(fighter, pressed && !meleeFire, both && !meleeFire, targets, { ...field, dt });
+  const blocked = attackBlocked(fighter) || guardHolds(fighter.shield) || meleeFire;
   if (fighter.sub === 'missiles') { if (missiles) launch(fighter.launcher, missiles, fighter.state, fighter.lock, !still && controls.missile, dt, fighter, blocked); }
   else useSub(fighter, !still && controls.missile, dt, targets, field);
   // 動きで撃ち方を替える（前・横・後ろ・止まる・踏み込み）。
@@ -2376,6 +2567,7 @@ const { ARCANA, casting } = modules['arcana.mjs'];
 const { METEOR, skyOf } = modules['meteors.mjs'];
 const { ASSAULT, COMBO, PRISM, STILLNESS, canCombo, canSpecial } = modules['abilities.mjs'];
 const { CHARACTERS } = modules['characters.mjs'];
+const { MELEE, meleeTarget } = modules['melee.mjs'];
 
 const RIVAL = Object.freeze({
   turnRate: 2.4,       // 視点を回す速さの上限（ラジアン/秒）
@@ -2429,6 +2621,13 @@ const RIVAL = Object.freeze({
   wallSeek: 0.7,       // 回り込む向きを選び直すとき、近くにビルの壁がある側を選ぶ割合（壁を蹴って避けられるように）
   wallProbe: 14,       // 左右のこの距離（m）先に壁があるかを見る
   kickHop: 1.5,        // 蹴れる面のそばで、弾が来ていなくても毎秒これだけの割合で横へ蹴る
+  // 近接（melee.mjs）。
+  meleeChance: 0.6,    // 殴りかかれる近さで、毎秒これだけの割合で殴りかかる
+  meleeReact: [0.15, 0.4], // 相手が構えてから気づくまでの秒（この間で選ぶ）。近くから殴られると間に合わない
+  meleeGuard: 0.3,     // 殴りかかられたとき、補助で受ける割合（受けられる補助のとき）
+  meleeStep: 0.3,      // クイックブーストで横へ外す割合
+  meleeClash: 0.15,    // 殴り返して相殺する割合。残りは何もできずに殴られる
+  meleeCounter: 0.85,  // ガードできたとき、カウンターを入れる割合
 });
 
 // キャラごとの Bot の癖：characters.mjs の bot.tune で RIVAL を上書きする（チュートリアルのボスを弱くする、など）。
@@ -2479,7 +2678,7 @@ function keysToward(state, d, input) {
 }
 
 function createRival(random = Math.random) {
-  return { random, strafe: 1, strafeT: 1, height: 5, castWait: -1, missileWait: -1, cover: null, search: null, reactT: -1, rainCover: null, rainSearch: null, burstT: RIVAL.burst, resting: false, combo: false, dodgeT: 0, dashFrames: 0, shieldT: 0, boltCover: null, boltSearch: null, boltCoverT: 0, ghost: null, passing: false, assaultReact: -1 };
+  return { random, meleeReact: -1, meleeAnswer: null, meleePress: false, counterT: -1, strafe: 1, strafeT: 1, height: 5, castWait: -1, missileWait: -1, cover: null, search: null, reactT: -1, rainCover: null, rainSearch: null, burstT: RIVAL.burst, resting: false, combo: false, dodgeT: 0, dashFrames: 0, shieldT: 0, boltCover: null, boltSearch: null, boltCoverT: 0, ghost: null, passing: false, assaultReact: -1 };
 }
 
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
@@ -2528,6 +2727,62 @@ function seenPosition(brain, foe, dt) {
 // 相手が大魔法を詠唱し始めたら、近くてロックしていれば撃って止めに行き、ほかはビルの陰へ隠れる。
 // meteors は降っている流星（三秒間の静止を使うかどうかに使う）。
 function driveRival(brain, me, foe, bolts, dt, world, missiles = [], rains = [], meteors = []) {
+  const out = steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors);
+  meleePlan(brain, me, foe, out, dt, world);
+  return out;
+}
+
+// 近接：左の押し直しで殴りかかるので、殴りかかれる近さでは撃ちっぱなしにし、殴るときだけ一度離して押す。
+// 相手が構えたら少し遅れて気づき、補助で受ける・横へステップ・殴り返して相殺のどれか（または何もできない）。ガードできたらカウンター。
+function meleePlan(brain, me, foe, out, dt, world) {
+  if (!me.alive || me.state.downT > 0 || casting(me)) { brain.meleePress = false; return; }
+  const r = brain.random, R = tuning(me.character), state = me.state, input = out.input;
+  const press = () => { if (me.fireWas) { out.fire = false; brain.meleePress = true; } else { out.fire = true; brain.meleePress = false; } };
+  if (me.melee) { out.fire = false; brain.meleePress = false; return; }
+  if (brain.meleePress) { out.shield = me.meleeCounterT > 0 && out.shield; press(); return; }
+  // ガードできた：少し遅れて、カウンターを入れる。
+  if (me.meleeCounterT > 0) {
+    // はじいた相手から離れないよう、横へ回るのをやめて前へ。
+    Object.assign(input, { forward: true, back: false, left: false, right: false });
+    if (brain.counterT < 0) brain.counterT = r() < R.meleeCounter ? R.meleeReact[0] + r() * (R.meleeReact[1] - R.meleeReact[0]) : Infinity;
+    brain.counterT -= dt;
+    if (brain.counterT <= 0) { brain.counterT = Infinity; press(); return; }
+  } else brain.counterT = -1;
+  // 相手が自分へ殴りかかってきた。
+  const fm = foe.melee, lunged = !!fm && ['windup', 'lunge'].includes(fm.phase) && fm.target === me && !fm.counter;
+  if (!lunged) { brain.meleeReact = -1; brain.meleeAnswer = null; }
+  else if (brain.meleeReact < 0) {
+    brain.meleeReact = R.meleeReact[0] + r() * (R.meleeReact[1] - R.meleeReact[0]);
+    const x = r();
+    brain.meleeAnswer = x < R.meleeGuard ? 'guard' : x < R.meleeGuard + R.meleeStep ? 'step' : x < R.meleeGuard + R.meleeStep + R.meleeClash ? 'clash' : 'none';
+  } else brain.meleeReact = Math.max(0, brain.meleeReact - dt);
+  if (lunged && brain.meleeReact === 0) {
+    let answer = brain.meleeAnswer;
+    const guardReady = !me.shield.broken && me.shield.charge > MELEE.guardCost && ['shield', 'still'].includes(me.shield.spec?.kind ?? 'shield');
+    const canDash = !!kickNormal(state.position, world) || (!state.overheat && state.boost >= FLIGHT.dashCost);
+    if (answer === 'clash' && (!meleeTarget(me) || me.meleeCooldown > 0)) answer = guardReady ? 'guard' : 'step';
+    if (answer === 'guard' && !guardReady) answer = 'step';
+    if (answer === 'step' && !canDash) answer = guardReady ? 'guard' : 'none';
+    if (answer === 'guard') { out.shield = true; out.fire = false; brain.shieldT = Math.max(brain.shieldT, R.shieldTime); }
+    else if (answer === 'step') {
+      // 相手の向きに対して横へ。押し続けていれば押し直す。
+      if (!state.boostHeld) { brain.meleeAnswer = 'none'; brain.strafe = r() < 0.5 ? -1 : 1; }
+      Object.assign(input, { boost: !state.boostHeld, forward: false, back: false, left: brain.strafe < 0, right: brain.strafe >= 0 });
+    } else if (answer === 'clash') { out.shield = false; press(); brain.meleeAnswer = 'none'; return; }
+    // 押し直すと殴りかかってしまうので、撃っていなければ押さない。
+    if (!me.fireWas) out.fire = false;
+    return;
+  }
+  // 殴りかかれる近さ：撃っている途中なら撃ち続け、ときどき離して殴りかかる。撃っていなければ、殴りかかるときだけ押す。
+  // ロックはこの後の stepFighter で付くこともあるので、距離でも見る。
+  const near = Math.hypot(foe.position.x - state.position.x, foe.position.y - state.position.y, foe.position.z - state.position.z) < MELEE.range;
+  if (!(near || meleeTarget(me)) || me.meleeCooldown > 0) return;
+  const holding = out.shield && me.shield.spec?.kind !== 'still';
+  if (meleeTarget(me) && !holding && r() < R.meleeChance * dt) { press(); return; }
+  if (!me.fireWas) out.fire = false;
+}
+
+function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
   const state = me.state, input = {};
   const out = { input, fire: false, shield: false, arcana: false, missile: false };
   if (!me.alive || state.downT > 0 || !foe.alive) { brain.dashFrames = 0; return out; }
@@ -3118,6 +3373,7 @@ const { CHARACTERS, ROSTER, SLOT_NAMES } = modules['characters.mjs'];
 const { createRival, driveRival } = modules['rival.mjs'];
 const { createEffects } = modules['effects.mjs'];
 const { TUTORIAL, createTutorial, stepTutorial } = modules['tutorial.mjs'];
+const { MELEE, meleeTarget, stepMelee } = modules['melee.mjs'];
 
 const T = window.THREE;
 const $ = id => document.getElementById(id);
@@ -3704,6 +3960,11 @@ function drawMarks() {
   });
   placeMark($('lock-box'), active && lock.target ? lock.target.position : null);
   $('lock-box').classList.toggle('hidden-target', !lock.visible);
+  // ダブルロック：殴りかかれる近さ（左の押し直しで近接）。ガードできた後はカウンターを出せる。
+  const counter = player.meleeCounterT > 0, close = !counter && !!meleeTarget(player) && !(player.meleeCooldown > 0) && !player.melee;
+  $('lock-box').classList.toggle('melee', close);
+  $('lock-box').classList.toggle('counter', counter);
+  $('lock-box').querySelector('span').textContent = counter ? 'COUNTER' : close ? 'MELEE' : 'LOCK';
   // 円は照準の近くにいるかだけで出す（遮蔽は捕捉のときに確かめる）。
   const hint = active && player.alive && !lock.target ? lockCandidates(player.state, lockables(), () => true, lock)[0] : null;
   placeMark($('lock-hint'), hint ? hint.target.position : null);
@@ -3903,14 +4164,18 @@ function fight(dt) {
     else if (e.kind === 'wall-end' || e.kind === 'wall-block') burst(e.at, 0x9fdcff, 2.5);
     else burst(e.at, color, e.kind === 'echo' ? 1.2 : 0.7);
   }
+  // 近接（弾を進める前に。相殺の衝撃波は周りの弾を消す）。
+  const close = stepMelee(list, { bolts, missiles }, dt);
+  for (const e of close.events) meleeFx(e);
   const blocked = (a, b) => !city.clear(a, b, 0.05);
   const all = facing ? [...fighters, ...decoys] : tutorial ? [player, ...grunts, ...decoys] : [player, ...targets];
-  const hits = ability.hits.concat(stepBolts(bolts, all, dt, blocked), stepMissiles(missiles, all, dt, blocked), stepMeteors(rains, meteors, all, dt, blocked, sees));
+  const hits = ability.hits.concat(close.hits, stepBolts(bolts, all, dt, blocked), stepMissiles(missiles, all, dt, blocked), stepMeteors(rains, meteors, all, dt, blocked, sees));
   const hpBefore = player.hp;
   applyHits(hits);
   for (const hit of hits) {
     if (hit.meteor) { if (hit.kind === 'target' && hit.destroyed && hit.target.kind !== 'fighter') destroyed++; burst(hit.at, hit.owner === rival ? 0xffa0d0 : 0xfff1a8, hit.kind === 'target' ? 3 : 2.5); continue; }
     if (hit.missile && hit.kind !== 'shield') { if (hit.kind === 'target' && hit.destroyed && hit.target.kind !== 'fighter') destroyed++; burst(hit.at, hit.kind === 'expired' ? 0x8899aa : 0xffb36b, hit.kind === 'target' ? 3 : 1.6); continue; }
+    if (hit.melee) { if (hit.destroyed) { if (hit.target.kind !== 'fighter') destroyed++; burst(hit.at, 0xff5fa2, 3); } continue; }
     if (hit.heavy) { if (hit.destroyed && hit.target.kind !== 'fighter') destroyed++; continue; }
     if (hit.kind === 'decoy') { burst(hit.at, 0xffffff, 2); continue; }
     if (hit.kind === 'bend') { burst(hit.at, 0xeadcff, 1.4); continue; }
@@ -3969,14 +4234,45 @@ function comboFx(e, color) {
     fx.sparks(at, color, 30, 30, { life: 0.5 });
   }
   fx.shake(e.owner === player ? 0.5 : Math.max(0, 0.8 - distanceToPlayer(at) / 120));
+  pop(`${e.owner === player ? '' : 'ライバル · '}${SLOT_NAMES[e.combo]}`, color);
+}
+// 画面の真ん中の下に出す、技名などの小さな知らせ。
+function pop(text, color) {
   const el = $('combo-pop');
-  el.textContent = `${e.owner === player ? '' : 'ライバル · '}${SLOT_NAMES[e.combo]}`;
+  el.textContent = text;
   el.style.setProperty('--tint', `#${color.toString(16).padStart(6, '0')}`);
   el.hidden = false;
   el.classList.remove('play');
   void el.offsetWidth;
   el.classList.add('play');
   comboPopT = 1;
+}
+// 近接の光と知らせ（melee.mjs の events）。
+function meleeFx(e) {
+  const color = CHARACTERS[e.owner.character]?.colors.glow ?? 0xffffff, mine = e.owner === player || e.foe === player;
+  const near = s => e.owner === player || e.foe === player ? s : Math.max(0, s - distanceToPlayer(e.at) / 150);
+  if (e.kind === 'start' || e.kind === 'counter-start') { fx.flash(e.at, color, e.kind === 'start' ? 6 : 10, 0.2); fx.sparks(e.at, color, 16, 12, { life: 0.3 }); }
+  else if (e.kind === 'hit' || e.kind === 'counter') {
+    const big = e.kind === 'counter';
+    fx.flash(e.at, 0xffffff, big ? 14 : 8, 0.18);
+    fx.sparks(e.at, color, big ? 60 : 30, big ? 40 : 28, { life: 0.5 });
+    if (big) fx.shockwave(e.at, color, 12, 0.4);
+    fx.shake(near(big ? 1.4 : 0.8));
+    if (e.foe === player) hurtT = Math.max(hurtT, 0.4);
+    if (mine) pop(big ? 'カウンター' : e.owner === player ? '近接 命中' : '近接を受けた', big ? 0xffffff : color);
+  } else if (e.kind === 'guard') {
+    fx.flash(e.at, 0xcffbff, 10, 0.2);
+    fx.circle(e.at, 0xcffbff, 2, 8, 0.3);
+    fx.shake(near(0.5));
+    if (mine) pop(e.owner === player ? 'ガード　左でカウンター' : 'ガードされた', 0xcffbff);
+  } else if (e.kind === 'clash') {
+    fx.flash(e.at, 0xffffff, 18, 0.25);
+    fx.shockwave(e.at, 0xffffff, MELEE.clashRadius, 0.6);
+    fx.circle(e.at, 0xffffff, 3, MELEE.clashRadius * 2, 0.6);
+    fx.sparks(e.at, 0xffffff, 60, 45, { life: 0.6 });
+    fx.shake(near(1.2));
+    if (mine) pop('相殺', 0xffffff);
+  } else if (e.kind === 'whiff') burst(e.at, 0x8899aa, 0.8);
 }
 function cutIn(f, c, color) {
   const el = $('cutin');
@@ -4189,7 +4485,7 @@ requestAnimationFrame(frame);
 // 読み取り専用の観測口。ブラウザで実際の入力・移動・一時停止を確認する。
 const fighterView = f => ({ position: f.position, hp: f.hp, alive: f.alive, kills: f.kills, drive: f.state.drive, downT: f.state.downT, guardT: f.guardT, arcana: { ...f.arcana },
   maxHp: f.maxHp, character: f.character, phased: f.phased, cloaked: f.cloaked, stillT: f.stillT, assaultT: f.assaultT, counterT: f.counterT, subCooldown: f.launcher.cooldown, guard: f.shield.active,
-  comboT: f.comboT, mirroring: f.mirroring, wall: !!f.wall, slowT: f.slowT, form: f.form, weapon: f.weapon.spec?.name });
+  comboT: f.comboT, mirroring: f.mirroring, wall: !!f.wall, slowT: f.slowT, form: f.form, weapon: f.weapon.spec?.name, melee: f.melee?.phase ?? null, meleeCooldown: f.meleeCooldown });
 window.flight = Object.freeze({
   snapshot: () => structuredClone({ ...player.state, mode, active, passed, gateIndex, destroyed, bolts: bolts.length, shield: { ...player.shield },
     lock: player.lock.target ? lockables().indexOf(player.lock.target) : -1, lockVisible: player.lock.visible, fov: camera.fov,
