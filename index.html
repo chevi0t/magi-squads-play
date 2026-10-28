@@ -37,6 +37,11 @@ button:disabled { opacity: .4; cursor: default; }
 .special label { border-left: 3px solid var(--tint, #85e8d3); padding-left: 8px; margin: 4px 0; }
 .special label b { font-weight: 600; }
 .special .kit { display: block; margin: 2px 0 0 22px; font-size: 10px; color: #8fa6b5; }
+.move-table { width: 100%; margin: 0 0 14px; border-collapse: collapse; font-size: 10px; color: #c1d6df; }
+.move-table th, .move-table td { padding: 4px 5px; border-bottom: 1px solid #54738040; text-align: left; vertical-align: top; font-weight: 400; }
+.move-table thead th { color: #7896a5; letter-spacing: .1em; }
+.move-table tbody th { color: #91dcca; white-space: nowrap; }
+.move-table small { margin-left: 4px; color: #ffe066; }
 button.secondary { margin-top: 10px; color: #d2f4ec; background: transparent; border: 1px solid #85e8d380; }
 button.secondary:hover { background: #85e8d322; }
 .result { margin: -4px 0 18px; font-size: 22px; font-weight: 700; letter-spacing: .12em; color: #ffc077; }
@@ -174,6 +179,7 @@ button span { float: right; font-size: 20px; line-height: 16px; }
       <h1 id="heading">Magi Squads</h1>
       <p id="result" class="result" hidden></p>
       <fieldset id="characters" class="special"><legend>キャラ（原案『星のない港』）</legend></fieldset>
+      <table id="move-table" class="move-table"></table>
       <button id="tutorial" type="button">チュートリアル（使い魔と見習いの魔女） <span>↗</span></button>
       <button id="start" class="secondary" type="button">1vs1（仮）を始める <span>↗</span></button>
       <button id="practice" class="secondary" type="button">練習飛行（リングと的） <span>↗</span></button>
@@ -183,13 +189,12 @@ button span { float: right; font-size: 20px; line-height: 16px; }
         <div><dt>マウス</dt><dd>上下でピッチ・左右でヨー</dd></div>
         <div><dt><kbd>Space</kbd> / <kbd>Ctrl</kbd></dt><dd>上昇 / 急降下（Ctrl+W はブラウザがタブを閉じるので、<kbd>C</kbd> でも急降下できる）</dd></div>
         <div><dt><kbd>Shift</kbd></dt><dd>クイックブースト（入力方向へ一気に踏み込む。使い切るとオーバーヒート）。地面やビルのすぐ近くでは、蹴ってゲージを使わずに出せる（オーバーヒート中も）</dd></div>
-        <div><dt>左クリック</dt><dd>魔法弾を連射（ロック中は目標の中心へ）</dd></div>
-        <div><dt>近接</dt><dd>ロック中の相手が近い（30m 以内、照準の枠が桃色の「MELEE」）ときに左クリックを押し直すと、構えてから踏み込んで殴る。相手はクイックブースト（ステップ）か右クリック（受けられる補助）で防げる。2人が同時に殴ると相殺の衝撃波で周りの弾が消え、引き離される。ガードできたら、すぐ左クリックでカウンター（枠が白い「COUNTER」、必ずダウン）</dd></div>
-        <div><dt>右クリック</dt><dd>押している間、補助（全方位の膜・零速の膜・光学迷彩・位相潜行など、キャラで違う）</dd></div>
-        <div><dt>移動しながら撃つ</dt><dd>前・横（A/D だけ）・後ろ（S）・止まっている（よく曲がる遅い弾）・前へクイックブーストした直後（重い弾）で撃ち方が変わる（キャラで違う）</dd></div>
-        <div><dt>右＋左クリック</dt><dd>同時押しで合わせ技（キャラで違う。撃てない補助なら、張っている間に左を押しても出る）</dd></div>
-        <div><dt><kbd>F</kbd> / 真ん中ボタン</dt><dd>副武器（誘導弾の群れ・急制動・屈折射・残響デコイ・水圧突進など）</dd></div>
-        <div><dt><kbd>E</kbd></dt><dd>特別（ゲージ満タンで使える）。大魔法・流星雨・三秒間の静止・残響の再生・潜行強襲など</dd></div>
+        <div><dt>右クリック</dt><dd>弱攻撃。押している間、撃ち続ける</dd></div>
+        <div><dt>左クリック</dt><dd>強攻撃。押すたびに1回（次まで少し待つ）</dd></div>
+        <div><dt>右＋左クリック</dt><dd>ほぼ同時に押すと特殊攻撃。ゲージ（相手に当てる・当てられると貯まる）を使う。満タンを使う大技もある</dd></div>
+        <div><dt>進む向きで技が変わる</dt><dd>3つとも、押した時の向き（前＝W だけ・横＝A/D・後ろ＝S・止まる＝何も押さない）で別の技になる（キャラで違う。下の表）</dd></div>
+        <div><dt>シールド</dt><dd>いつも張っている膜。当たると減り、なくなると割れる。少し当たらなければ戻る。技ごとに「減衰」（膜を削る力）と「貫通」（膜を無視する割合）がある</dd></div>
+        <div><dt>近接</dt><dd>ロック中の相手が近い（30m 以内、照準の枠が桃色の「MELEE」）ときに左クリックで、構えてから踏み込んで殴る（膜を無視する）。殴られる瞬間に右クリックを押し直すと受け（枠が白い「COUNTER」で、すぐ左でカウンター）。クイックブーストでも避けられる。2人が同時に殴ると相殺</dd></div>
         <div><dt><kbd>Q</kbd></dt><dd>ロックオンを次の相手へ（照準の近く 150m 以内は自動でロック）</dd></div>
         <div><dt><kbd>Esc</kbd> / <kbd>R</kbd></dt><dd>一時停止 / 初めからやり直す</dd></div>
         <div><dt><kbd>G</kbd>（試験用）</dt><dd>ダウンして自由落下（2.5秒）</dd></div>
@@ -209,12 +214,12 @@ button span { float: right; font-size: 20px; line-height: 16px; }
     <div class="reticle"><i></i><b></b></div>
     <div id="lock-hint" class="lock-hint" hidden></div>
     <div id="lock-box" class="lock-box" hidden><i></i><i></i><i></i><i></i><span>LOCK</span></div>
-    <div class="readout speed"><span>SPEED</span><strong id="speed">0<span> m/s</span></strong><div class="meter"><i id="speed-bar"></i></div><small id="drive">HOVER</small><div id="hp-gauge" class="gauge hp"><span>HP</span><b id="hp-value">250</b><div class="meter"><i id="hp-bar"></i></div></div><div id="form-gauge" class="gauge form"><span id="form-label">主武器 · 前</span><b id="form-value">—</b></div><div id="boost-gauge" class="gauge"><span id="boost-label">BOOST</span><b id="boost-value">100</b><div class="meter"><i id="boost-bar"></i></div></div><div id="shield-gauge" class="gauge shield"><span id="shield-label">SHIELD</span><b id="shield-value">100</b><div class="meter"><i id="shield-bar"></i></div></div><div id="combo-gauge" class="gauge combo" hidden><span id="combo-label">合わせ技</span><b id="combo-value">右+左</b><div class="meter"><i id="combo-bar"></i></div></div><div id="missile-gauge" class="gauge missile"><span id="missile-label">誘導弾</span><b id="missile-value">F</b><div class="meter"><i id="missile-bar"></i></div></div><div id="arcana-gauge" class="gauge arcana"><span id="arcana-label">大魔法</span><b id="arcana-value">0</b><div class="meter"><i id="arcana-bar"></i></div></div></div>
+    <div class="readout speed"><span>SPEED</span><strong id="speed">0<span> m/s</span></strong><div class="meter"><i id="speed-bar"></i></div><small id="drive">HOVER</small><div id="hp-gauge" class="gauge hp"><span>HP</span><b id="hp-value">250</b><div class="meter"><i id="hp-bar"></i></div></div><div id="boost-gauge" class="gauge"><span id="boost-label">BOOST</span><b id="boost-value">100</b><div class="meter"><i id="boost-bar"></i></div></div><div id="shield-gauge" class="gauge shield"><span id="shield-label">SHIELD</span><b id="shield-value">100</b><div class="meter"><i id="shield-bar"></i></div></div><div id="weak-gauge" class="gauge form"><span id="weak-label">右 弱 · 前</span><b id="weak-value">—</b></div><div id="strong-gauge" class="gauge combo"><span id="strong-label">左 強</span><b id="strong-value">—</b><div class="meter"><i id="strong-bar"></i></div></div><div id="arcana-gauge" class="gauge arcana"><span id="arcana-label">右+左 特殊</span><b id="arcana-value">0</b><div class="meter"><i id="arcana-bar"></i></div></div></div>
     <div class="readout altitude"><span>ALTITUDE</span><strong id="altitude">60<span> m</span></strong><small id="pitch">PITCH +0°</small></div>
     <div class="objective"><i></i><span id="objective">光のリングを目印に、自由に飛行できます</span></div>
     <div id="contact" class="contact" hidden>接触</div>
     <div class="floor-note">地理データ：東京都ほか／国土交通省 Project PLATEAU ほか（CC BY 4.0、加工）</div>
-    <div class="key-hint">左クリック 射撃・近接 <em>·</em> 右クリック 補助 <em>·</em> 右+左 合わせ技 <em>·</em> F 副武器 <em>·</em> E 特別 <em>·</em> Q ロック切替 <em>·</em> SHIFT クイックブースト（壁際は蹴る） <em>·</em> CTRL/C 急降下 <em>·</em> ESC 停止</div>
+    <div class="key-hint">右 弱 <em>·</em> 左 強 <em>·</em> 右+左 特殊（どれも向きで変わる） <em>·</em> 殴られる瞬間に右で受け <em>·</em> Q ロック <em>·</em> SHIFT ブースト <em>·</em> C 急降下 <em>·</em> ESC 停止</div>
   </div>
   <!-- three.js: The MIT License
 
@@ -257,14 +262,14 @@ THE SOFTWARE.
 (() => {
 const modules = {};
 modules['flight-model.mjs'] = (() => {
-// いつも前のブーストの速さ（72m/s）で飛ぶ。ゆっくり飛ぶ意味が無いので、巡航ブーストはやめた（ユーザー指定 2026-10-27）。
+// いつも前のブーストの速さ（72m/s、2026-10-28 に3割減らして 50m/s）で飛ぶ。ゆっくり飛ぶ意味が無いので、巡航ブーストはやめた（ユーザー指定 2026-10-27）。
 // Shift は緊急回避のクイックブースト専用：押した瞬間に進みたい向きへ一気に踏み込む。ゲージ 1000 のうち 1 回 200 を使う。
 // 使い切るとオーバーヒートして満タンまで使えない（core-breaker の shortDash の仕組み）。回復は使ってから 0.8 秒後に毎秒 250。
 // 地面やビルが kickRange（m）以内にあれば、それを蹴ってゲージを使わずにクイックブーストできる（壁蹴り。オーバーヒート中も出せる）。
 // 蹴る面へ向かう分は、面から離れる向きへ折り返す。Ctrl は急降下（diveSpeed で真下へ、横は普段の速さのまま）（どちらもユーザー指定 2026-10-27）。
 const SETTINGS = Object.freeze({
-  speed: 72,
-  dashSpeed: 150,
+  speed: 50,
+  dashSpeed: 105,
   dashTime: 0.3,
   dashResponse: 14,
   response: 5,
@@ -274,7 +279,7 @@ const SETTINGS = Object.freeze({
   regenDelay: 0.8,
   overheatSpeed: 0.55,
   kickRange: 6,
-  diveSpeed: 130,
+  diveSpeed: 91,
   diveResponse: 10,
   radius: 0.5,
   sink: 3,
@@ -307,6 +312,7 @@ function createFlightState(start = {}) {
     contact: false,
     diving: false,
     kicks: 0,
+    boosts: 0,
     kicked: false,
     kickAt: null,
   };
@@ -354,6 +360,7 @@ function updateBoost(state, input, moving, wish, dt, world) {
       state.boost -= SETTINGS.dashCost;
       if (state.boost <= 0) { state.boost = 0; state.overheat = true; }
     }
+    state.boosts++;
     state.dashDir = dir;
     state.dashT = SETTINGS.dashTime;
     state.dashSpeed = null;
@@ -880,9 +887,9 @@ const LOCK = Object.freeze({
 });
 
 const BOLT = Object.freeze({
-  speed: 160,     // m/s
-  life: 0.7,      // 秒（射程 約110m）
-  homing: 0.8,    // 撃った時の目標へ曲がる速さの上限（ラジアン/秒）。0 はまっすぐ
+  speed: 112,     // m/s
+  life: 1,        // 秒（射程 約110m）
+  homing: 0.56,   // 撃った時の目標へ曲がる速さの上限（ラジアン/秒）。0 はまっすぐ
   interval: 0.12, // 連射の間隔（秒）
   damage: 10,
   muzzle: 1,      // 体の中心から撃ち出す位置までの距離（m）
@@ -1030,43 +1037,57 @@ function muzzle(state) {
 // spec は主武器の性能（BOLT と同じ形。characters.mjs の WEAPONS）。
 function createWeapon(spec = BOLT) { return { cooldown: 0, spec }; }
 
-// 弾を1つ作る。damage・stagger・size は弾ごとに持つ（stepBolts が使う）。
+// 弾を1つ作る。damage・stagger・size と、シールドへの効き（shieldDamage は減衰、pierce は貫通。無ければ減衰は威力と同じ、貫通 0）は弾ごとに持つ（stepBolts が使う）。
+// keep は目標が後ろへ回っても追い続ける（後ろや横へ撒いてから曲がる弾）。accel は { delay, from }：from（m/s）でほぼ止まって出て、delay 秒後に speed で目標へ飛ぶ。
 function makeBolt(from, direction, spec, owner, power = 1) {
+  const speed = spec.accel ? spec.accel.from ?? 4 : spec.speed;
   return {
-    position: { ...from }, start: { ...from }, velocity: { x: direction.x * spec.speed, y: direction.y * spec.speed, z: direction.z * spec.speed },
-    life: spec.life, alive: true, owner, homing: spec.homing ?? 0, target: null, damage: spec.damage * power, stagger: (spec.stagger ?? 10) * power, size: spec.size ?? 0, mine: !!spec.mine,
+    position: { ...from }, start: { ...from }, velocity: { x: direction.x * speed, y: direction.y * speed, z: direction.z * speed },
+    life: spec.life, age: 0, alive: true, owner, homing: spec.homing ?? 0, target: null, damage: spec.damage * power, stagger: (spec.stagger ?? 10) * power, size: spec.size ?? 0, mine: !!spec.mine,
+    shieldDamage: (spec.shieldDamage ?? spec.damage) * power, pierce: spec.pierce ?? 0, keep: !!spec.keep, accel: spec.accel ? { delay: spec.accel.delay, speed: spec.speed } : null, heavy: !!spec.heavy,
+    source: spec.name ?? null,
   };
 }
 
-// 張っているシールドのうち、弾を止める物（全方位の膜）か。零速の膜・光学迷彩・位相潜行は止めない。
-const shieldUp = t => !!t.shield?.active && (t.shield.spec ?? SHIELD).blocks !== false;
-// 張ったまま撃てない補助を張っているか。
-const guardHolds = shield => !!shield?.active && !(shield.spec ?? SHIELD).fire;
-
-// 押している間、間隔ごとに撃つ。撃った弾を bolts に足し、最初の1つを返す。owner は撃った魔法少女（自分の弾には当たらない）。
-// pellets が2以上なら、照準の周りに広げて撃つ（散弾）。power は威力とよろけの倍率。
-function fire(weapon, bolts, state, lock, held, dt, shield = null, owner = null, power = 1) {
-  weapon.cooldown = Math.max(0, weapon.cooldown - dt);
-  if (!held || weapon.cooldown > 0 || state.downT > 0 || guardHolds(shield)) return null;
-  const spec = weapon.spec ?? BOLT;
-  weapon.cooldown = spec.interval;
-  const d = aimDirection(state, lock, spec.speed), from = muzzle(state), pellets = spec.pellets ?? 1;
-  // 散弾は、真ん中の1発と、その周りの輪に並べる。
+// 撃つ向き d の周りに pellets 発を並べた向き。fan なら横一列（3Way・薙ぎ払い）、ほかは真ん中の1発とその周りの輪（散弾）。spread はラジアン。
+function spreadDirections(d, pellets = 1, spread = 0, fan = false) {
   const side = Math.abs(d.y) < 0.95 ? unit({ x: -d.z, y: 0, z: d.x }) : { x: 1, y: 0, z: 0 };
   const up = { x: side.y * d.z - side.z * d.y, y: side.z * d.x - side.x * d.z, z: side.x * d.y - side.y * d.x };
-  let first = null;
+  const dirs = [];
   for (let i = 0; i < pellets; i++) {
-    let dir = d;
-    if (i > 0) {
-      const a = (i - 1) / (pellets - 1) * Math.PI * 2, s = spec.spread ?? 0;
-      dir = unit({ x: d.x + (side.x * Math.cos(a) + up.x * Math.sin(a)) * s, y: d.y + (side.y * Math.cos(a) + up.y * Math.sin(a)) * s, z: d.z + (side.z * Math.cos(a) + up.z * Math.sin(a)) * s });
+    if (fan) {
+      const k = pellets > 1 ? (i / (pellets - 1) * 2 - 1) * spread : 0;
+      dirs.push(unit({ x: d.x + side.x * k, y: d.y + side.y * k, z: d.z + side.z * k }));
+      continue;
     }
+    if (i === 0) { dirs.push(d); continue; }
+    const a = (i - 1) / (pellets - 1) * Math.PI * 2;
+    dirs.push(unit({ x: d.x + (side.x * Math.cos(a) + up.x * Math.sin(a)) * spread, y: d.y + (side.y * Math.cos(a) + up.y * Math.sin(a)) * spread, z: d.z + (side.z * Math.cos(a) + up.z * Math.sin(a)) * spread }));
+  }
+  return dirs;
+}
+
+// spec の弾を今すぐ撃つ（間隔は見ない）。撃った弾を bolts に足し、最初の1つを返す。
+function shoot(spec, bolts, state, lock, owner = null, power = 1) {
+  const d = aimDirection(state, lock, spec.speed), from = muzzle(state);
+  let first = null;
+  for (const dir of spreadDirections(d, spec.pellets ?? 1, spec.spread ?? 0, !!spec.fan)) {
     const bolt = makeBolt(from, dir, spec, owner, power);
     if (lock?.target && lock.visible) bolt.target = lock.target;
     bolts.push(bolt);
     first ??= bolt;
   }
   return first;
+}
+
+// 押している間、間隔ごとに撃つ。撃った弾を bolts に足し、最初の1つを返す。owner は撃った魔法少女（自分の弾には当たらない）。
+// pellets が2以上なら広げて撃つ（spreadDirections）。power は威力とよろけの倍率。
+function fire(weapon, bolts, state, lock, held, dt, owner = null, power = 1) {
+  weapon.cooldown = Math.max(0, weapon.cooldown - dt);
+  if (!held || weapon.cooldown > 0 || state.downT > 0) return null;
+  const spec = weapon.spec ?? BOLT;
+  weapon.cooldown = spec.interval;
+  return shoot(spec, bolts, state, lock, owner, power);
 }
 
 
@@ -1098,7 +1119,7 @@ function home(bolt, dt, blocked) {
   const speed = length(bolt.velocity), v = { x: bolt.velocity.x / speed, y: bolt.velocity.y / speed, z: bolt.velocity.z / speed };
   // 目標の今の動きから、弾が届く頃の位置へ向かう（撃つ時の見越しと同じ考え）。
   const want = unit(sub(intercept(p, t.position, t.velocity ?? { x: 0, y: 0, z: 0 }, speed), p)), c = v.x * want.x + v.y * want.y + v.z * want.z;
-  if (c < 0) { bolt.target = null; return; }
+  if (c < 0 && !bolt.keep) { bolt.target = null; return; }
   const angle = Math.acos(Math.min(1, c)), turn = Math.min(angle, bolt.homing * dt);
   if (angle < 1e-6) return;
   // v から want の方へ turn だけ回す。
@@ -1140,26 +1161,36 @@ function stepBolts(bolts, targets, dt, blocked) {
         continue;
       }
     }
-    if (bolt.target && bolt.homing > 0) home(bolt, dt, blocked);
+    bolt.age += dt;
+    // 零速の矢など：止まって出た弾が、delay 秒後に目標（いなければ今の向き）へ一気に飛ぶ。
+    if (bolt.accel && bolt.age >= bolt.accel.delay) {
+      const t = bolt.target, speed = bolt.accel.speed;
+      const dir = t?.alive ? unit(sub(intercept(bolt.position, t.position, t.velocity ?? { x: 0, y: 0, z: 0 }, speed), bolt.position)) : unit(bolt.velocity);
+      bolt.velocity = { x: dir.x * speed, y: dir.y * speed, z: dir.z * speed };
+      bolt.start = { ...bolt.position };
+      bolt.accel = null;
+      hits.push({ kind: 'launch', owner, at: { ...bolt.position } });
+    }
+    if (bolt.target && bolt.homing > 0 && !bolt.accel) home(bolt, dt, blocked);
     const to = { x: from.x + bolt.velocity.x * dt, y: from.y + bolt.velocity.y * dt, z: from.z + bolt.velocity.z * dt };
     // 水の壁（合わせ技）は、張った本人のほかの弾を止める。
     const wall = targets.find(t => t.wall && t !== owner && segmentHitsSphere(from, to, t.wall.position, t.wall.radius + (bolt.size || 0)));
     if (wall) { bolt.alive = false; hits.push({ kind: 'wall', target: wall, owner, at: { ...from } }); continue; }
-    const target = targets.find(t => hittable(t, owner) && segmentHitsSphere(from, to, t.position, (shieldUp(t) ? (t.shield.spec ?? SHIELD).radius : t.hitRadius ?? TARGET.radius) + (bolt.size || 0)));
+    const target = targets.find(t => hittable(t, owner) && segmentHitsSphere(from, to, t.position, (t.mirroring ? MIRROR_RADIUS : t.hitRadius ?? TARGET.radius) + (bolt.size || 0)));
     if (target) {
-      // 反射の膜（合わせ技）：膜に当たった弾を、撃った相手へ跳ね返す（跳ね返した弾は自分の弾になる）。
-      if (target.mirroring && shieldUp(target) && owner?.alive) {
+      // 反射の膜（透子の特殊）：膜に当たった弾を、撃った相手へ跳ね返す（跳ね返した弾は自分の弾になる）。
+      if (target.mirroring && owner?.alive) {
         reflect(bolt, target, owner);
         hits.push({ kind: 'mirror', target, owner, at: { ...from } });
         continue;
       }
       bolt.alive = false;
-      if (shieldUp(target) || warded(target)) { hits.push({ kind: 'shield', target, owner, at: { ...from } }); continue; }
+      if (warded(target)) { hits.push({ kind: 'shield', target, owner, at: { ...from } }); continue; }
+      // 使い魔の盾は、受けた威力だけ減って、なくなると消える。
+      if (target.kind === 'familiar') { hits.push({ kind: 'familiar', target, owner, at: { ...from }, broke: guardTake(target, bolt.damage) }); continue; }
       if (target.kind === 'decoy') { target.alive = false; hits.push({ kind: 'decoy', target, owner, at: { ...target.position } }); continue; }
-      target.hp -= bolt.damage ?? BOLT.damage;
-      const destroyed = target.hp <= 0;
-      if (destroyed) { target.hp = 0; target.alive = false; target.respawnT = target.respawn ?? TARGET.respawn; }
-      hits.push({ kind: 'target', target, owner, destroyed, stagger: bolt.stagger, at: { ...target.position } });
+      const r = strike(target, bolt);
+      hits.push({ kind: 'target', target, owner, ...r, heavy: bolt.heavy && !r.shield, source: bolt.source, at: { ...target.position } });
       continue;
     }
     if (blocked(from, to)) { bolt.alive = false; hits.push({ kind: 'city', owner, at: to }); continue; }
@@ -1204,229 +1235,56 @@ function stepTargets(targets, dt) {
   }
 }
 
-// シールド：右クリックを押している間、体の周りに張る（ユーザー指定 2026-10-26）。張っている間は撃てない。
-// ゲージ 100 を毎秒 25 使い（約 4 秒）、離して 1 秒後から毎秒 20 回復する。使い切ると割れて、満タンまで張れない。
-const SHIELD = Object.freeze({ max: 100, drain: 25, regen: 20, regenDelay: 1, radius: 1.6 });
+// シールド（ユーザー指定 2026-10-28「シールドはパッシブにしよっか、AC4のプライマルアーマーみたいな感じで攻撃を受けると減少・消滅。時間経過により回復」）。
+// いつも体を包み、当たった物の shieldDamage（減衰）だけ減る。残っている間は、威力とよろけのうち pierce（貫通、0〜1）の割合だけが体に届く。
+// 0 になると消え（broken）、そのまま届く。最後に当たってから delay 秒（消えたときは brokenDelay 秒）たつと、毎秒 regen ずつ戻る。
+// 大きさ（max）はキャラごと。数値は提案。
+const SHIELD = Object.freeze({ max: 120, regen: 25, delay: 2.5, brokenDelay: 3.5, radius: 1.6 });
 
-// spec は補助の性能（SHIELD と同じゲージ。characters.mjs の GUARDS。零速の膜・光学迷彩・位相潜行も同じゲージで張る）。
-function createShield(spec = SHIELD) { return { charge: spec.max, active: false, broken: false, idle: 0, spec }; }
+function createShield(max = SHIELD.max) { return { charge: max, max, idle: Infinity, broken: false, hitT: 0 }; }
 
-// latch が立っていれば、一度離すまで張らない（合わせ技で解いたとき）。
-function stepShield(shield, held, state, dt) {
-  const spec = shield.spec ?? SHIELD;
-  if (!held) shield.latch = false;
-  if (shield.latch) held = false;
-  shield.active = !!held && !shield.broken && shield.charge > 0 && !(state.downT > 0);
-  if (shield.active) {
-    shield.idle = 0;
-    shield.charge = Math.max(0, shield.charge - spec.drain * dt);
-    if (shield.charge <= 0) { shield.broken = true; shield.active = false; }
-    return;
-  }
+function stepShield(shield, dt) {
   shield.idle += dt;
-  if (shield.idle > spec.regenDelay) shield.charge = Math.min(spec.max, shield.charge + spec.regen * dt);
-  if (shield.broken && shield.charge >= spec.max) shield.broken = false;
+  shield.hitT = Math.max(0, shield.hitT - dt);
+  if (shield.idle < (shield.broken ? SHIELD.brokenDelay : SHIELD.delay)) return;
+  shield.charge = Math.min(shield.max, shield.charge + SHIELD.regen * dt);
+  shield.broken = false;
 }
 
-// 張っているシールドが、線分 a→b（弾の動き）を止めるか。
-function shieldBlocks(shield, center, a, b) {
-  return shield.active && (shield.spec ?? SHIELD).blocks !== false && segmentHitsSphere(a, b, center, (shield.spec ?? SHIELD).radius);
+// 当たりを体力とシールドに入れる（弾・誘導弾・流星・近接・大技のどれも通る）。hit は { damage, stagger, shieldDamage, pierce }。
+// シールドが減衰の分を受けきれないときは、受けきれなかった割合だけ、そのまま届く。シールドの無い物（的・使い魔の雑魚）はそのまま。
+// 体に届いた威力（damage）・よろけ（stagger）・シールドが受けた量（shield）・消えたか（broke）・撃墜したか（destroyed）を返す。
+function strike(t, { damage = 0, stagger = 10, shieldDamage = damage, pierce = 0 }) {
+  const s = t.shield;
+  let through = 1, absorbed = 0, broke = false;
+  if (s) {
+    if (s.charge > 0 && pierce < 1 && shieldDamage > 0) {
+      absorbed = Math.min(s.charge, shieldDamage);
+      s.charge -= absorbed;
+      through = pierce + (1 - pierce) * (1 - absorbed / shieldDamage);
+      if (s.charge <= 1e-6) { s.charge = 0; s.broken = true; broke = true; }
+    }
+    s.idle = 0;
+    s.hitT = absorbed > 0 ? 0.3 : s.hitT;
+  }
+  t.hp -= damage * through;
+  const destroyed = t.hp <= 0;
+  if (destroyed) { t.hp = 0; t.alive = false; t.respawnT = t.respawn ?? TARGET.respawn; }
+  return { destroyed, damage: damage * through, stagger: stagger * through, shield: absorbed, broke };
 }
 
-return { LOCK, BOLT, TARGET, nose, anglesTo, offAxis, createLock, setLock, releaseLock, lockCandidates, updateLock, trackLock, intercept, aimDirection, muzzle, createWeapon, makeBolt, shieldUp, guardHolds, fire, warded, hittable, REFLECT, stepBolts, createTarget, stepTargets, SHIELD, createShield, stepShield, shieldBlocks };
-})();
-modules['characters.mjs'] = (() => {
-// 操作できる魔法少女（能力固定キャラ、ユーザー指定 2026-10-26）。描画は持たない。
-// 人物と術式はユーザーの原案『星のない港』キャラクター設定 Ver.1.0（/mnt/project-files/flight/characters/）から、
-// 今の仕組み（ロックオン・魔法弾・シールド・誘導弾・大技・遮蔽）に合うキャラを先に入れた。
-// 各枠の notes の「原案」は原文にある術式・戦い方、「提案」はゲームの4枠を埋めるためにこちらで足した物。数値はすべて仮。
-const { BOLT, SHIELD } = modules['combat.mjs'];
+// 反射の膜を張っている相手に弾が当たる大きさ（m）。
+const MIRROR_RADIUS = 2.4;
 
-// 主武器（左クリック）。BOLT と同じ形：速さ・寿命・間隔・威力・誘導（homing、ラジアン/秒）。pellets は1回に撃つ数、spread はその広がり（ラジアン）、size は当たりの大きさに足す（m）。
-// 速い弾ほどまっすぐ、遅い弾ほど強く曲がる（ユーザー指定 2026-10-27）。射程はどれも 100m 前後で、得意な距離はキャラで違う（bot.near〜far）。
-const WEAPONS = Object.freeze({
-  rapid: Object.freeze({ ...BOLT, name: '連射弾', stagger: 10 }),
-  // 透子の連射弾は光学兵器らしく速く、ほとんど曲がらない（ユーザー指定 2026-10-27「弾速上げてこ」）。
-  light: Object.freeze({ ...BOLT, name: '軽い連射弾', speed: 300, life: 0.37, homing: 0.35, damage: 10, stagger: 10 }),
-  lance: Object.freeze({ name: '光の狙撃弾', speed: 420, life: 0.38, interval: 0.75, damage: 50, stagger: 26, homing: 0, muzzle: 1 }),
-  tide: Object.freeze({ name: '水の槍', speed: 100, life: 1.1, interval: 0.6, damage: 28, stagger: 22, size: 0.9, homing: 4, muzzle: 1 }),
-  // 見習いの魔女（チュートリアルのボス）の弾：遅く、軽く、少し曲がる。見てから避けられる。
-  novice: Object.freeze({ name: '見習いの魔法弾', speed: 80, life: 1.4, interval: 0.45, damage: 6, stagger: 7, homing: 0.6, size: 0.2, muzzle: 1 }),
-  scatter: Object.freeze({ name: '至近の散弾', speed: 220, life: 0.25, interval: 0.35, damage: 10, stagger: 6, pellets: 5, spread: 0.035, homing: 0, muzzle: 1 }),
-});
-
-// 動きながら撃つと変わる主武器（ユーザー指定 2026-10-27、案「キャラごと・向きごと」）。前（W）は上の主武器、
-// 横（A/D だけ）は side、後ろ（S）は back。前へのクイックブースト中とその直後は dash（打撃力重視：重く速い弾、誘導は弱い）、
-// WASD を押さず止まっている間は still（誘導性能が高く、遅い弾）（dash・still もユーザー指定 2026-10-27）。
-// 中身はどれも提案。mine は撃った所にほぼ止まって長く残る弾（当たりが大きい）。
-const FORMS = Object.freeze({
-  natsume: Object.freeze({
-    side: Object.freeze({ ...BOLT, name: '挟み撃ち', speed: 170, life: 0.65, homing: 1.2, interval: 0.18, damage: 7, stagger: 7, pellets: 2, spread: 0.03 }),
-    back: Object.freeze({ ...BOLT, name: '置き追尾弾', speed: 60, life: 1.8, homing: 2.2, interval: 0.3, damage: 14, stagger: 12 }),
-    dash: Object.freeze({ ...BOLT, name: '突進の重弾', speed: 220, life: 0.5, homing: 0.5, interval: 0.3, damage: 20, stagger: 22 }),
-    still: Object.freeze({ ...BOLT, name: '漂う追尾弾', speed: 45, life: 2.4, homing: 3, interval: 0.35, damage: 10, stagger: 8 }),
-  }),
-  mashiro: Object.freeze({
-    side: Object.freeze({ name: '光の速射', speed: 300, life: 0.4, interval: 0.25, damage: 14, stagger: 9, homing: 0, muzzle: 1 }),
-    back: Object.freeze({ name: '引き撃ちの光槍', speed: 500, life: 0.32, interval: 1.4, damage: 70, stagger: 34, homing: 0, muzzle: 1 }),
-    dash: Object.freeze({ name: '貫く光槍', speed: 460, life: 0.3, interval: 0.9, damage: 75, stagger: 42, homing: 0, muzzle: 1 }),
-    still: Object.freeze({ name: '誘う光', speed: 80, life: 1.4, interval: 0.7, damage: 26, stagger: 14, homing: 3, muzzle: 1 }),
-  }),
-  toko: Object.freeze({
-    side: Object.freeze({ ...BOLT, name: '扇撃ち', speed: 260, life: 0.42, homing: 0.3, interval: 0.2, damage: 6, stagger: 6, pellets: 3, spread: 0.08 }),
-    back: Object.freeze({ ...BOLT, name: '残響の群れ', speed: 70, life: 1.4, homing: 2.5, interval: 0.15, damage: 7, stagger: 6 }),
-    dash: Object.freeze({ ...BOLT, name: '重ね撃ち', speed: 360, life: 0.31, homing: 0.15, interval: 0.25, damage: 16, stagger: 14 }),
-    still: Object.freeze({ ...BOLT, name: '漂う光', speed: 50, life: 2, homing: 3.5, interval: 0.25, damage: 8, stagger: 6 }),
-  }),
-  shiori: Object.freeze({
-    side: Object.freeze({ name: '三筋の水', speed: 160, life: 0.7, interval: 0.5, damage: 12, stagger: 10, pellets: 3, spread: 0.05, homing: 1.5, size: 0.4, muzzle: 1 }),
-    back: Object.freeze({ name: '水の機雷', speed: 8, life: 4, interval: 1, damage: 35, stagger: 30, size: 2.5, homing: 0, mine: true, muzzle: 1 }),
-    dash: Object.freeze({ name: '激流', speed: 140, life: 0.75, interval: 0.6, damage: 45, stagger: 36, size: 1.6, homing: 2, muzzle: 1 }),
-    still: Object.freeze({ name: '水の追跡', speed: 50, life: 2.2, interval: 0.8, damage: 26, stagger: 18, size: 1.2, homing: 7, muzzle: 1 }),
-  }),
-  midori: Object.freeze({
-    side: Object.freeze({ name: '薙ぎ払い', speed: 220, life: 0.2, interval: 0.45, damage: 7, stagger: 5, pellets: 7, spread: 0.09, homing: 0, muzzle: 1 }),
-    back: Object.freeze({ name: '置き土産', speed: 50, life: 1.5, interval: 0.6, damage: 15, stagger: 12, pellets: 2, spread: 0.15, homing: 3, muzzle: 1 }),
-    dash: Object.freeze({ name: '零距離の砲', speed: 240, life: 0.22, interval: 0.45, damage: 16, stagger: 10, pellets: 5, spread: 0.03, homing: 0, muzzle: 1 }),
-    still: Object.freeze({ name: '種まき', speed: 40, life: 2.4, interval: 0.7, damage: 12, stagger: 9, pellets: 3, spread: 0.2, homing: 3.5, muzzle: 1 }),
-  }),
-});
-
-// 前へのクイックブーストが終わってからも dash の撃ち方でいられる秒。
-const DASH_FORM_TIME = 0.4;
-
-// 今の動きで撃つ主武器の撃ち方：dash（前へ踏み込んだ直後、dashing）、後ろ（S）、横（A/D だけ）、止まっている（WASD なし）、前（それ以外）。
-function stance(input = {}, dashing = false) {
-  if (dashing) return 'dash';
-  if (input.back && !input.forward) return 'back';
-  if ((input.left || input.right) && !input.forward && !input.back) return 'side';
-  if (!input.forward && !input.back && !input.left && !input.right) return 'still';
-  return 'front';
+// 使い魔の盾（familiars.mjs）が威力を受ける。なくなれば消えて true。
+function guardTake(familiar, damage) {
+  familiar.hp -= damage;
+  if (familiar.hp > 0) return false;
+  familiar.alive = false;
+  return true;
 }
 
-// 補助（右クリックを押している間）。どれも SHIELD と同じゲージ（max・drain・regen・regenDelay）を使う。
-// blocks は弾を止める球を張るか、fire は張ったまま撃てるか。
-const GUARDS = Object.freeze({
-  shield: Object.freeze({ ...SHIELD, kind: 'shield', name: '全方位の膜', blocks: true, fire: false }),
-  hard: Object.freeze({ ...SHIELD, kind: 'shield', name: '硬い膜', drain: 15, blocks: true, fire: false }),
-  // 零速の膜：近づく相手の弾と誘導弾を減速させてそらす。張ったまま撃てる。
-  still: Object.freeze({ ...SHIELD, kind: 'still', name: '零速の膜', drain: 34, radius: 9, slow: 0.3, blocks: false, fire: true }),
-  // 光学迷彩：張っている間はロックされず、追ってくる誘導弾も見失う。弾は当たる。撃てない。
-  cloak: Object.freeze({ ...SHIELD, kind: 'cloak', name: '光学迷彩', drain: 22, regen: 16, regenDelay: 1.2, blocks: false, fire: false }),
-  // 位相潜行：ビルと弾をすり抜ける。撃てない。建物の中では解けず、解けた直後の少しの間は撃てない。
-  phase: Object.freeze({ ...SHIELD, kind: 'phase', name: '位相潜行', drain: 40, regen: 25, regenDelay: 0.8, recover: 0.5, blocks: false, fire: false }),
-});
-
-const CHARACTERS = Object.freeze({
-  natsume: {
-    id: 'natsume', ride: 'stand', name: '乾 夏芽', code: 'アルタイル', role: '迎撃・急減速・反撃', hp: 250,
-    colors: { dress: 0x1e1a20, accent: 0xc98a99, hair: 0x2b2326, glow: 0xf3b4c4, shield: 0xf6c9d4, shieldEdge: 0xffe6ee },
-    main: WEAPONS.rapid, forms: FORMS.natsume, guard: GUARDS.still, sub: 'brake', special: 'stillness', combo: 'wave',
-    notes: {
-      ride: '提案：何にも乗らず、立ったまま体を倒して飛ぶ。「魔法少女」の肩書きを嫌う現実主義者なので箒に乗らない。急制動ではのけぞって踏ん張る',
-      forms: '提案：横は左右から挟む2発、後ろは下がりながら置いていく遅い追尾弾（迎撃）。前へ踏み込むと重い弾、止まると漂う追尾弾',
-      main: '提案：原文に主武器の記載が無いので、今の連射弾',
-      guard: '原案：慣性制御《零速領域》の「飛来する魔法弾の減速」。通常技は短時間の減速・偏向まで',
-      sub: '原案：高速からの瞬間停止と急旋回。通り過ぎる相手の背後を取って反撃する',
-      special: '原案：星蝕解放「三秒間の静止」（複数の弾幕を完全に止める）。記憶の代償はゲームでは扱わない',
-      combo: '提案：零速領域を一気に広げる（零速の波）。周りの弾を消し、入った相手を遅くする',
-    },
-    bot: { near: 35, far: 65 },
-  },
-  mashiro: {
-    id: 'mashiro', ride: 'prone', name: '鷺沢 真白', code: 'ミラージュ', role: '長距離狙撃・光学迷彩・曲射', hp: 210, lockRange: 200,
-    colors: { dress: 0x2b2a4a, accent: 0x9a6cff, hair: 0xd9dbe8, glow: 0xc49bff, shield: 0xd2b8ff, shieldEdge: 0xeadcff },
-    main: WEAPONS.lance, forms: FORMS.mashiro, guard: GUARDS.cloak, sub: 'prism', special: 'arcana', combo: 'ambush',
-    notes: {
-      ride: '提案：銀の長い杖に伏せ、狙撃の構えのまま滑るように飛ぶ（高所を転々とする狙撃手）',
-      forms: '提案：横は軽い光の速射、後ろは下がりながらの重い一撃（引き撃ち）。前へ踏み込むとさらに重い光槍、止まると曲がる光',
-      main: '原案：長距離狙撃。弾が速く、連射は遅い',
-      guard: '原案：光学迷彩。接近されると脆いので、受け止める膜は持たない',
-      sub: '原案：魔法で作ったプリズムで弾道を曲げ、見通せない角度から撃つ',
-      special: '提案：今の大魔法（見えている相手すべてに当たる光）',
-      combo: '提案：迷彩から出る瞬間の狙撃（不意打ち）。原案の「光学迷彩」と「長距離狙撃」を合わせた',
-    },
-    bot: { near: 55, far: 85, fire: 150 },
-  },
-  toko: {
-    id: 'toko', ride: 'broom', name: '江波 透子', code: 'リリィ', role: '撹乱・デコイ・追尾妨害', hp: 250,
-    colors: { dress: 0xfff1a0, accent: 0x7fd3f0, hair: 0x5a4230, glow: 0xfff38a, shield: 0xbfeeff, shieldEdge: 0xe6f9ff },
-    main: WEAPONS.light, forms: FORMS.toko, guard: GUARDS.shield, sub: 'decoy', special: 'replay', combo: 'mirror',
-    notes: {
-      ride: '提案：魔法少女に憧れていた新人なので、昔ながらの箒に横向きに腰かける',
-      forms: '提案：横は扇に広がる3発、後ろは遅く強く曲がる弾の群れ（撹乱）。前へ踏み込むと重ね撃ち、止まると漂う光',
-      main: '原案：直接火力が最初の6人で一番低い。今の連射弾の威力を下げた物',
-      guard: '提案：今の全方位の膜',
-      sub: '原案：残響術式《エコーズ》。擬似的な魔力反応でロックオンと追尾を欺く',
-      special: '提案：空間に残った残響を再生する術式から。直前に撃った弾を、撃った場所からもう一度撃つ',
-      combo: '提案：膜に当たった弾を撃った相手へ跳ね返す（反射の膜）',
-    },
-    bot: { near: 45, far: 80 },
-  },
-  shiori: {
-    id: 'shiori', ride: 'surf', name: '深町 汐里', code: 'ネレイド', role: '重火力・面制圧・水圧の突進', hp: 290,
-    colors: { dress: 0x1f4a3a, accent: 0x2f7fd0, hair: 0x1b2633, glow: 0x7fd8ff, shield: 0x9fdcff, shieldEdge: 0xd6f1ff },
-    main: WEAPONS.tide, forms: FORMS.shiori, guard: GUARDS.hard, sub: 'surge', special: 'meteor', combo: 'wall',
-    notes: {
-      ride: '提案：水の板に横向きに立ち、膝を曲げて波に乗るように飛ぶ（水流の反動で突進する港の隊長）。横へ大きく傾く',
-      forms: '提案：横は細い水の3本、後ろはその場に残る水の機雷。前へ踏み込むと太い激流、止まるとしつこく追う水',
-      main: '原案：海水を巨大な槍として射出する。遅く大きい弾。遅いぶん強く曲がって追う（ビルの角で切れる）',
-      guard: '提案：生存力が高いので、長く張れる硬い膜',
-      sub: '原案：水流の反動で瞬間的に突進・急上昇する',
-      special: '提案：大量の水滴の弾幕を、今の流星雨の仕組みで降らせる（豪雨）。水の無い所で弱くなるのはまだ入れていない',
-      combo: '提案：硬い膜を前へ押し出す水の壁。弾を止め、ぶつかった相手をダウンさせる',
-    },
-    bot: { near: 30, far: 60 },
-  },
-  midori: {
-    id: 'midori', ride: 'dive', name: '蓮見 翠', code: 'ファントム', role: '透過・奇襲・至近の連続攻撃', hp: 240,
-    colors: { dress: 0xeef3ef, accent: 0x2fae7f, hair: 0x23302b, glow: 0x7ff0c2, shield: 0xa8f5d6, shieldEdge: 0xdafbee },
-    main: WEAPONS.scatter, forms: FORMS.midori, guard: GUARDS.phase, sub: 'missiles', special: 'assault', combo: 'burst',
-    notes: {
-      ride: '提案：何にも乗らず、腕を後ろへ流して水平に突き進む（壁をすり抜ける奇襲）',
-      forms: '提案：横は広い薙ぎ払い、後ろは置いていく強く曲がる2発。前へ踏み込むと零距離の砲、止まると曲がる3発（種まき）',
-      main: '原案：至近距離からの連続攻撃。届く距離の短い散弾にした',
-      guard: '原案：物質透過《位相潜行》。透過中は攻撃できず、解ける瞬間が隙。弾もすり抜けるのは仮の決め（原文の確認事項）',
-      sub: '提案：今の誘導弾の群れ',
-      special: '提案：長く潜行して近づき、出た瞬間に至近で撃ち込む（潜行強襲）',
-      combo: '提案：潜行を解いた瞬間に散弾をまとめて撃つ（抜け際の一斉射）',
-    },
-    bot: { near: 10, far: 28, fire: 50 },
-  },
-  // チュートリアルのボス（操作できない。ユーザー指定 2026-10-27「アンプレイアブルで操作を覚えかけでも殺せるボス」）。人物・名前・能力はすべて提案。
-  // 飛ぶのはみんなの半分の速さ（pace）。弾は遅く軽く、副武器と合わせ技は無い。特別は流星雨（屋根の下で防ぐ練習）。
-  // Bot は近くで戦い、振り向きが遅く、あまり避けず、よく止まる（bot.tune で RIVAL を上書き）。
-  apprentice: {
-    id: 'apprentice', ride: 'broom', name: '見習いの魔女', code: 'ノービス', role: 'チュートリアルのボス', hp: 160, playable: false, pace: 0.5,
-    colors: { dress: 0x3b3150, accent: 0x9c86c9, hair: 0x6f5e86, glow: 0xc3b0f0, shield: 0xd8ccf5, shieldEdge: 0xefe8ff },
-    main: WEAPONS.novice, forms: null, guard: GUARDS.shield, sub: 'none', special: 'meteor', combo: null,
-    notes: {
-      ride: '提案：見習いなので箒',
-      main: '提案：遅く軽い魔法弾。見てから避けられる',
-      guard: '提案：全方位の膜。Bot はあまり張らない',
-      sub: '提案：無し',
-      special: '提案：流星雨。上が開いていると警告が出るので、屋根や高架の下へ入る練習になる',
-    },
-    bot: {
-      near: 30, far: 60, fire: 90,
-      tune: { heightMin: 0, heightMax: 15, floorMargin: 20, turnRate: 1.3, burst: 0.9, rest: 1.4, dodgeChance: 0.12, shieldChance: 0.15, kickDodgeChance: 0.15, kickHop: 0, lungeChance: 0, holdChance: 0.45, wallSeek: 0.2, castDelay: [3, 7], boltReact: 0.4, react: [0.8, 1.6],
-        // 近接はほとんど防げず、たまにしか殴らない。
-        meleeChance: 0.2, meleeReact: [0.4, 0.8], meleeGuard: 0.1, meleeStep: 0.1, meleeClash: 0, meleeCounter: 0.3 },
-    },
-  },
-});
-
-// 開始画面で選べるキャラ（操作できないボスは入れない）。
-const ROSTER = Object.freeze(Object.keys(CHARACTERS).filter(id => CHARACTERS[id].playable !== false));
-
-// 枠の名前（HUD と開始画面）。
-const SLOT_NAMES = Object.freeze({
-  missiles: '誘導弾の群れ', brake: '急制動', prism: '屈折射', decoy: '残響デコイ', surge: '水圧突進',
-  arcana: '大魔法', meteor: '流星雨', stillness: '三秒間の静止', replay: '残響の再生', assault: '潜行強襲',
-  wave: '零速の波', ambush: '不意打ち', mirror: '反射の膜', wall: '水の壁', burst: '抜け際の一斉射',
-});
-
-return { WEAPONS, FORMS, DASH_FORM_TIME, stance, GUARDS, CHARACTERS, ROSTER, SLOT_NAMES };
+return { LOCK, BOLT, TARGET, nose, anglesTo, offAxis, createLock, setLock, releaseLock, lockCandidates, updateLock, trackLock, intercept, aimDirection, muzzle, createWeapon, makeBolt, spreadDirections, shoot, fire, warded, hittable, REFLECT, stepBolts, createTarget, stepTargets, SHIELD, createShield, stepShield, strike, MIRROR_RADIUS, guardTake };
 })();
 modules['arcana.mjs'] = (() => {
 // 大魔法（特別の枠）：遮蔽を使わせる大技。描画は持たない。
@@ -1434,7 +1292,7 @@ modules['arcana.mjs'] = (() => {
 // 詠唱が終わった瞬間、使い手から 400m 以内で見えている（街に遮られていない）相手すべてに大きく当たり、ダウンさせる。
 // シールドでは止まらない。詠唱中はよろけないので、防ぐにはビルの陰へ隠れるか、詠唱中に撃墜する（詠唱は途切れ、ゲージは戻らない）。
 // 詠唱の前からダウンしていれば使えない。
-const { TARGET, warded } = modules['combat.mjs'];
+const { strike, warded } = modules['combat.mjs'];
 
 const ARCANA = Object.freeze({
   max: 100,
@@ -1483,10 +1341,8 @@ function stepArcana(fighter, enemies, dt, sees) {
     if (!t.alive || t.guardT > 0 || warded(t)) continue;
     const p = t.position;
     if (Math.hypot(p.x - from.x, p.y - from.y, p.z - from.z) > ARCANA.range || !sees(from, p)) continue;
-    t.hp -= ARCANA.damage;
-    const destroyed = t.hp <= 0;
-    if (destroyed) { t.hp = 0; t.alive = false; t.respawnT = t.respawn ?? TARGET.respawn; }
-    hits.push({ kind: 'target', target: t, owner: fighter, destroyed, heavy: true, at: { ...p } });
+    // 大魔法はシールドを貫く。
+    hits.push({ kind: 'target', target: t, owner: fighter, ...strike(t, { damage: ARCANA.damage, pierce: 1 }), heavy: true, at: { ...p } });
   }
   return { kind: 'release', caster: fighter, at: { ...from }, hits };
 }
@@ -1494,47 +1350,55 @@ function stepArcana(fighter, enemies, dt, sees) {
 return { ARCANA, createArcana, canCast, startCast, casting, castLeft, stepArcana };
 })();
 modules['missiles.mjs'] = (() => {
-// 誘導弾の群れ（副武器）：撃った時にロックしていた相手だけを追う 8 発の弾。描画は持たない。
+// 誘導弾の群れ：撃った時にロックしていた相手だけを追う弾。描画は持たない。
 // 曲がる速さに上限があるので、ビルの角を回れば壁に当たり、すれ違うように避ければ追い越して外れる。
-// 相手が後ろへ回る（90 度より外れる）と追うのをやめる。シールドで止まる。
-const { SHIELD, TARGET, hittable, nose, shieldUp, warded } = modules['combat.mjs'];
+// 相手が後ろへ回る（lost より外れる）と追うのをやめる。シールドは減衰が高い（剥がす役）。
+// 板野サーカス風（CIRCUS、ユーザー指定 2026-10-28「板野サーカスのようなミサイル」）：ばらばらの向きへ撒き、うねりながら相手へ曲がる。形は提案。
+const { TARGET, guardTake, hittable, nose, strike, warded } = modules['combat.mjs'];
 
 const MISSILE = Object.freeze({
   count: 8,
   spread: 0.5,     // 撃ち出す向きの広がり（ラジアン）。扇のように広がってから相手へ曲がる
-  speed: 60,       // 撃ち出す速さ（m/s）
-  maxSpeed: 105,   // 加速して届く速さ。ブースト（72m/s）より速い
-  accel: 60,       // m/s²
-  turn: 1.2,       // 曲がる速さの上限（ラジアン/秒）。最高速では半径約 88m で回る
+  speed: 42,       // 撃ち出す速さ（m/s）
+  maxSpeed: 74,    // 加速して届く速さ。いつもの速さ（50m/s）より速い
+  accel: 29,       // m/s²
+  turn: 0.84,      // 曲がる速さの上限（ラジアン/秒）。最高速では半径約 88m で回る
   delay: 0.25,     // 撃ってから追い始めるまでの秒
   lost: Math.PI / 2, // 相手がこの角度より後ろへ回ると追うのをやめる
-  life: 4.5,       // 秒
+  life: 6.4,       // 秒
   damage: 20,
   stagger: 25,     // 2 発当たるとダウン
   radius: 1.8,     // 魔法少女に当たる距離（m）
   cooldown: 5,     // 次に撃てるまでの秒
+  shieldDamage: 30,
+  pierce: 0.2,
 });
 
-function createLauncher() { return { cooldown: 0 }; }
+// 板野サーカス風：数が多く、一発は軽い。撒いてから追い始めるまでが長く、うねる（wobble ラジアン、wobbleRate 回/秒）。後ろへ回った相手も、
+// 撒いた向きから曲がってくるので lost は広い。spreadYaw・spreadPitch は撒く向きの広がり（ラジアン）。count は技ごとに替える。
+const CIRCUS = Object.freeze({
+  ...MISSILE, count: 10, speed: 30, maxSpeed: 80, accel: 45, turn: 2.4, delay: 0.4, life: 5, lost: Math.PI * 0.8,
+  damage: 9, stagger: 10, shieldDamage: 22, pierce: 0.1, radius: 1.6,
+  spreadYaw: 1.5, spreadPitch: 0.9, wobble: 0.5, wobbleRate: 1.6,
+});
 
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
 const length = v => Math.hypot(v.x, v.y, v.z);
 const unit = v => { const n = length(v) || 1; return { x: v.x / n, y: v.y / n, z: v.z / n }; };
 
-// 撃った瞬間：ロック中で見えている相手を目標にし、機首を中心に扇状に 8 発撃ち出す。撃った弾の数を返す。
-function launch(launcher, missiles, state, lock, pressed, dt, owner = null, blocked = false) {
-  launcher.cooldown = Math.max(0, launcher.cooldown - dt);
-  if (!pressed || blocked || launcher.cooldown > 0 || state.downT > 0) return 0;
-  launcher.cooldown = MISSILE.cooldown;
+// 板野サーカス風に撒く。spec は CIRCUS に count・向き（back なら後ろの半分へ撒く）などを足した物。random は撒く向きのばらつき。撃った数を返す。
+function scatter(missiles, state, lock, spec, owner = null, random = Math.random) {
   const target = lock.target && lock.visible ? lock.target : null;
-  for (let i = 0; i < MISSILE.count; i++) {
-    // 左右に 3 発ずつ、上下にもずらす。
-    const side = (i % 2 ? 1 : -1) * (Math.floor(i / 2) + 1) / 3 * MISSILE.spread;
-    const lift = (i % 3 - 1) * MISSILE.spread * 0.5;
-    const d = nose(state.yaw + side, Math.max(-1.4, Math.min(1.4, state.pitch + lift)));
-    missiles.push({ position: { x: state.position.x + d.x, y: state.position.y + d.y, z: state.position.z + d.z }, velocity: { x: d.x * MISSILE.speed, y: d.y * MISSILE.speed, z: d.z * MISSILE.speed }, target, owner, age: 0, homing: !!target, alive: true });
+  for (let i = 0; i < spec.count; i++) {
+    // 左右に交互に、だんだん外へ。上下と、少しのばらつき。
+    const k = (Math.floor(i / 2) + 1) / Math.ceil(spec.count / 2), sign = i % 2 ? 1 : -1;
+    const yaw = state.yaw + (spec.back ? Math.PI : 0) + sign * (k * spec.spreadYaw + (random() - 0.5) * 0.3);
+    const pitch = Math.max(-1.3, Math.min(1.3, state.pitch * (spec.back ? -1 : 1) + (random() * 2 - 1) * spec.spreadPitch));
+    const d = nose(yaw, pitch);
+    missiles.push({ position: { x: state.position.x + d.x, y: state.position.y + d.y, z: state.position.z + d.z }, velocity: { x: d.x * spec.speed, y: d.y * spec.speed, z: d.z * spec.speed },
+      target, owner, age: 0, homing: !!target, alive: true, spec, phase: random() * Math.PI * 2, circus: true, source: spec.name ?? null });
   }
-  return MISSILE.count;
+  return spec.count;
 }
 
 // 速度 v を、目標の向き want へ最大 angle だけ回す（速さは変えない）。
@@ -1555,34 +1419,39 @@ function stepMissiles(missiles, targets, dt, blocked) {
   for (const m of missiles) {
     if (!m.alive || m.frozen) continue;
     m.age += dt;
-    const t = m.target;
+    const t = m.target, spec = m.spec ?? MISSILE;
     if (m.homing && (!t || !t.alive)) m.homing = false;
-    if (m.homing && m.age > MISSILE.delay) {
-      const want = sub(t.position, m.position), v = unit(m.velocity), w = unit(want);
-      if (Math.acos(Math.max(-1, Math.min(1, v.x * w.x + v.y * w.y + v.z * w.z))) > MISSILE.lost) m.homing = false;
-      else m.velocity = turnToward(m.velocity, want, MISSILE.turn * dt);
+    if (m.homing && m.age > spec.delay) {
+      let want = sub(t.position, m.position);
+      const v = unit(m.velocity), w = unit(want);
+      // うねり：目標への向きを、横へ少し振る（近づくほど小さく）。
+      if (spec.wobble) {
+        const side = unit({ x: -w.z, y: 0, z: w.x }), a = Math.sin(m.age * spec.wobbleRate * Math.PI * 2 + m.phase) * spec.wobble * Math.min(1, length(want) / 40);
+        want = { x: want.x + side.x * length(want) * a, y: want.y + Math.cos(m.age * 5 + m.phase) * length(want) * a * 0.5, z: want.z + side.z * length(want) * a };
+      }
+      if (Math.acos(Math.max(-1, Math.min(1, v.x * w.x + v.y * w.y + v.z * w.z))) > spec.lost) m.homing = false;
+      else m.velocity = turnToward(m.velocity, want, spec.turn * dt);
     }
-    const speed = Math.min(MISSILE.maxSpeed, length(m.velocity) + MISSILE.accel * dt), d = unit(m.velocity);
+    const speed = Math.min(spec.maxSpeed, length(m.velocity) + spec.accel * dt), d = unit(m.velocity);
     m.velocity = { x: d.x * speed, y: d.y * speed, z: d.z * speed };
     const from = m.position, to = { x: from.x + m.velocity.x * dt, y: from.y + m.velocity.y * dt, z: from.z + m.velocity.z * dt };
-    // 近くを通れば当たる（線分と球）。シールドを張っていれば、その球で止まる。
-    // 水の壁（合わせ技）は、張った本人のほかの誘導弾を止める。
+    // 近くを通れば当たる（線分と球）。
+    // 水の壁は、張った本人のほかの誘導弾を止める。
     const wall = targets.find(f => f.wall && f !== m.owner && near(from, to, f.wall.position, f.wall.radius));
     if (wall) { m.alive = false; hits.push({ kind: 'wall', target: wall, owner: m.owner, at: { ...from }, missile: true }); continue; }
-    const hit = targets.find(f => hittable(f, m.owner) && near(from, to, f.position, shieldUp(f) ? (f.shield.spec ?? SHIELD).radius : Math.max(MISSILE.radius, f.hitRadius ?? TARGET.radius)));
+    const hit = targets.find(f => hittable(f, m.owner) && near(from, to, f.position, Math.max(spec.radius, f.hitRadius ?? TARGET.radius)));
     if (hit) {
       m.alive = false;
-      if (shieldUp(hit) || warded(hit)) { hits.push({ kind: 'shield', target: hit, owner: m.owner, at: { ...from }, missile: true }); continue; }
+      if (warded(hit)) { hits.push({ kind: 'shield', target: hit, owner: m.owner, at: { ...from }, missile: true }); continue; }
+      if (hit.kind === 'familiar') { hits.push({ kind: 'familiar', target: hit, owner: m.owner, at: { ...from }, missile: true, broke: guardTake(hit, spec.damage) }); continue; }
       if (hit.kind === 'decoy') { hit.alive = false; hits.push({ kind: 'decoy', target: hit, owner: m.owner, at: { ...hit.position }, missile: true }); continue; }
-      hit.hp -= MISSILE.damage;
-      const destroyed = hit.hp <= 0;
-      if (destroyed) { hit.hp = 0; hit.alive = false; hit.respawnT = hit.respawn ?? TARGET.respawn; }
-      hits.push({ kind: 'target', target: hit, owner: m.owner, destroyed, stagger: MISSILE.stagger, at: { ...hit.position }, missile: true });
+      const r = strike(hit, spec);
+      hits.push({ kind: 'target', target: hit, owner: m.owner, ...r, source: m.source ?? '誘導弾', at: { ...hit.position }, missile: true });
       continue;
     }
     if (blocked(from, to)) { m.alive = false; hits.push({ kind: 'city', owner: m.owner, at: to, missile: true }); continue; }
     m.position = to;
-    if (m.age > MISSILE.life) { m.alive = false; hits.push({ kind: 'expired', owner: m.owner, at: to, missile: true }); }
+    if (m.age > spec.life) { m.alive = false; hits.push({ kind: 'expired', owner: m.owner, at: to, missile: true }); }
   }
   for (let i = missiles.length - 1; i >= 0; i--) if (!missiles[i].alive) missiles.splice(i, 1);
   return hits;
@@ -1594,25 +1463,259 @@ function near(a, b, c, r) {
   return length(sub({ x: a.x + d.x * t, y: a.y + d.y * t, z: a.z + d.z * t }, c)) <= r;
 }
 
-return { MISSILE, createLauncher, launch, stepMissiles };
+return { MISSILE, CIRCUS, scatter, stepMissiles };
+})();
+modules['characters.mjs'] = (() => {
+// 操作できる魔法少女（能力固定キャラ、ユーザー指定 2026-10-26）。描画は持たない。
+// 人物と術式はユーザーの原案『星のない港』キャラクター設定 Ver.1.0（/mnt/project-files/flight/characters/）から。
+// 撃ち方（ユーザー指定 2026-10-28）：右クリックの弱攻撃・左クリックの強攻撃・両方押しの特殊攻撃の3つを、進む向き（前・横・後ろ・静止）で変える。
+// 弱は押している間ずっと撃つ（減衰が高く、シールドを削る）。強は押すたびに1回（貫通が高く、体力を削る。待ちの秒は共通）。特殊は魔力のゲージを cost 使う。
+// 表の中身・名前・数値はすべて提案（原案にある術式は notes に「原案」と書いた）。表はドキュメント「撃ち方とシールドの作り直し（案）」と同じ。
+// 弾の形は BOLT と同じ（combat.mjs の makeBolt）：速さ・寿命・間隔・威力・よろけ・誘導（homing、ラジアン/秒）・減衰（shieldDamage）・貫通（pierce）。
+// pellets は1回に撃つ数、spread はその広がり（ラジアン）、fan なら横一列、size は当たりの大きさに足す（m）、mine は撃った所にほぼ止まる弾。
+// 速い弾ほどまっすぐ、遅い弾ほど強く曲がる（ユーザー指定 2026-10-27）。速さはどれも 2026-10-28 に3割減らした（寿命は延ばして届く距離は同じ）。
+const { BOLT } = modules['combat.mjs'];
+const { CIRCUS } = modules['missiles.mjs'];
+
+// 進む向き：S を押していれば後ろ、A か D なら横（W と一緒でも）、W だけなら前、何も押していなければ静止。上下（Space・Ctrl）は数えない。
+const DIRECTIONS = Object.freeze(['front', 'side', 'back', 'still']);
+const DIRECTION_NAMES = Object.freeze({ front: '前', side: '横', back: '後', still: '静止' });
+function direction(input = {}) {
+  if (input.back) return 'back';
+  if (input.left || input.right) return 'side';
+  if (input.forward) return 'front';
+  return 'still';
+}
+
+const shot = (name, spec) => Object.freeze({ kind: 'shot', name, muzzle: 1, ...spec });
+const weak = (name, spec) => shot(name, { pierce: 0.1, ...spec });
+
+const CHARACTERS = Object.freeze({
+  natsume: {
+    id: 'natsume', ride: 'stand', name: '乾 夏芽', code: 'アルタイル', role: '迎撃・急減速・反撃', hp: 260, shield: 100,
+    colors: { dress: 0x1e1a20, accent: 0xc98a99, hair: 0x2b2326, glow: 0xf3b4c4, shield: 0xf6c9d4, shieldEdge: 0xffe6ee },
+    moves: {
+      weak: {
+        front: weak('連射弾', { ...BOLT, stagger: 8, shieldDamage: 18 }),
+        side: weak('3Way', { speed: 112, life: 1, homing: 0.4, interval: 0.2, damage: 9, stagger: 6, pellets: 3, spread: 0.12, fan: true, shieldDamage: 14 }),
+        back: weak('置き追尾弾', { speed: 42, life: 2.57, homing: 1.54, interval: 0.3, damage: 14, stagger: 12, shieldDamage: 20, pierce: 0.15 }),
+        still: weak('漂う追尾弾', { speed: 31, life: 3.43, homing: 2.1, interval: 0.35, damage: 10, stagger: 8, shieldDamage: 16 }),
+      },
+      strong: {
+        front: shot('突進の重弾', { speed: 154, life: 0.71, homing: 0.35, damage: 30, stagger: 26, size: 0.3, shieldDamage: 12, pierce: 0.6, cooldown: 1.2 }),
+        // 左右へ飛び出し、強く曲がって挟み込む2発（keep：横へ撒いても追い続ける）。
+        side: Object.freeze({ kind: 'pincer', name: '挟み撃ち', angle: 1.1, speed: 84, life: 2, homing: 2.4, keep: true, damage: 20, stagger: 18, size: 0.3, shieldDamage: 15, pierce: 0.5, cooldown: 1.6 }),
+        back: Object.freeze({ kind: 'brake', name: '急制動', cooldown: 4.5 }),
+        // 止まった弾が一拍おいて目標へ一気に飛ぶ。
+        still: shot('零速の矢', { speed: 245, life: 1.2, homing: 0.3, accel: { delay: 0.6, from: 3 }, damage: 35, stagger: 30, size: 0.4, shieldDamage: 10, pierce: 0.8, cooldown: 2 }),
+      },
+      special: {
+        front: Object.freeze({ kind: 'wave', name: '零速の波', cost: 35 }),
+        side: Object.freeze({ kind: 'veil', veil: 'still', name: '零速の膜', cost: 35, time: 3, radius: 9, slow: 0.3 }),
+        back: Object.freeze({ kind: 'familiar', role: 'intercept', name: '迎撃の小星', cost: 50, time: 8, count: 2, range: 50, interval: 0.4 }),
+        still: Object.freeze({ kind: 'stillness', name: '三秒間の静止', cost: 100 }),
+      },
+    },
+    notes: {
+      ride: '提案：何にも乗らず、立ったまま体を倒して飛ぶ。「魔法少女」の肩書きを嫌う現実主義者なので箒に乗らない。急制動ではのけぞって踏ん張る',
+      moves: '原案：慣性制御《零速領域》（飛来する魔法弾の減速）、高速からの瞬間停止と急旋回、星蝕解放「三秒間の静止」。ほかは提案',
+    },
+    bot: { near: 35, far: 65 },
+  },
+  mashiro: {
+    id: 'mashiro', ride: 'prone', name: '鷺沢 真白', code: 'ミラージュ', role: '長距離狙撃・光学迷彩・曲射', hp: 210, shield: 80, lockRange: 200,
+    colors: { dress: 0x2b2a4a, accent: 0x9a6cff, hair: 0xd9dbe8, glow: 0xc49bff, shield: 0xd2b8ff, shieldEdge: 0xeadcff },
+    moves: {
+      weak: {
+        front: weak('光の速射', { speed: 210, life: 0.57, interval: 0.25, damage: 14, stagger: 9, homing: 0, shieldDamage: 18, pierce: 0.25 }),
+        side: weak('光の扇', { speed: 210, life: 0.57, interval: 0.35, damage: 9, stagger: 6, homing: 0, pellets: 3, spread: 0.1, fan: true, shieldDamage: 12, pierce: 0.2 }),
+        back: weak('引き撃ちの光弾', { speed: 245, life: 0.5, interval: 0.3, damage: 12, stagger: 8, homing: 0, shieldDamage: 16, pierce: 0.2 }),
+        still: weak('誘う光', { speed: 56, life: 2, interval: 0.7, damage: 26, stagger: 14, homing: 2.1, shieldDamage: 30, pierce: 0.2 }),
+      },
+      strong: {
+        front: shot('光の狙撃弾', { speed: 294, life: 0.54, damage: 50, stagger: 26, homing: 0, shieldDamage: 20, pierce: 0.7, cooldown: 0.9 }),
+        side: Object.freeze({ kind: 'prism', name: '屈折射', cooldown: 3.5, pierce: 0.6 }),
+        back: shot('引き撃ちの光槍', { speed: 350, life: 0.46, damage: 70, stagger: 34, homing: 0, shieldDamage: 25, pierce: 0.7, cooldown: 1.6 }),
+        still: shot('貫く光槍', { speed: 322, life: 0.43, damage: 75, stagger: 42, homing: 0, pierce: 1, cooldown: 2.5 }),
+      },
+      special: {
+        // 迷彩の有り無しにかかわらず、当たればダウンする狙撃弾を1発。迷彩中なら解ける。
+        front: Object.freeze({ kind: 'ambush', name: '不意打ち', cost: 35, power: 1.5, stagger: 60 }),
+        side: Object.freeze({ kind: 'veil', veil: 'cloak', name: '光学迷彩', cost: 35, time: 4 }),
+        back: Object.freeze({ kind: 'familiar', role: 'gunner', name: 'プリズム', cost: 50, time: 8, count: 1, interval: 1.1,
+          bolt: Object.freeze({ speed: 210, life: 0.8, homing: 0.5, damage: 14, stagger: 10, shieldDamage: 14, pierce: 0.4 }) }),
+        still: Object.freeze({ kind: 'arcana', name: '大魔法', cost: 100 }),
+      },
+    },
+    notes: {
+      ride: '提案：銀の長い杖に伏せ、狙撃の構えのまま滑るように飛ぶ（高所を転々とする狙撃手）',
+      moves: '原案：長距離狙撃、光学迷彩、プリズムで弾道を曲げる曲射。ほかは提案',
+    },
+    bot: { near: 55, far: 85, fire: 150 },
+  },
+  toko: {
+    id: 'toko', ride: 'broom', name: '江波 透子', code: 'リリィ', role: '撹乱・デコイ・追尾妨害', hp: 250, shield: 130,
+    colors: { dress: 0xfff1a0, accent: 0x7fd3f0, hair: 0x5a4230, glow: 0xfff38a, shield: 0xbfeeff, shieldEdge: 0xe6f9ff },
+    moves: {
+      weak: {
+        front: weak('軽い連射弾', { ...BOLT, speed: 210, life: 0.53, homing: 0.24, damage: 10, stagger: 10, shieldDamage: 20, pierce: 0.15 }),
+        side: weak('扇撃ち', { speed: 182, life: 0.6, homing: 0.35, interval: 0.2, damage: 8, stagger: 6, pellets: 3, spread: 0.12, fan: true, shieldDamage: 16, pierce: 0.15 }),
+        back: weak('残響の群れ', { speed: 49, life: 2, homing: 1.75, interval: 0.15, damage: 8, stagger: 6, shieldDamage: 14, pierce: 0.15 }),
+        still: weak('漂う光', { speed: 35, life: 2.86, homing: 2.45, interval: 0.25, damage: 9, stagger: 6, shieldDamage: 15, pierce: 0.15 }),
+      },
+      strong: {
+        front: shot('重ね撃ち', { speed: 252, life: 0.44, homing: 0.1, damage: 24, stagger: 16, pellets: 2, spread: 0.02, shieldDamage: 14, pierce: 0.5, cooldown: 0.8 }),
+        side: Object.freeze({ kind: 'circus', name: '残響の誘導弾', cooldown: 4, spec: Object.freeze({ ...CIRCUS, name: '残響の誘導弾', count: 10 }) }),
+        back: Object.freeze({ kind: 'decoy', name: '残響デコイ', cooldown: 4 }),
+        still: shot('置き残響', { speed: 6, life: 5.7, damage: 20, stagger: 18, size: 2, mine: true, pellets: 3, spread: 0.25, shieldDamage: 30, pierce: 0.3, cooldown: 3 }),
+      },
+      special: {
+        front: Object.freeze({ kind: 'veil', veil: 'mirror', name: '反射の膜', cost: 35, time: 2.5 }),
+        // 自分の周りを回る偽物2つ。相手のロックと誘導弾を引きつける。
+        side: Object.freeze({ kind: 'familiar', role: 'decoy', name: '残響の小鳥', cost: 50, time: 8, count: 2 }),
+        back: Object.freeze({ kind: 'circus', name: '残響の一斉', cost: 35, spec: Object.freeze({ ...CIRCUS, name: '残響の一斉', count: 16, back: true, spreadYaw: 1.3 }) }),
+        still: Object.freeze({ kind: 'replay', name: '残響の再生', cost: 100 }),
+      },
+    },
+    notes: {
+      ride: '提案：魔法少女に憧れていた新人なので、昔ながらの箒に横向きに腰かける',
+      moves: '原案：残響術式《エコーズ》（擬似的な魔力反応でロックオンと追尾を欺く）、直接火力が一番低い。ほかは提案',
+    },
+    bot: { near: 45, far: 80 },
+  },
+  shiori: {
+    id: 'shiori', ride: 'surf', name: '深町 汐里', code: 'ネレイド', role: '重火力・面制圧・水圧の突進', hp: 260, shield: 100,
+    colors: { dress: 0x1f4a3a, accent: 0x2f7fd0, hair: 0x1b2633, glow: 0x7fd8ff, shield: 0x9fdcff, shieldEdge: 0xd6f1ff },
+    moves: {
+      weak: {
+        front: weak('水の礫', { speed: 98, life: 1.1, homing: 1.2, interval: 0.16, damage: 8, stagger: 6, size: 0.3, shieldDamage: 22, pierce: 0 }),
+        side: weak('三筋の水', { speed: 112, life: 1, interval: 0.55, damage: 6, stagger: 7, pellets: 3, spread: 0.1, fan: true, homing: 0.6, size: 0.3, shieldDamage: 16 }),
+        back: weak('水の機雷', { speed: 6, life: 5.71, interval: 1, damage: 35, stagger: 30, size: 2.5, homing: 0, mine: true, shieldDamage: 40, pierce: 0.3 }),
+        still: weak('水の追跡', { speed: 35, life: 3.14, interval: 0.8, damage: 26, stagger: 18, size: 1.2, homing: 4.9, shieldDamage: 36, pierce: 0.2 }),
+      },
+      strong: {
+        front: shot('水の槍', { speed: 70, life: 1.57, damage: 28, stagger: 22, size: 0.9, homing: 2.8, shieldDamage: 24, pierce: 0.6, cooldown: 1 }),
+        side: shot('激流の薙ぎ払い', { speed: 98, life: 1.07, homing: 0.6, damage: 12, stagger: 12, size: 0.8, pellets: 5, spread: 0.3, fan: true, shieldDamage: 16, pierce: 0.4, cooldown: 3 }),
+        // 進む向き（後ろ）へ水圧で跳び、元いた所に水の機雷を置く。
+        back: Object.freeze({ kind: 'surge', name: '水圧の跳び退き', cooldown: 2.5,
+          leave: Object.freeze({ speed: 6, life: 5, damage: 30, stagger: 26, size: 2.5, homing: 0, mine: true, shieldDamage: 35, pierce: 0.3 }) }),
+        still: shot('激流', { speed: 98, life: 1.07, damage: 45, stagger: 36, size: 1.6, homing: 1.4, shieldDamage: 30, pierce: 0.7, cooldown: 2 }),
+      },
+      special: {
+        front: Object.freeze({ kind: 'wall', name: '水の壁', cost: 60 }),
+        side: Object.freeze({ kind: 'familiar', role: 'gunner', name: '小魚の群れ', cost: 50, time: 8, count: 3, interval: 0.45,
+          bolt: Object.freeze({ speed: 98, life: 1.1, homing: 1.4, damage: 6, stagger: 5, size: 0.3, shieldDamage: 12, pierce: 0.1 }) }),
+        // 後ろと上へ撒いた水弾が、曲がって相手へ向かう。
+        back: Object.freeze({ kind: 'barrage', name: '雨の弾幕', cost: 35, count: 12,
+          bolt: Object.freeze({ speed: 63, life: 3, homing: 1.8, keep: true, damage: 12, stagger: 10, size: 0.5, shieldDamage: 20, pierce: 0.2 }) }),
+        still: Object.freeze({ kind: 'meteor', name: '流星雨', cost: 100 }),
+      },
+    },
+    notes: {
+      ride: '提案：水の板に横向きに立ち、膝を曲げて波に乗るように飛ぶ（水流の反動で突進する港の隊長）。横へ大きく傾く',
+      moves: '原案：海水を巨大な槍として射出、水流の反動で瞬間的に突進、大量の水滴の弾幕。ほかは提案',
+    },
+    bot: { near: 30, far: 60 },
+  },
+  midori: {
+    id: 'midori', ride: 'dive', name: '蓮見 翠', code: 'ファントム', role: '透過・奇襲・至近の連続攻撃', hp: 240, shield: 90,
+    colors: { dress: 0xeef3ef, accent: 0x2fae7f, hair: 0x23302b, glow: 0x7ff0c2, shield: 0xa8f5d6, shieldEdge: 0xdafbee },
+    moves: {
+      weak: {
+        front: weak('至近の散弾', { speed: 154, life: 0.36, interval: 0.35, damage: 10, stagger: 6, pellets: 5, spread: 0.035, homing: 0, shieldDamage: 15 }),
+        side: weak('薙ぎ払い', { speed: 154, life: 0.29, interval: 0.45, damage: 7, stagger: 5, pellets: 7, spread: 0.25, fan: true, homing: 0, shieldDamage: 10 }),
+        back: weak('置き土産', { speed: 35, life: 2.14, interval: 0.6, damage: 15, stagger: 12, pellets: 2, spread: 0.15, homing: 2.1, shieldDamage: 20 }),
+        still: weak('種まき', { speed: 28, life: 3.43, interval: 0.7, damage: 12, stagger: 9, pellets: 3, spread: 0.2, homing: 2.45, shieldDamage: 16 }),
+      },
+      strong: {
+        front: shot('零距離の砲', { speed: 168, life: 0.31, damage: 16, stagger: 10, pellets: 5, spread: 0.03, homing: 0, shieldDamage: 10, pierce: 0.7, cooldown: 1 }),
+        side: Object.freeze({ kind: 'circus', name: '誘導弾の群れ', cooldown: 5, spec: Object.freeze({ ...CIRCUS, name: '誘導弾の群れ', count: 10 }) }),
+        back: shot('置き土産の機雷', { speed: 6, life: 5, damage: 30, stagger: 26, size: 2.2, mine: true, pellets: 2, spread: 0.3, shieldDamage: 30, pierce: 0.4, cooldown: 3 }),
+        still: shot('芽吹き', { speed: 28, life: 3.4, homing: 2.45, damage: 10, stagger: 8, pellets: 7, spread: 0.3, shieldDamage: 14, pierce: 0.2, cooldown: 2.5 }),
+      },
+      special: {
+        front: Object.freeze({ kind: 'assault', name: '潜行強襲', cost: 100 }),
+        side: Object.freeze({ kind: 'veil', veil: 'phase', name: '位相潜行', cost: 35, time: 2.5, recover: 0.5 }),
+        back: Object.freeze({ kind: 'burst', name: '抜け際の一斉射', cost: 35 }),
+        // 相手との間に浮かんで、弾と誘導弾を受ける盾。受けきれなくなると消える。
+        still: Object.freeze({ kind: 'familiar', role: 'guard', name: '影', cost: 50, time: 8, count: 1, hp: 80 }),
+      },
+    },
+    notes: {
+      ride: '提案：何にも乗らず、腕を後ろへ流して水平に突き進む（壁をすり抜ける奇襲）',
+      moves: '原案：至近距離からの連続攻撃、物質透過《位相潜行》（透過中は攻撃できず、解ける瞬間が隙）。弾もすり抜けるのは仮の決め。ほかは提案',
+    },
+    bot: { near: 10, far: 28, fire: 50 },
+  },
+  // チュートリアルのボス（操作できない。ユーザー指定 2026-10-27「アンプレイアブルで操作を覚えかけでも殺せるボス」）。人物・名前・能力はすべて提案。
+  // 飛ぶのはみんなの半分の速さ（pace）。弾は遅く軽く、強攻撃は1つだけ。特殊は流星雨だけ（屋根の下で防ぐ練習）。
+  // Bot は近くで戦い、振り向きが遅く、あまり避けず、よく止まる（bot.tune で RIVAL を上書き）。
+  apprentice: {
+    id: 'apprentice', ride: 'broom', name: '見習いの魔女', code: 'ノービス', role: 'チュートリアルのボス', hp: 160, shield: 60, playable: false, pace: 0.5,
+    colors: { dress: 0x3b3150, accent: 0x9c86c9, hair: 0x6f5e86, glow: 0xc3b0f0, shield: 0xd8ccf5, shieldEdge: 0xefe8ff },
+    moves: {
+      weak: { front: weak('見習いの魔法弾', { speed: 56, life: 2, interval: 0.45, damage: 6, stagger: 7, homing: 0.42, size: 0.2, shieldDamage: 10 }) },
+      strong: { front: shot('見習いの重い弾', { speed: 56, life: 2, damage: 14, stagger: 14, homing: 0.6, size: 0.5, shieldDamage: 10, pierce: 0.4, cooldown: 3 }) },
+      special: { still: Object.freeze({ kind: 'meteor', name: '流星雨', cost: 100 }) },
+    },
+    notes: {
+      ride: '提案：見習いなので箒',
+      moves: '提案：遅く軽い魔法弾と、流星雨（上が開いていると警告が出るので、屋根や高架の下へ入る練習になる）',
+    },
+    bot: {
+      near: 30, far: 60, fire: 90,
+      tune: { heightMin: 0, heightMax: 15, floorMargin: 20, turnRate: 1.3, burst: 0.9, rest: 1.4, dodgeChance: 0.12, kickDodgeChance: 0.15, kickHop: 0, holdChance: 0.45, wallSeek: 0.2, boltReact: 0.4, react: [0.8, 1.6],
+        strongChance: 0.15, specialChance: 0.5,
+        // 近接はほとんど防げず、たまにしか殴らない。
+        meleeChance: 0.2, meleeReact: [0.4, 0.8], meleeGuard: 0.1, meleeStep: 0.1, meleeClash: 0, meleeCounter: 0.3 },
+    },
+  },
+  // 試験用の基本の組み合わせ（キャラを決めずに作った魔法少女。操作できない）。
+  basic: {
+    id: 'basic', ride: 'broom', name: '基本', code: '', role: '試験用', hp: 250, shield: 120, playable: false,
+    colors: { dress: 0x333333, accent: 0x999999, hair: 0x222222, glow: 0xffffff, shield: 0xdddddd, shieldEdge: 0xffffff },
+    moves: {
+      weak: { front: weak('連射弾', { ...BOLT, stagger: 10, shieldDamage: 16 }) },
+      strong: {
+        front: shot('重い弾', { speed: 154, life: 0.71, homing: 0.35, damage: 30, stagger: 26, shieldDamage: 12, pierce: 0.6, cooldown: 1.2 }),
+        side: Object.freeze({ kind: 'circus', name: '誘導弾の群れ', cooldown: 5, spec: Object.freeze({ ...CIRCUS, name: '誘導弾の群れ', count: 8 }) }),
+      },
+      special: { still: Object.freeze({ kind: 'arcana', name: '大魔法', cost: 100 }) },
+    },
+    notes: {},
+    bot: {},
+  },
+});
+
+// 開始画面で選べるキャラ（操作できないボスと試験用は入れない）。
+const ROSTER = Object.freeze(Object.keys(CHARACTERS).filter(id => CHARACTERS[id].playable !== false));
+
+// 入力（weak・strong・special）と向きの技。弱と強はその向きに技が無ければ前の技。特殊は無ければ null（見習いの魔女など）。
+function moveOf(character, input, dir) {
+  const table = CHARACTERS[character]?.moves?.[input];
+  if (!table) return null;
+  return table[dir] ?? (input === 'special' ? null : table.front) ?? null;
+}
+
+return { DIRECTIONS, DIRECTION_NAMES, direction, CHARACTERS, ROSTER, moveOf };
 })();
 modules['meteors.mjs'] = (() => {
 // 流星雨（特別の枠で、大魔法の代わりに選べる）：狙った相手の上へ、使い手の側から斜めに光の雨を降らせる。描画は持たない。
 // 大魔法と同じゲージを使い、E で呼ぶ。使い手は詠唱せずにそのまま動ける。1 秒後から 4 秒間、毎秒 10 個が降る。
 // 雨は相手の動きを見越して狙い、相手を追って動く。相手の近くを通ると空中でも弾ける（直撃 30、爆風 18）。シールドでは止まらない。
 // 斜めに降るので、高架や屋根の下、雨の来る側にあるビルの陰へ入れば、街に当たって届かない。爆風も壁の向こうへは届かない。
-const { TARGET, nose, warded } = modules['combat.mjs'];
+const { nose, strike: hurt, warded } = modules['combat.mjs'];
 const { ARCANA } = modules['arcana.mjs'];
 
 const METEOR = Object.freeze({
   delay: 1,          // 呼んでから降り始めるまでの秒
   duration: 4,       // 降る秒
   rate: 10,          // 毎秒の数
-  speed: 140,        // m/s
+  speed: 98,         // m/s
   angle: Math.PI / 3, // 水平からの降る角度（60 度）。使い手の側から相手の側へ斜めに降る
-  flight: 1.6,       // 1 個が空から狙った所へ届くまでの秒
+  flight: 2.3,       // 1 個が空から狙った所へ届くまでの秒
   spread: 8,         // 狙いのばらつき（m）
-  follow: 25,        // 雨の中心が相手を追う速さ（m/s）
+  follow: 18,        // 雨の中心が相手を追う速さ（m/s）
   ahead: 80,         // ロックしていないときは、機首の先この距離へ降らせる（m）
   damage: 30,        // 直撃
   stagger: 20,
@@ -1620,6 +1723,7 @@ const METEOR = Object.freeze({
   blast: 5,          // 爆風の半径（m）
   blastDamage: 18,
   blastStagger: 10,
+  pierce: 0.5,
 });
 
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
@@ -1662,12 +1766,9 @@ function callMeteors(fighter, rains) {
   return rain;
 }
 
-// 当てる：体力を減らし、倒れたら撃墜。stepBolts と同じ形の当たりを返す。
+// 当てる：シールドを通して体力を減らし、倒れたら撃墜。stepBolts と同じ形の当たりを返す。流星はシールドを半分貫く（pierce）。
 function strike(t, owner, damage, stagger, at) {
-  t.hp -= damage;
-  const destroyed = t.hp <= 0;
-  if (destroyed) { t.hp = 0; t.alive = false; t.respawnT = t.respawn ?? TARGET.respawn; }
-  return { kind: 'target', target: t, owner, destroyed, stagger, at, meteor: true };
+  return { kind: 'target', target: t, owner, ...hurt(t, { damage, stagger, pierce: METEOR.pierce }), at, meteor: true };
 }
 
 // 雨と降っている流星を進める。targets は当たる相手（使い手には当たらない）。blocked(a, b) は線分が街に当たるか、sees(a, b) は遮られていないか。
@@ -1709,7 +1810,8 @@ function stepMeteors(rains, meteors, targets, dt, blocked, sees, random = Math.r
     const valid = f => f.alive && f !== m.owner && f.kind !== 'decoy' && !(f.guardT > 0) && !f.phased && !warded(f);
     // 街や地面に当たればそこで弾ける（屋根の下や壁の向こうには届かない）。相手の近く（爆風の半径）を通れば、空中でも弾ける。
     let at = null, direct = null;
-    if (blocked(from, to)) {
+    const hitCity = blocked(from, to);
+    if (hitCity) {
       // 当たった所を二分して探す。
       let lo = 0, hi = 1;
       for (let k = 0; k < 6; k++) { const mid = (lo + hi) / 2; if (blocked(from, lerp(from, to, mid))) hi = mid; else lo = mid; }
@@ -1725,8 +1827,8 @@ function stepMeteors(rains, meteors, targets, dt, blocked, sees, random = Math.r
       continue;
     }
     m.alive = false;
-    // 爆風の中心は、弾けた所の少し手前（壁の中から見ないように）。
-    const back = 1 / METEOR.speed;
+    // 爆風の中心は、街に当たったなら弾けた所の少し手前（壁の中から見ないように）、空中ならその場。
+    const back = hitCity ? 1 / METEOR.speed : 0;
     const blastAt = { x: at.x - m.velocity.x * back, y: at.y - m.velocity.y * back, z: at.z - m.velocity.z * back };
     if (direct) hits.push(strike(direct, m.owner, METEOR.damage, METEOR.stagger, { ...direct.position }));
     else hits.push({ kind: 'impact', owner: m.owner, at, meteor: true });
@@ -1752,40 +1854,37 @@ function closest(a, b, c) {
 return { METEOR, fallDirection, skyOf, canCallMeteors, callMeteors, stepMeteors };
 })();
 modules['abilities.mjs'] = (() => {
-// キャラごとの能力（characters.mjs）のうち、副武器（F）・特別（E）と、補助の効き目。描画は持たない。
-// 誘導弾の群れ（missiles.mjs）・大魔法（arcana.mjs）・流星雨（meteors.mjs）はそれぞれの所にあり、ここから呼ぶ。
-// arena は1つの試合で共有する物：{ bolts, missiles, rains, meteors, decoys, sees(a, b), clear(a, b, r), free(p, r) }。どれも省ける。
-const { aimDirection, anglesTo, intercept, makeBolt, muzzle, nose, setLock, shieldUp, warded } = modules['combat.mjs'];
+// キャラごとの技（characters.mjs の moves）のうち、弾を撃つだけではない物の効き目。描画は持たない。
+// 強攻撃（左）と特殊攻撃（右と左の同時押し）は moves.mjs が向きで選び、ここの関数を呼ぶ（ユーザー指定 2026-10-28：F・E の技は特殊へまとめた）。
+// 誘導弾（missiles.mjs）・大魔法（arcana.mjs）・流星雨（meteors.mjs）・使い魔（familiars.mjs）はそれぞれの所にある。
+// arena は1つの試合で共有する物：{ bolts, missiles, rains, meteors, decoys, familiars, prisms, fighters, sees(a, b), clear(a, b, r), free(p, r) }。どれも省ける。
+const { aimDirection, anglesTo, intercept, makeBolt, muzzle, nose, setLock, spreadDirections, strike, warded } = modules['combat.mjs'];
 const { SETTINGS: FLIGHT, surge, wishDirection } = modules['flight-model.mjs'];
-const { ARCANA, startCast } = modules['arcana.mjs'];
-const { MISSILE } = modules['missiles.mjs'];
-const { callMeteors } = modules['meteors.mjs'];
+const { moveOf } = modules['characters.mjs'];
 
-// 副武器。待ちの秒は、技を撃ち合う回数を増やすため短めにした（ユーザー指定 2026-10-27「ド派手な技の撃ち合い」）。
+// 強攻撃の効き目。待ちの秒は技ごと（characters.mjs の cooldown）。
 const BRAKE = Object.freeze({
-  cooldown: 4.5,
   range: 120,    // 向き直る相手を探す距離（m）
   counter: 1.2,  // 止まってからこの秒は、弾の威力とよろけが power 倍（反撃）
   power: 1.5,
 });
 const PRISM = Object.freeze({
-  cooldown: 3.5,
   memory: 3,     // 見失ってからこの秒までの相手を狙える
   range: 160,    // 届く距離（m）
+  speed: 294,
   damage: 35,
   stagger: 26,
 });
 const DECOY = Object.freeze({
-  cooldown: 4,
   count: 2,
   life: 3.5,     // 秒
-  speed: 35,     // 自分の速さに足して、左右へ離れる速さ（m/s）
+  speed: 25,     // 自分の速さに足して、左右へ離れる速さ（m/s）
   angle: 0.6,    // 左右へ離れる角度（ラジアン）
   radius: 1.5,   // 弾が当たる大きさ（m）
 });
-const SURGE = Object.freeze({ cooldown: 2.5, speed: 150, time: 0.45 });
+const SURGE = Object.freeze({ speed: 105, time: 0.64 });
 
-// 特別（大魔法と同じゲージを使う）。
+// 特殊攻撃の効き目。ゲージの使う量は技ごと（cost）。
 const STILLNESS = Object.freeze({ time: 3, radius: 90 });
 const REPLAY = Object.freeze({
   window: 3,     // 直前のこの秒に撃った弾を
@@ -1797,30 +1896,21 @@ const REPLAY = Object.freeze({
 });
 const ASSAULT = Object.freeze({
   time: 4,       // 潜行の秒
-  speed: 105,    // 潜行中に進む速さ（m/s、ブーストより速い）
-  trigger: 22,   // 相手がこの距離まで来たら、すぐに出る（m）
-  radius: 30,    // 出た瞬間に当たる距離（m）
-  damage: 90,
+  speed: 74,     // 潜行中に進む速さ（m/s、いつもの速さより速い）
+  trigger: 16,   // 相手がこの距離まで来たら、すぐに出る（m）
+  radius: 20,    // 出た瞬間に当たる距離（m）
+  damage: 60,
 });
-
-// 合わせ技：右クリックと左クリックの同時押し（ユーザー指定 2026-10-27、案「キャラごとの合わせ技」）。中身はどれも提案。
-// 補助のゲージを cost 使い、cooldown 秒は次を使えない。反射の膜だけは、両方を押している間ずっと効き、ゲージを drain 倍の速さで使う。
-const COMBO = Object.freeze({
+const SPECIAL = Object.freeze({
   // 夏芽：零速の膜を一気に広げる。周りの相手の弾と誘導弾を消し、入った相手を少しの間遅くする（遅い相手には弾が当たりやすい）。
-  wave: Object.freeze({ name: '零速の波', cost: 40, cooldown: 5, radius: 45, slow: 0.3, time: 1.5 }),
-  // 真白：光学迷彩を解いた瞬間に、強い狙撃弾を1発。当たればダウンする。
-  ambush: Object.freeze({ name: '不意打ち', cost: 40, cooldown: 6, power: 1.5, stagger: 60 }),
-  // 透子：膜に当たった相手の弾を、撃った相手へ跳ね返す。
-  mirror: Object.freeze({ name: '反射の膜', drain: 2.5, cooldown: 0 }),
+  wave: Object.freeze({ radius: 45, slow: 0.3, time: 1.5 }),
   // 汐里：前へ進む水の壁。相手の弾と誘導弾を止め、ぶつかった相手をダウンさせる。建物に当たると崩れる。
-  wall: Object.freeze({ name: '水の壁', cost: 40, cooldown: 5, speed: 45, time: 1.6, radius: 6, damage: 30 }),
-  // 翠：位相潜行を解いた瞬間に、散弾をまとめて撃つ（解けた直後の待ちも無い）。建物の中では使えない。
-  burst: Object.freeze({ name: '抜け際の一斉射', cost: 40, cooldown: 4, pellets: 12, spread: 0.07 }),
+  wall: Object.freeze({ speed: 32, time: 2.3, radius: 5, damage: 20 }),
+  // 翠：散弾をまとめて撃つ。潜行中なら解いて撃つ（解けた直後の待ちも無い）。建物の中では使えない。
+  burst: Object.freeze({ pellets: 12, spread: 0.07 }),
+  // 汐里の雨の弾幕：後ろと上へ撒く広がり（ラジアン）。
+  barrage: Object.freeze({ yaw: 2.4, pitch: [0.25, 0.9] }),
 });
-// 同時押しとみなす、2つのボタンを押した時の差（秒）。張ったまま撃てない補助なら、張っている間に左を押しても出る。
-const COMBO_WINDOW = 0.15;
-
-const SUB_COOLDOWN = Object.freeze({ missiles: MISSILE.cooldown, brake: BRAKE.cooldown, prism: PRISM.cooldown, decoy: DECOY.cooldown, surge: SURGE.cooldown });
 
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
 const length = v => Math.hypot(v.x, v.y, v.z);
@@ -1828,7 +1918,7 @@ const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
 const unit = v => { const n = length(v) || 1; return { x: v.x / n, y: v.y / n, z: v.z / n }; };
 const scale = (v, k) => ({ x: v.x * k, y: v.y * k, z: v.z * k });
 
-// 特別の枠が使っている最中か（使っている間はゲージがたまらない）。
+// 大きな特殊が使っている最中か（使っている間はゲージがたまらない）。
 const specialActive = f => f.stillT > 0 || f.assaultT > 0 || f.replay?.length > 0;
 
 // 撃てない間：大魔法の詠唱中、すり抜けている間、解けた直後、潜行強襲の間。
@@ -1840,144 +1930,18 @@ function remembered(f, memory) {
   return l && l.target.alive && !l.target.cloaked && f.clock - l.t <= memory ? l.target : null;
 }
 
-function canSpecial(f) {
-  const a = f.arcana;
-  if (!a || !f.alive || a.charge < ARCANA.max || a.castT > 0 || f.state.downT > 0 || specialActive(f)) return false;
-  if (f.special === 'replay') return (f.echoes?.length ?? 0) >= REPLAY.min && !!remembered(f, REPLAY.window);
-  return true;
-}
+// ---- 強攻撃 ----
 
-// E を押した瞬間。使えれば true。
-function useSpecial(f, arena) {
-  if (!canSpecial(f)) return false;
-  switch (f.special) {
-    case 'meteor': return !!(arena.rains && callMeteors(f, arena.rains));
-    case 'stillness': f.arcana.charge = 0; f.stillT = STILLNESS.time; return true;
-    case 'assault': f.arcana.charge = 0; f.assaultT = ASSAULT.time; f.assaultEnd = false; return true;
-    case 'replay': {
-      const target = remembered(f, REPLAY.window), shots = f.echoes.slice(-REPLAY.max);
-      f.arcana.charge = 0;
-      f.replay = shots.map((e, i) => ({ from: e.from, at: (i + 1) / shots.length * REPLAY.spread, target }));
-      f.replayT = 0;
-      f.echoes = [];
-      return true;
-    }
-    default: return startCast(f);
-  }
-}
-
-// 右と左の押し始めを覚え、合わせ技を出す入力か（押し始めのフレームだけ true）を返す。
-function comboPressed(f, controls) {
-  const h = f.held ??= { fire: false, shield: false, fireAt: -Infinity, shieldAt: -Infinity };
-  const firePressed = !!controls.fire && !h.fire, shieldPressed = !!controls.shield && !h.shield;
-  if (firePressed) h.fireAt = f.clock;
-  if (shieldPressed) h.shieldAt = f.clock;
-  h.fire = !!controls.fire;
-  h.shield = !!controls.shield;
-  if (!(controls.fire && controls.shield) || !(firePressed || shieldPressed)) return false;
-  return Math.abs(h.fireAt - h.shieldAt) <= COMBO_WINDOW || (firePressed && !f.shield.spec?.fire);
-}
-
-const canCombo = f => !!f.combo && f.alive && !(f.state.downT > 0) && !(f.arcana?.castT > 0) && !(f.comboT > 0) && !f.shield.broken
-  && f.shield.charge >= (COMBO[f.combo].cost ?? 0);
-
-// 1フレーム分の合わせ技。pressed は comboPressed、held は今も両方を押しているか。enemies は効く相手。
-// stepFighter の補助の後、射撃の前に呼ぶ。使えば true。
-function useCombo(f, pressed, held, enemies, arena) {
-  f.comboT = Math.max(0, (f.comboT ?? 0) - (arena.dt ?? 0));
-  const spec = COMBO[f.combo];
-  if (!spec) return false;
-  // 反射の膜：同時押しで始め、両方を押して膜を張っている間だけ続く。
-  if (f.combo === 'mirror') {
-    if (pressed && canCombo(f)) f.mirroring = true;
-    f.mirroring = !!f.mirroring && held && f.shield.active;
-    if (f.mirroring) {
-      f.shield.charge = Math.max(0, f.shield.charge - (f.shield.spec.drain ?? 25) * (spec.drain - 1) * (arena.dt ?? 0));
-      if (f.shield.charge <= 0) { f.shield.broken = true; f.shield.active = false; f.mirroring = false; }
-    }
-    if (pressed && f.mirroring) f.comboEvent = { kind: 'combo', combo: f.combo, owner: f, at: { ...f.position } };
-    return f.mirroring;
-  }
-  if (!pressed || !canCombo(f)) return false;
-  const used = { wave, ambush, wall: waterWall, burst }[f.combo](f, spec, enemies, arena);
-  if (!used) return false;
-  f.shield.charge -= spec.cost ?? 0;
-  if (f.shield.charge <= 0) { f.shield.charge = 0; f.shield.broken = true; f.shield.active = false; }
-  f.comboT = spec.cooldown;
-  f.comboEvent = { kind: 'combo', combo: f.combo, owner: f, at: { ...f.position } };
-  return true;
-}
-
-// 零速の波：周りの相手の弾と誘導弾を消し、入った相手を遅くする。
-function wave(f, spec, enemies, arena) {
-  for (const list of [arena.bolts, arena.missiles]) for (const b of list ?? []) {
-    if (b.alive && b.owner !== f && length(sub(b.position, f.position)) <= spec.radius) b.alive = false;
-  }
-  for (const e of enemies) {
-    if (!e.alive || e.kind !== 'fighter' || e.phased || warded(e) || e.guardT > 0) continue;
-    if (length(sub(e.position, f.position)) > spec.radius || (arena.sees && !arena.sees(f.position, e.position))) continue;
-    e.slowT = spec.time;
-    Object.assign(e.state, { dashT: 0, dashSpeed: null, velocity: scale(e.state.velocity, spec.slow) });
+// 挟み撃ち：左右へ飛び出し、強く曲がって挟み込む2発。
+function pincer(f, move, arena) {
+  if (!arena.bolts) return false;
+  const d = aimDirection(f.state, f.lock, move.speed), from = muzzle(f.state);
+  for (const dir of spreadDirections(d, 2, Math.tan(move.angle), true)) {
+    const bolt = makeBolt(from, dir, move, f, f.counterT > 0 ? BRAKE.power : 1);
+    if (f.lock.target && f.lock.visible) bolt.target = f.lock.target;
+    arena.bolts.push(bolt);
   }
   return true;
-}
-
-// 不意打ち：光学迷彩を張っている間だけ。迷彩を解き、強い狙撃弾を1発撃つ。
-function ambush(f, spec, enemies, arena) {
-  if (!f.cloaked || !arena.bolts) return false;
-  const w = f.main ?? f.weapon.spec, bolt = makeBolt(muzzle(f.state), aimDirection(f.state, f.lock, w.speed), { ...w, stagger: spec.stagger }, f, spec.power);
-  bolt.stagger = spec.stagger;
-  if (f.lock.target && f.lock.visible) bolt.target = f.lock.target;
-  bolt.ambush = true;
-  arena.bolts.push(bolt);
-  f.weapon.cooldown = w.interval;
-  uncover(f);
-  return true;
-}
-
-// 水の壁：前へ進む壁を出す（stepAbilities が進める）。
-function waterWall(f, spec) {
-  const d = nose(f.state.yaw, f.state.pitch), p = f.position;
-  f.wall = { position: { x: p.x + d.x * 4, y: p.y + d.y * 4, z: p.z + d.z * 4 }, velocity: scale(d, spec.speed), radius: spec.radius, t: spec.time };
-  return true;
-}
-
-// 抜け際の一斉射：位相潜行ですり抜けている間だけ。建物の外で解き、散弾をまとめて撃つ。
-function burst(f, spec, enemies, arena) {
-  if (f.shield.spec?.kind !== 'phase' || !f.shield.active || !arena.bolts) return false;
-  if (arena.free && !arena.free(f.position, FLIGHT.radius * 0.9)) return false;
-  const w = f.main ?? f.weapon.spec, d = aimDirection(f.state, f.lock, w.speed), from = muzzle(f.state);
-  const side = Math.abs(d.y) < 0.95 ? unit({ x: -d.z, y: 0, z: d.x }) : { x: 1, y: 0, z: 0 };
-  const up = { x: side.y * d.z - side.z * d.y, y: side.z * d.x - side.x * d.z, z: side.x * d.y - side.y * d.x };
-  for (let i = 0; i < spec.pellets; i++) {
-    // 真ん中の1発と、内と外の2つの輪。
-    const ring = i === 0 ? 0 : i <= 4 ? 0.5 : 1, a = i * 2.4;
-    const dir = unit({ x: d.x + (side.x * Math.cos(a) + up.x * Math.sin(a)) * spec.spread * ring, y: d.y + (side.y * Math.cos(a) + up.y * Math.sin(a)) * spec.spread * ring, z: d.z + (side.z * Math.cos(a) + up.z * Math.sin(a)) * spec.spread * ring });
-    arena.bolts.push(makeBolt(from, dir, w, f));
-  }
-  f.weapon.cooldown = w.interval;
-  uncover(f);
-  f.phased = false;
-  f.recoverT = 0;
-  return true;
-}
-
-// 補助を解き、右を一度離すまで張らない。
-function uncover(f) {
-  f.shield.active = false;
-  f.shield.latch = true;
-  f.cloaked = false;
-}
-
-// 1フレーム分の副武器。pressed は F を押した瞬間。誘導弾の群れは missiles.mjs の launch を使うので、ここでは扱わない。
-// targets は自分が狙える物（ロックオンと同じ）。使えば true。
-function useSub(f, pressed, dt, targets, arena) {
-  const l = f.launcher;
-  l.cooldown = Math.max(0, l.cooldown - dt);
-  if (!pressed || l.cooldown > 0 || !f.alive || f.state.downT > 0 || f.arcana?.castT > 0) return false;
-  const used = { brake, prism, decoy, surge: surging }[f.sub]?.(f, targets, arena);
-  if (used) l.cooldown = SUB_COOLDOWN[f.sub];
-  return !!used;
 }
 
 // 急制動：その場で止まり、近くで見えている相手へ向き直って捕捉する。少しの間、弾が強くなる。
@@ -2001,16 +1965,14 @@ function brake(f, targets, arena) {
 }
 
 // 屈折射：見えない相手へ、両方から見える所にプリズムを置き、そこで弾を曲げて当てる。見えていればまっすぐ撃つ。
-function prism(f, targets, arena) {
-  if (attackBlocked(f) || (f.shield.active && !f.shield.spec?.fire)) return false;
+function prism(f, move, arena) {
   const target = f.lock.target && f.lock.visible ? f.lock.target : remembered(f, PRISM.memory);
   if (!target || !arena.bolts) return false;
-  const from = muzzle(f.state), spec = { ...(f.main ?? f.weapon.spec), damage: PRISM.damage, stagger: PRISM.stagger };
+  const from = muzzle(f.state), spec = { speed: PRISM.speed, life: 1, homing: 0, damage: PRISM.damage, stagger: PRISM.stagger, pierce: move.pierce ?? 0 };
   if (length(sub(target.position, from)) > PRISM.range) return false;
   const clear = (a, b) => !arena.clear || arena.clear(a, b, 0.05);
   if (clear(from, target.position)) {
-    const bolt = makeBolt(from, unit(sub(intercept(from, target.position, target.velocity, spec.speed), from)), spec, f);
-    arena.bolts.push(bolt);
+    arena.bolts.push(makeBolt(from, unit(sub(intercept(from, target.position, target.velocity, spec.speed), from)), spec, f));
     return true;
   }
   const point = prismPoint(from, target.position, clear);
@@ -2039,7 +2001,7 @@ function prismPoint(from, to, clear) {
 }
 
 // 残響デコイ：自分の左右へ偽物を2つ出す。自分を捕捉している相手は偽物へ移り、追ってくる誘導弾も偽物を追う。
-function decoy(f, targets, arena) {
+function decoy(f, arena) {
   if (!arena.decoys) return false;
   const s = f.state, v = s.velocity, heading = length(v) > 5 ? unit(v) : nose(s.yaw, s.pitch);
   const made = [];
@@ -2060,13 +2022,114 @@ function decoy(f, targets, arena) {
   return true;
 }
 
-// 水圧突進：ゲージを使わず、進みたい向きへ一気に踏み込む。
-function surging(f, targets, arena) {
+// 水圧の跳び退き：ゲージを使わず、進みたい向きへ一気に跳ぶ。leave があれば、元いた所にその弾（水の機雷）を置く。
+function surging(f, move, arena) {
+  if (move.leave && arena.bolts) arena.bolts.push(makeBolt(f.position, nose(f.state.yaw, f.state.pitch), move.leave, f));
   return surge(f.state, wishDirection(f.state, f.lastInput ?? {}), SURGE.speed, SURGE.time);
 }
 
-// 1フレーム分の、補助と特別の効き目。stepFighter の後、弾を進める前に呼ぶ。当たり（applyHits に渡す）と、出来事（描画用）を返す。
-// enemiesOf(f) は f の特別が当たる相手。
+// ---- 特殊攻撃 ----
+
+// 零速の波：周りの相手の弾と誘導弾を消し、入った相手を遅くする。
+function wave(f, enemies, arena) {
+  const spec = SPECIAL.wave;
+  for (const list of [arena.bolts, arena.missiles]) for (const b of list ?? []) {
+    if (b.alive && b.owner !== f && length(sub(b.position, f.position)) <= spec.radius) b.alive = false;
+  }
+  for (const e of enemies) {
+    if (!e.alive || e.kind !== 'fighter' || e.phased || warded(e) || e.guardT > 0) continue;
+    if (length(sub(e.position, f.position)) > spec.radius || (arena.sees && !arena.sees(f.position, e.position))) continue;
+    e.slowT = spec.time;
+    Object.assign(e.state, { dashT: 0, dashSpeed: null, velocity: scale(e.state.velocity, spec.slow) });
+  }
+  return true;
+}
+
+// 不意打ち：前の強攻撃（真白は光の狙撃弾）を、当たればダウンする強さで1発撃つ。光学迷彩中なら解ける。
+function ambush(f, move, arena) {
+  if (!arena.bolts) return false;
+  const w = moveOf(f.character, 'strong', 'front') ?? { speed: 294, life: 0.54, damage: 50 };
+  const bolt = makeBolt(muzzle(f.state), aimDirection(f.state, f.lock, w.speed), { ...w, stagger: move.stagger, pierce: 1, heavy: true }, f, move.power);
+  bolt.stagger = move.stagger;
+  if (f.lock.target && f.lock.visible) bolt.target = f.lock.target;
+  bolt.ambush = true;
+  arena.bolts.push(bolt);
+  uncover(f);
+  return true;
+}
+
+// 水の壁：前へ進む壁を出す（stepAbilities が進める）。
+function waterWall(f) {
+  const spec = SPECIAL.wall, d = nose(f.state.yaw, f.state.pitch), p = f.position;
+  f.wall = { position: { x: p.x + d.x * 4, y: p.y + d.y * 4, z: p.z + d.z * 4 }, velocity: scale(d, spec.speed), radius: spec.radius, t: spec.time };
+  return true;
+}
+
+// 抜け際の一斉射：前の弱攻撃（翠は至近の散弾）をまとめて撃つ。潜行中なら、建物の外で解いて撃つ。
+function burst(f, arena) {
+  if (!arena.bolts || (f.phased && arena.free && !arena.free(f.position, FLIGHT.radius * 0.9))) return false;
+  const spec = SPECIAL.burst, w = moveOf(f.character, 'weak', 'front') ?? { speed: 154, life: 0.36, damage: 10 };
+  const d = aimDirection(f.state, f.lock, w.speed), from = muzzle(f.state);
+  const side = Math.abs(d.y) < 0.95 ? unit({ x: -d.z, y: 0, z: d.x }) : { x: 1, y: 0, z: 0 };
+  const up = { x: side.y * d.z - side.z * d.y, y: side.z * d.x - side.x * d.z, z: side.x * d.y - side.y * d.x };
+  for (let i = 0; i < spec.pellets; i++) {
+    // 真ん中の1発と、内と外の2つの輪。
+    const ring = i === 0 ? 0 : i <= 4 ? 0.5 : 1, a = i * 2.4;
+    const dir = unit({ x: d.x + (side.x * Math.cos(a) + up.x * Math.sin(a)) * spec.spread * ring, y: d.y + (side.y * Math.cos(a) + up.y * Math.sin(a)) * spec.spread * ring, z: d.z + (side.z * Math.cos(a) + up.z * Math.sin(a)) * spec.spread * ring });
+    const bolt = makeBolt(from, dir, w, f);
+    if (f.lock.target && f.lock.visible) bolt.target = f.lock.target;
+    arena.bolts.push(bolt);
+  }
+  if (f.veil?.kind === 'phase') f.veil = null;
+  f.phased = false;
+  f.recoverT = 0;
+  return true;
+}
+
+// 雨の弾幕：後ろと上へ撒いた弾が、曲がって相手へ向かう（keep）。random は撒く向きのばらつき。
+function barrage(f, move, arena, random = Math.random) {
+  if (!arena.bolts) return false;
+  const s = f.state, spec = SPECIAL.barrage, target = f.lock.target && f.lock.visible ? f.lock.target : null;
+  for (let i = 0; i < move.count; i++) {
+    const k = move.count > 1 ? i / (move.count - 1) - 0.5 : 0;
+    const dir = nose(s.yaw + Math.PI + k * spec.yaw, spec.pitch[0] + random() * (spec.pitch[1] - spec.pitch[0]));
+    const bolt = makeBolt(s.position, dir, move.bolt, f);
+    bolt.target = target;
+    arena.bolts.push(bolt);
+  }
+  return true;
+}
+
+// 決まった秒だけ張る物（零速の膜・光学迷彩・反射の膜・位相潜行）。
+function veil(f, move, arena) {
+  f.veil = { kind: move.veil, t: move.time, move };
+  if (move.veil === 'cloak') for (const m of arena.missiles ?? []) if (m.target === f) m.homing = false;
+  return true;
+}
+
+const veiled = (f, kind) => f.veil?.kind === kind && f.veil.t > 0;
+
+// 光学迷彩を解く（撃つと解ける）。
+function uncover(f) {
+  if (f.veil?.kind === 'cloak') f.veil = null;
+  f.cloaked = false;
+}
+
+// 三秒間の静止・潜行強襲・残響の再生を始める（ゲージは moves.mjs が使う）。
+function stillness(f) { f.stillT = STILLNESS.time; return true; }
+function assault(f) { f.assaultT = ASSAULT.time; f.assaultEnd = false; return true; }
+const canReplay = f => (f.echoes?.length ?? 0) >= REPLAY.min && !!remembered(f, REPLAY.window);
+function replay(f) {
+  if (!canReplay(f)) return false;
+  const target = remembered(f, REPLAY.window), shots = f.echoes.slice(-REPLAY.max);
+  f.replay = shots.map((e, i) => ({ from: e.from, at: (i + 1) / shots.length * REPLAY.spread, target }));
+  f.replayT = 0;
+  f.echoes = [];
+  return true;
+}
+
+// 1フレーム分の、技の効き目（デコイ・水の壁・膜・迷彩・静止・再生・潜行強襲）。stepFighter の後、弾を進める前に呼ぶ。
+// 当たり（applyHits に渡す）と、出来事（描画用）を返す。enemiesOf(f) は f の技が当たる相手。
 function stepAbilities(fighters, enemiesOf, arena, dt) {
   const hits = [], events = [];
   const decoys = arena.decoys ?? [];
@@ -2074,6 +2137,8 @@ function stepAbilities(fighters, enemiesOf, arena, dt) {
     if (!d.alive) continue;
     d.life -= dt;
     if (d.life <= 0 || !d.owner.alive) { d.alive = false; continue; }
+    // 使い魔の小鳥（orbit）は familiars.mjs が動かす。
+    if (d.orbit) continue;
     for (const axis of ['x', 'y', 'z']) d.position[axis] += d.velocity[axis] * dt;
     const n = Math.exp(-1.2 * dt);
     d.velocity = scale(d.velocity, n);
@@ -2085,8 +2150,13 @@ function stepAbilities(fighters, enemiesOf, arena, dt) {
     f.recoverT = Math.max(0, (f.recoverT ?? 0) - dt);
     if (specialActive(f) && f.arcana) f.arcana.charge = 0;
     f.slowT = Math.max(0, (f.slowT ?? 0) - dt);
-    if (f.comboEvent) { events.push(f.comboEvent); f.comboEvent = null; }
-    // 水の壁：前へ進み、相手に当たるか建物に当たるか時間が来ると崩れる。当たった相手はダウンする（膜を張っていれば止まる）。
+    if (f.moveEvent) { events.push(f.moveEvent); f.moveEvent = null; }
+    // 決まった秒だけ張る物。ダウン・撃墜で解ける。
+    if (f.veil) {
+      f.veil.t -= dt;
+      if (f.veil.t <= 0 || !f.alive || f.state.downT > 0) { events.push({ kind: 'veil-end', veil: f.veil.kind, owner: f, at: { ...f.position } }); f.veil = null; }
+    }
+    // 水の壁：前へ進み、相手に当たるか建物に当たるか時間が来ると崩れる。当たった相手はダウンする（シールドを貫く）。
     if (f.wall) {
       const w = f.wall;
       w.t -= dt;
@@ -2096,32 +2166,30 @@ function stepAbilities(fighters, enemiesOf, arena, dt) {
         if (!e.alive || e.kind !== 'fighter' || e.guardT > 0 || e.phased) continue;
         if (length(sub(e.position, w.position)) > w.radius + (e.hitRadius ?? 1.5)) continue;
         end = true;
-        if (shieldUp(e) || warded(e)) { events.push({ kind: 'wall-block', owner: f, at: { ...w.position } }); break; }
-        e.hp -= COMBO.wall.damage;
-        const destroyed = e.hp <= 0;
-        if (destroyed) { e.hp = 0; e.alive = false; e.respawnT = e.respawn ?? 3; }
-        hits.push({ kind: 'target', target: e, owner: f, destroyed, heavy: true, at: { ...e.position } });
+        if (warded(e)) { events.push({ kind: 'wall-block', owner: f, at: { ...w.position } }); break; }
+        hits.push({ kind: 'target', target: e, owner: f, ...strike(e, { damage: SPECIAL.wall.damage, pierce: 1 }), heavy: true, at: { ...e.position } });
         break;
       }
       if (end) { events.push({ kind: 'wall-end', owner: f, at: { ...w.position } }); f.wall = null; }
     }
-    const spec = f.shield.spec ?? {};
+    const v = f.veil?.move ?? {};
     // 零速の膜：次の1フレームで膜へ入る相手の弾と誘導弾を、膜に沿う向きへそらして遅くする（誘導弾は追うのをやめる）。
-    if (f.alive && f.shield.active && spec.kind === 'still') {
+    if (f.alive && veiled(f, 'still')) {
       for (const b of [...(arena.bolts ?? []), ...(arena.missiles ?? [])]) {
         if (!b.alive || b.frozen || b.slowed || b.owner === f) continue;
         const next = { x: b.position.x + b.velocity.x * dt, y: b.position.y + b.velocity.y * dt, z: b.position.z + b.velocity.z * dt };
-        if (!passesWithin(b.position, next, f.position, spec.radius)) continue;
+        if (!passesWithin(b.position, next, f.position, v.radius)) continue;
         const out = unit(sub(b.position, f.position)), toward = dot(b.velocity, out);
-        let v = toward < 0 ? sub(b.velocity, scale(out, toward)) : b.velocity;
-        b.velocity = scale(v, spec.slow);
+        const kept = toward < 0 ? sub(b.velocity, scale(out, toward)) : b.velocity;
+        b.velocity = scale(kept, v.slow);
         b.slowed = true;
         if ('homing' in b) b.homing = false;
         events.push({ kind: 'deflect', owner: f, at: { ...b.position } });
       }
     }
-    // 光学迷彩：張った瞬間、追ってくる誘導弾は見失う。
-    f.cloaked = f.alive && f.shield.active && spec.kind === 'cloak';
+    // 光学迷彩と反射の膜。
+    f.cloaked = f.alive && veiled(f, 'cloak');
+    f.mirroring = f.alive && veiled(f, 'mirror');
     if (f.cloaked) for (const m of arena.missiles ?? []) if (m.target === f) m.homing = false;
     // 三秒間の静止：周りの相手の弾を止め、終わると消す。
     if (f.stillT > 0) {
@@ -2143,14 +2211,14 @@ function stepAbilities(fighters, enemiesOf, arena, dt) {
       while (f.replay.length && f.replay[0].at <= f.replayT) {
         const e = f.replay.shift(), t = e.target;
         if (!t.alive || !arena.bolts) continue;
-        const spec = { ...(f.main ?? f.weapon.spec), damage: REPLAY.damage, stagger: REPLAY.stagger, pellets: 1 };
+        const spec = { ...(moveOf(f.character, 'weak', 'front') ?? {}), damage: REPLAY.damage, stagger: REPLAY.stagger, pellets: 1 };
         const bolt = makeBolt(e.from, unit(sub(intercept(e.from, t.position, t.velocity, spec.speed), e.from)), spec, f);
         bolt.echo = true;
         arena.bolts.push(bolt);
         events.push({ kind: 'echo', owner: f, at: { ...e.from } });
       }
     }
-    // 潜行強襲：時間が来るか相手が近づいたら、建物の外へ出た所で、近くの見えている相手に大きく当ててダウンさせる。
+    // 潜行強襲：時間が来るか相手が近づいたら、建物の外へ出た所で、近くの見えている相手に大きく当ててダウンさせる（シールドを貫く）。
     if (f.assaultT > 0) {
       if (!f.alive) { f.assaultT = 0; continue; }
       const enemies = enemiesOf(f);
@@ -2164,12 +2232,9 @@ function stepAbilities(fighters, enemiesOf, arena, dt) {
         f.recoverT = 0;
         const struck = [];
         for (const e of enemies) {
-          if (!e.alive || e.guardT > 0 || e.phased || warded(e)) continue;
+          if (!e.alive || e.guardT > 0 || e.phased || warded(e) || e.kind === 'familiar') continue;
           if (length(sub(e.position, f.position)) > ASSAULT.radius || (arena.sees && !arena.sees(f.position, e.position))) continue;
-          e.hp -= ASSAULT.damage;
-          const destroyed = e.hp <= 0;
-          if (destroyed) { e.hp = 0; e.alive = false; e.respawnT = e.respawn ?? 3; }
-          const hit = { kind: 'target', target: e, owner: f, destroyed, heavy: true, at: { ...e.position } };
+          const hit = { kind: 'target', target: e, owner: f, ...strike(e, { damage: ASSAULT.damage, pierce: 1 }), heavy: true, at: { ...e.position } };
           hits.push(hit);
           struck.push(hit);
         }
@@ -2187,38 +2252,273 @@ function passesWithin(a, b, c, r) {
   return length(sub({ x: a.x + d.x * t, y: a.y + d.y * t, z: a.z + d.z * t }, c)) <= r;
 }
 
-return { BRAKE, PRISM, DECOY, SURGE, STILLNESS, REPLAY, ASSAULT, COMBO, COMBO_WINDOW, SUB_COOLDOWN, specialActive, attackBlocked, canSpecial, useSpecial, comboPressed, canCombo, useCombo, useSub, prismPoint, stepAbilities };
+return { BRAKE, PRISM, DECOY, SURGE, STILLNESS, REPLAY, ASSAULT, SPECIAL, specialActive, attackBlocked, remembered, pincer, brake, prism, prismPoint, decoy, surging, wave, ambush, waterWall, burst, barrage, veil, veiled, uncover, stillness, assault, canReplay, replay, stepAbilities };
+})();
+modules['familiars.mjs'] = (() => {
+// 使い魔（ユーザー指定 2026-10-28「使い魔召喚などで画面を派手にしたい」）。特殊で呼び、呼んだ魔法少女の周りを time 秒飛んで勝手に働く。描画は持たない。
+// 役（role）は提案：
+// - intercept：近づく相手の誘導弾（無ければ弾）を interval 秒ごとに1つ撃ち落とす。
+// - gunner：ロック中で見えている相手へ、自分の位置から bolt を interval 秒ごとに撃つ。
+// - guard：自分とロック中の相手の間に浮かび、相手の弾と誘導弾を hp だけ受ける盾（なくなると消える）。
+// - decoy：自分の周りを回る偽物（abilities.mjs のデコイと同じく、当たると消える）。呼んだ瞬間に、相手のロックと追ってくる誘導弾を引きつける。
+// 同じ魔法少女がもう一度呼ぶと、前の使い魔は消える。
+const { intercept: lead, makeBolt, setLock } = modules['combat.mjs'];
+
+const FAMILIAR = Object.freeze({
+  orbit: 3.2,    // 周りを回る半径（m）
+  spin: 1.6,     // 回る速さ（ラジアン/秒）
+  follow: 10,    // 回る所へ寄る速さ（1/秒）
+  guardGap: 4,   // 盾が自分から相手の側へ出る距離（m）
+  radius: 1.6,   // 盾に弾が当たる大きさ（m）
+  reach: 160,    // gunner が撃つ距離（m）
+});
+
+const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
+const length = v => Math.hypot(v.x, v.y, v.z);
+const unit = v => { const n = length(v) || 1; return { x: v.x / n, y: v.y / n, z: v.z / n }; };
+
+// 呼ぶ。arena は { familiars, decoys, missiles, fighters }。呼べれば true。
+function summon(f, move, arena) {
+  if (!arena.familiars) return false;
+  for (const x of arena.familiars) if (x.owner === f) x.alive = false;
+  for (const d of arena.decoys ?? []) if (d.owner === f && d.orbit) d.alive = false;
+  const made = [];
+  for (let i = 0; i < move.count; i++) {
+    const angle = i / move.count * Math.PI * 2;
+    const base = { owner: f, team: f.team, alive: true, role: move.role, move, angle, position: { ...f.position }, velocity: { x: 0, y: 0, z: 0 }, dashing: false };
+    if (move.role === 'decoy') {
+      // デコイと同じ物（ロックでき、当たると消える）。動きは周りを回る。
+      const d = { ...base, kind: 'decoy', hp: 1, hitRadius: 1.5, life: move.time, orbit: true };
+      arena.decoys?.push(d);
+      made.push(d);
+      continue;
+    }
+    arena.familiars.push({ ...base, kind: 'familiar', t: move.time, hp: move.hp ?? 1, hitRadius: FAMILIAR.radius, cooldown: (move.interval ?? 0) * i / move.count });
+  }
+  if (made.length) {
+    for (const e of arena.fighters ?? []) if (e !== f && e.lock?.target === f) setLock(e.lock, made[0]);
+    let k = 0;
+    for (const m of arena.missiles ?? []) if (m.alive && m.target === f) { m.target = made[k++ % made.length]; m.homing = true; }
+  }
+  return true;
+}
+
+// 周りを回る所（自分の位置から）。
+function orbitPoint(owner, angle, k = 1) {
+  const p = owner.position;
+  return { x: p.x + Math.cos(angle) * FAMILIAR.orbit * k, y: p.y + 0.8 + Math.sin(angle * 2) * 0.6, z: p.z + Math.sin(angle) * FAMILIAR.orbit * k };
+}
+
+function moveTo(x, want, dt) {
+  const k = 1 - Math.exp(-FAMILIAR.follow * dt), before = { ...x.position };
+  for (const axis of ['x', 'y', 'z']) x.position[axis] += (want[axis] - x.position[axis]) * k;
+  x.velocity = { x: (x.position.x - before.x) / dt, y: (x.position.y - before.y) / dt, z: (x.position.z - before.z) / dt };
+}
+
+// 1フレーム分。stepAbilities の後、弾を進める前に呼ぶ。arena は { familiars, decoys, bolts, missiles, sees }。出来事（描画用）を返す。
+function stepFamiliars(arena, dt) {
+  const events = [], list = arena.familiars ?? [];
+  // 回る偽物（デコイの役）。寿命と消え方は stepAbilities のデコイと同じ。
+  for (const d of arena.decoys ?? []) {
+    if (!d.orbit || !d.alive) continue;
+    d.angle += FAMILIAR.spin * dt;
+    moveTo(d, orbitPoint(d.owner, d.angle, 2.2), dt);
+  }
+  for (const x of list) {
+    if (!x.alive) continue;
+    const f = x.owner;
+    x.t -= dt;
+    if (x.t <= 0 || !f.alive) { x.alive = false; events.push({ kind: 'familiar-end', owner: f, at: { ...x.position } }); continue; }
+    x.angle += FAMILIAR.spin * dt;
+    const t = f.lock?.target && f.lock.visible && f.lock.target.alive ? f.lock.target : null;
+    if (x.role === 'guard') {
+      const d = t ? unit(sub(t.position, f.position)) : { x: Math.sin(f.state.yaw), y: 0, z: -Math.cos(f.state.yaw) };
+      moveTo(x, { x: f.position.x + d.x * FAMILIAR.guardGap, y: f.position.y + d.y * FAMILIAR.guardGap, z: f.position.z + d.z * FAMILIAR.guardGap }, dt);
+      continue;
+    }
+    moveTo(x, orbitPoint(f, x.angle), dt);
+    x.cooldown -= dt;
+    if (x.cooldown > 0) continue;
+    const move = x.move;
+    if (x.role === 'intercept') {
+      // 自分の近くの、相手の誘導弾を先に。無ければ自分へ向かってくる弾。
+      let best = null, bestD = move.range;
+      for (const m of arena.missiles ?? []) {
+        if (!m.alive || m.owner === f || m.frozen) continue;
+        const d = length(sub(m.position, f.position));
+        if (d < bestD) { best = m; bestD = d; }
+      }
+      if (!best) for (const b of arena.bolts ?? []) {
+        if (!b.alive || b.owner === f || !b.owner || b.frozen || b.mine) continue;
+        const to = sub(f.position, b.position), d = length(to);
+        if (d < bestD && to.x * b.velocity.x + to.y * b.velocity.y + to.z * b.velocity.z > 0) { best = b; bestD = d; }
+      }
+      if (!best) continue;
+      best.alive = false;
+      x.cooldown = move.interval;
+      events.push({ kind: 'intercept', owner: f, from: { ...x.position }, at: { ...best.position } });
+    } else if (x.role === 'gunner') {
+      if (!t || length(sub(t.position, x.position)) > FAMILIAR.reach || (arena.sees && !arena.sees(x.position, t.position)) || !arena.bolts) continue;
+      const bolt = makeBolt(x.position, unit(sub(lead(x.position, t.position, t.velocity ?? { x: 0, y: 0, z: 0 }, move.bolt.speed), x.position)), move.bolt, f);
+      bolt.target = t;
+      bolt.familiar = true;
+      arena.bolts.push(bolt);
+      x.cooldown = move.interval;
+      events.push({ kind: 'familiar-shot', owner: f, at: { ...x.position } });
+    }
+  }
+  for (let i = list.length - 1; i >= 0; i--) if (!list[i].alive) list.splice(i, 1);
+  return events;
+}
+
+// 弾と誘導弾が当たる使い魔（盾）。stepBolts・stepMissiles の目標に足す。
+const shields = arena => (arena.familiars ?? []).filter(x => x.alive && x.role === 'guard');
+
+return { FAMILIAR, summon, orbitPoint, stepFamiliars, shields };
+})();
+modules['moves.mjs'] = (() => {
+// 3つの入力（ユーザー指定 2026-10-28）：右クリックの弱攻撃・左クリックの強攻撃・両方押しの特殊攻撃。進む向き（characters.mjs の direction）で技が変わる。
+// 自分も Bot も同じ手順で、ボタンの押し下げ（controls.weak・controls.strong）からここで技を選ぶ。描画は持たない。
+// - 両方を WINDOW 秒以内に押すと特殊。右を押したまま左を押すのは強（同時押しではない）。
+// - 強は左を押した瞬間の向きで、WINDOW 秒待ってから出す（その間に右が来れば特殊）。強の待ち（strongT）は技ごとの cooldown で、どの向きの強も共通。
+// - 特殊は魔力のゲージ（arcana.charge、今までの大魔法のゲージ）を cost 使う。次の特殊までは SPECIAL_GAP 秒あける。
+// - 特殊を出した後は、右を一度離すまで弱を撃たない。
+const { shoot } = modules['combat.mjs'];
+const { ARCANA, startCast } = modules['arcana.mjs'];
+const { callMeteors } = modules['meteors.mjs'];
+const { scatter } = modules['missiles.mjs'];
+const { summon } = modules['familiars.mjs'];
+const { BRAKE, ambush, assault, barrage, brake, burst, canReplay, decoy, pincer, prism, replay, specialActive, stillness, surging, veil, wave, waterWall } = modules['abilities.mjs'];
+const { direction, moveOf } = modules['characters.mjs'];
+
+const WINDOW = 0.12;
+const SPECIAL_GAP = 1;
+
+// 1フレーム分のボタンを読む。返す物：weak（弱を撃つ）、weakPressed（右を押し直した瞬間）、strong（強を出す向き。出さなければ null）、special（特殊を出す向き）。
+function readButtons(f, controls, dt) {
+  const h = f.buttons ??= { weak: false, strong: false, weakAt: -Infinity, strongAt: -Infinity, pending: null, latch: false };
+  const weak = !!controls.weak, strong = !!controls.strong, dir = direction(controls.input);
+  const weakPressed = weak && !h.weak, strongPressed = strong && !h.strong;
+  if (weakPressed) h.weakAt = f.clock;
+  if (strongPressed) h.strongAt = f.clock;
+  h.weak = weak;
+  h.strong = strong;
+  if (!weak) h.latch = false;
+  const out = { weak: weak && !h.latch, weakPressed, strong: null, special: null };
+  if ((weakPressed || strongPressed) && weak && strong && Math.abs(h.weakAt - h.strongAt) <= WINDOW) {
+    h.pending = null;
+    h.latch = true;
+    out.weak = false;
+    out.special = dir;
+    return out;
+  }
+  if (strongPressed) h.pending = { at: f.clock, dir };
+  if (h.pending && f.clock - h.pending.at >= WINDOW - 1e-9) { out.strong = h.pending.dir; h.pending = null; }
+  return out;
+}
+
+const noop = () => true;
+
+// 強攻撃を出す。targets はロックできる相手、arena は試合で共有する物。出せば true。
+function useStrong(f, dir, targets, arena) {
+  const move = moveOf(f.character, 'strong', dir);
+  if (!move || f.strongT > 0 || !f.alive || f.state.downT > 0) return false;
+  let used;
+  switch (move.kind) {
+    case 'shot': used = !!arena.bolts && !!shoot(move, arena.bolts, f.state, f.lock, f, f.counterT > 0 ? BRAKE.power : 1); break;
+    case 'pincer': used = pincer(f, move, arena); break;
+    case 'brake': used = brake(f, targets, arena); break;
+    case 'prism': used = prism(f, move, arena); break;
+    case 'circus': used = !!arena.missiles && scatter(arena.missiles, f.state, f.lock, move.spec, f, randomOf(f)) > 0; break;
+    case 'decoy': used = decoy(f, arena); break;
+    case 'surge': used = surging(f, move, arena); break;
+    default: used = false;
+  }
+  if (!used) return false;
+  f.strongT = move.cooldown ?? 1;
+  f.strongMax = f.strongT;
+  f.moveEvent = { kind: 'strong', move, dir, owner: f, at: { ...f.position } };
+  return true;
+}
+
+// 特殊攻撃が出せるか（ゲージと、技ごとの条件）。
+function canSpecial(f, move) {
+  const a = f.arcana;
+  if (!move || !a || !f.alive || f.state.downT > 0 || a.castT > 0 || specialActive(f) || (f.specialT ?? 0) > 0) return false;
+  if (a.charge < Math.min(ARCANA.max, move.cost ?? ARCANA.max)) return false;
+  if (move.kind === 'replay') return canReplay(f);
+  return true;
+}
+
+// 特殊攻撃を出す。enemies は技が当たる相手。出せば true。
+function useSpecial(f, dir, enemies, arena) {
+  const move = specialOf(f, dir);
+  if (!canSpecial(f, move)) return false;
+  const used = ({
+    wave: () => wave(f, enemies, arena),
+    veil: () => veil(f, move, arena),
+    familiar: () => summon(f, move, arena),
+    stillness: () => stillness(f),
+    ambush: () => ambush(f, move, arena),
+    arcana: () => startCast(f),
+    replay: () => replay(f),
+    meteor: () => !!(arena.rains && callMeteors(f, arena.rains)),
+    circus: () => !!arena.missiles && scatter(arena.missiles, f.state, f.lock, move.spec, f, randomOf(f)) > 0,
+    barrage: () => barrage(f, move, arena, randomOf(f)),
+    wall: () => waterWall(f),
+    burst: () => burst(f, arena),
+    assault: () => assault(f),
+  }[move.kind] ?? noop)();
+  if (!used) return false;
+  // 大魔法と流星雨は、使った所でゲージを空にしている。
+  if (!['arcana', 'meteor'].includes(move.kind)) f.arcana.charge = Math.max(0, f.arcana.charge - move.cost);
+  f.specialT = SPECIAL_GAP;
+  if (move.kind === 'familiar') f.familiarT = move.time;
+  f.moveEvent = { kind: 'special', move, dir, owner: f, at: { ...f.position } };
+  return true;
+}
+
+const specialOf = (f, dir) => moveOf(f.character, 'special', dir);
+
+// 撒く向きのばらつき。試合の時刻から作るので、同じ試合はいつも同じになる。
+function randomOf(f) {
+  let seed = (Math.floor(f.clock * 997) * 16807 + 12345) % 2147483647 || 1;
+  return () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+}
+
+return { WINDOW, SPECIAL_GAP, readButtons, useStrong, canSpecial, useSpecial, specialOf };
 })();
 modules['melee.mjs'] = (() => {
 // 近接（ユーザー指定 2026-10-28「殴り掛かってステップかガードされなかったら通る、攻撃が被ると衝撃波が出て周囲弾をけしつつ攻撃相殺と離隔確保、ガード出来たらカウンター入れられる」）。描画は持たない。
 // ロック中の相手が近ければ、左クリック（押し直し）で少し構えて（光る）から、相手へ曲がりながら踏み込んで殴る。
 // - 相手がクイックブースト（ステップ）すると、踏み込みは曲がるのをやめて外れる。
-// - 相手が右クリックで受けていればガードされ、こちらははじかれて少し動けない。ガードした側はすぐ左でカウンター（必ずダウン）。
+// - 殴りかかられた側が、構えか踏み込みの間に右を押し直すと受け（parry、2026-10-28 の提案。右は弱攻撃なので押し直しで受ける）。
+//   受けた側は parryWindow 秒の間に届けばガードになり、こちらははじかれて少し動けない。ガードした側はすぐ左でカウンター（必ずダウン）。1回の殴りかかりに受けは1回。
 // - 2人が同時に殴りかかる（構えか踏み込みが重なる）と相殺：衝撃波で周りの弾と誘導弾を消し、2人を引き離す。
-// 自分も Bot も同じ決まり。数値はすべて提案。
+// 近接はシールドを貫く（貫通 1）。自分も Bot も同じ決まり。数値はすべて提案。
 const { surge } = modules['flight-model.mjs'];
-const { TARGET, hittable, warded } = modules['combat.mjs'];
+const { hittable, strike, warded } = modules['combat.mjs'];
 
 const MELEE = Object.freeze({
   range: 30,          // ロック中の相手がこの距離より近ければ、左クリックで殴りかかる（m）
   windup: 0.15,       // 殴りかかる前に構える秒（光って見える。ここで相手が気づける）
-  lungeSpeed: 110,    // 踏み込みの速さ（m/s）。いつもの速さ（72）より速く、クイックブースト（150）より遅い
-  lungeTime: 0.6,     // 踏み込む最長の秒。この間に届かなければ空振り
-  turn: 6,            // 踏み込みが相手へ曲がる速さ（ラジアン/秒）
+  lungeSpeed: 77,     // 踏み込みの速さ（m/s）。いつもの速さ（50）より速く、クイックブースト（105）より遅い
+  lungeTime: 0.85,    // 踏み込む最長の秒。この間に届かなければ空振り
+  turn: 5,            // 踏み込みが相手へ曲がる速さ（ラジアン/秒）
   reach: 3.5,         // この距離まで寄れば当たる（m）
   damage: 30,
   stagger: 30,
-  knock: 60,          // 当たった相手を押し出す速さ（m/s）
+  knock: 42,          // 当たった相手を押し出す速さ（m/s）
   whiff: 0.5,         // 空振りした後、動けない秒
   recoil: 0.7,        // ガードではじかれた後、動けない秒（この間にカウンターが入る）
-  guardCost: 20,      // ガードで受けると補助のゲージが減る
+  parryWindow: 0.35,  // 右を押し直してから、受けられる秒
   counterWindow: 0.7, // ガードしてからカウンターを出せる秒
   counterReach: 20,   // カウンターが届く距離（m）
-  counterSpeed: 200,  // カウンターの踏み込みの速さ（m/s）
+  counterSpeed: 140,  // カウンターの踏み込みの速さ（m/s）
   counterDamage: 40,  // カウンターは必ずダウンさせる
   clashRadius: 30,    // 相殺の衝撃波：この半径の弾・誘導弾を消す（m）
-  clashPush: 110,     // 相殺で2人を引き離す速さ（m/s）
-  clashPushTime: 0.35,
+  clashPush: 77,      // 相殺で2人を引き離す速さ（m/s）
+  clashPushTime: 0.5,
   cooldown: 0.9,      // 次に殴りかかれるまでの秒
 });
 
@@ -2226,8 +2526,22 @@ const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
 const length = v => Math.hypot(v.x, v.y, v.z);
 const unit = v => { const n = length(v) || 1; return { x: v.x / n, y: v.y / n, z: v.z / n }; };
 
-// 殴りを受け止められる補助（全方位の膜・硬い膜・零速の膜）を張っているか。光学迷彩と位相潜行は受けない（迷彩はロックされず、潜行はすり抜ける）。
-const meleeGuard = t => !!t.shield?.active && ['shield', 'still'].includes(t.shield.spec?.kind ?? 'shield');
+// 受けている（右を押し直したばかり）か。
+const meleeGuard = t => (t.parryT ?? 0) > 0;
+
+// 自分へ殴りかかってきている相手（構えか踏み込み、カウンターは除く）。
+const lungingAt = (a, b) => ['windup', 'lunge'].includes(a.melee?.phase) && a.melee.target === b && !a.melee.counter;
+
+// 右を押し直した瞬間（stepFighter から）。殴りかかってきている相手がいて、その殴りかかりにまだ受けていなければ受ける。受ければ true。
+function parry(f, pressed, foes, dt) {
+  f.parryT = Math.max(0, (f.parryT ?? 0) - dt);
+  if (!pressed || f.melee || f.state.downT > 0) return false;
+  const a = foes.find(g => lungingAt(g, f) && !g.melee.tried);
+  if (!a) return false;
+  a.melee.tried = true;
+  f.parryT = MELEE.parryWindow;
+  return true;
+}
 
 // 近接の最中（構え・踏み込み・空振り・はじかれ）か。最中は移動と射撃の入力を受けない。
 const inMelee = f => !!f.melee;
@@ -2239,12 +2553,9 @@ function meleeTarget(f) {
   return length(sub(t.position, f.position)) < MELEE.range ? t : null;
 }
 
-// 左クリックを見る（stepFighter から、移動の前に）。押し直した瞬間に、カウンターか殴りかかりを始める。
-// blocked は撃てない状態（詠唱・潜行など）、holding は張ったまま撃てない補助を張っているか（カウンターだけは張ったまま出せる）。
-// 近接を始めたか、近接の最中なら true（そのフレームは撃たない）。
-function startMelee(f, fire, blocked, holding) {
-  const pressed = !!fire && !f.fireWas;
-  f.fireWas = !!fire;
+// 左（強）の押した瞬間を見る（stepFighter から、移動の前に）。カウンターか殴りかかりを始める。
+// blocked は撃てない状態（詠唱・潜行など）。近接を始めたか、近接の最中なら true（そのフレームは強攻撃を出さない）。
+function startMelee(f, pressed, blocked) {
   if (f.melee) return true;
   if (!pressed || blocked || f.state.downT > 0) return false;
   const foe = f.meleeCounterT > 0 ? f.meleeCounterTarget : null;
@@ -2254,7 +2565,7 @@ function startMelee(f, fire, blocked, holding) {
     return true;
   }
   const t = meleeTarget(f);
-  if (!t || holding || f.meleeCooldown > 0) return false;
+  if (!t || f.meleeCooldown > 0) return false;
   f.melee = { phase: 'windup', t: MELEE.windup, target: t, homing: true, counter: false, dir: null };
   return true;
 }
@@ -2267,7 +2578,9 @@ function driveMelee(f, dt) {
   let dir = m.dir ?? (s.dashT > 0 && s.dashSpeed ? s.dashDir : unit(sub(m.target.position, s.position)));
   if (m.homing && m.target.alive) {
     const want = unit(sub(m.target.position, s.position)), c = Math.max(-1, Math.min(1, dir.x * want.x + dir.y * want.y + dir.z * want.z));
-    const angle = Math.acos(c), turn = Math.min(angle, MELEE.turn * dt);
+    // 寄り切る所（reach の 3 倍）まで来たら、まっすぐ相手へ（回りこまれて届かないことがないように）。
+    const close = length(sub(m.target.position, s.position)) < MELEE.reach * 3;
+    const angle = Math.acos(c), turn = close ? angle : Math.min(angle, MELEE.turn * dt);
     if (angle > 1e-6) {
       const side = unit({ x: want.x - dir.x * c, y: want.y - dir.y * c, z: want.z - dir.z * c }), cos = Math.cos(turn), sin = Math.sin(turn);
       dir = { x: dir.x * cos + side.x * sin, y: dir.y * cos + side.y * sin, z: dir.z * cos + side.z * sin };
@@ -2289,7 +2602,7 @@ function stepMelee(fighters, arena, dt) {
     f.meleeCooldown = Math.max(0, (f.meleeCooldown ?? 0) - dt);
     f.meleeCounterT = Math.max(0, (f.meleeCounterT ?? 0) - dt);
   }
-  const attacking = (a, b) => ['windup', 'lunge'].includes(a.melee?.phase) && a.melee.target === b && !a.melee.counter;
+  const attacking = lungingAt;
   for (const f of fighters) {
     const m = f.melee;
     if (!m) continue;
@@ -2326,8 +2639,7 @@ function stepMelee(fighters, arena, dt) {
       if (warded(t)) { f.melee = { phase: 'whiff', t: MELEE.whiff }; f.meleeCooldown = MELEE.cooldown; hits.push({ kind: 'shield', target: t, owner: f, at }); continue; }
       if (!m.counter && meleeGuard(t)) {
         // ガード：はじかれて動けない。受けた側は少しの間カウンターを出せる。
-        t.shield.charge = Math.max(0, t.shield.charge - MELEE.guardCost);
-        if (t.shield.charge <= 0) Object.assign(t.shield, { broken: true, active: false });
+        t.parryT = 0;
         f.melee = { phase: 'recoil', t: MELEE.recoil };
         f.meleeCooldown = MELEE.recoil + MELEE.cooldown;
         halt(f);
@@ -2340,13 +2652,10 @@ function stepMelee(fighters, arena, dt) {
       f.meleeCooldown = MELEE.cooldown;
       halt(f);
       if (t.kind === 'decoy') { t.alive = false; hits.push({ kind: 'decoy', target: t, owner: f, at }); continue; }
-      const damage = m.counter ? MELEE.counterDamage : MELEE.damage;
-      t.hp -= damage;
-      const destroyed = t.hp <= 0;
-      if (destroyed) { t.hp = 0; t.alive = false; t.respawnT = t.respawn ?? TARGET.respawn; }
+      const r = strike(t, { damage: m.counter ? MELEE.counterDamage : MELEE.damage, stagger: MELEE.stagger, pierce: 1 });
       // 当たった相手を、踏み込んだ向きへ押し出す。
-      if (t.state && !destroyed) { t.melee = null; surge(t.state, sub(t.position, f.position), MELEE.knock, 0.25); }
-      hits.push({ kind: 'target', target: t, owner: f, destroyed, stagger: MELEE.stagger, heavy: m.counter, melee: true, at });
+      if (t.state && !r.destroyed) { t.melee = null; surge(t.state, sub(t.position, f.position), MELEE.knock, 0.25); }
+      hits.push({ kind: 'target', target: t, owner: f, ...r, heavy: m.counter, melee: true, at });
       events.push({ kind: m.counter ? 'counter' : 'hit', at, owner: f, foe: t });
       continue;
     }
@@ -2359,18 +2668,18 @@ function stepMelee(fighters, arena, dt) {
   return { hits, events };
 }
 
-return { MELEE, meleeGuard, inMelee, meleeTarget, startMelee, driveMelee, stepMelee };
+return { MELEE, meleeGuard, lungingAt, parry, inMelee, meleeTarget, startMelee, driveMelee, stepMelee };
 })();
 modules['duel.mjs'] = (() => {
 // 1vs1 の試合：魔法少女（自分と敵）の体力・撃墜・復帰と、勝ち負け。描画は持たない。
-// 魔法少女は飛び方（flight-model）・ロックオン・魔法弾・シールド（combat）を同じ物で持ち、Bot も同じ決まりで動く。
+// 魔法少女は飛び方（flight-model）・ロックオン・魔法弾・シールド（combat）・技（moves）を同じ物で持ち、Bot も同じ決まりで動く。
 const { SETTINGS: FLIGHT, createFlightState, knockDown, stepFlight, surge, wishDirection } = modules['flight-model.mjs'];
-const { LOCK, createLock, createShield, createWeapon, fire, guardHolds, releaseLock, stepShield, trackLock, updateLock } = modules['combat.mjs'];
+const { LOCK, createLock, createShield, createWeapon, fire, releaseLock, stepShield, trackLock, updateLock } = modules['combat.mjs'];
 const { ARCANA, casting, createArcana, stepArcana } = modules['arcana.mjs'];
-const { createLauncher, launch } = modules['missiles.mjs'];
-const { ASSAULT, BRAKE, COMBO, REPLAY, attackBlocked, comboPressed, useCombo, useSpecial, useSub } = modules['abilities.mjs'];
-const { CHARACTERS, DASH_FORM_TIME, stance } = modules['characters.mjs'];
-const { driveMelee, startMelee } = modules['melee.mjs'];
+const { ASSAULT, BRAKE, REPLAY, SPECIAL, attackBlocked, uncover, veiled } = modules['abilities.mjs'];
+const { CHARACTERS, direction, moveOf } = modules['characters.mjs'];
+const { driveMelee, parry, startMelee } = modules['melee.mjs'];
+const { readButtons, useSpecial, useStrong } = modules['moves.mjs'];
 
 const FIGHTER = Object.freeze({
   hp: 250,          // 魔法弾 25 発で撃墜
@@ -2388,24 +2697,22 @@ const DUEL = Object.freeze({
   ready: 2,   // 始まるまでの秒（その間は動けない）
 });
 
-// character はキャラの id（characters.mjs）。能力（主武器・補助・副武器・特別）はキャラで決まる。
-// 省くと、連射弾・全方位の膜・誘導弾の群れ・大魔法の基本の組み合わせ（試験用）。special を渡すと特別の枠だけ替える。
-function createFighter({ name, start, team, character = null, special = null }) {
-  const c = character ? CHARACTERS[character] : null;
-  const maxHp = c?.hp ?? FIGHTER.hp;
+// character はキャラの id（characters.mjs）。技と体力・シールドはキャラで決まる。省くと試験用の基本の組み合わせ（basic）。
+function createFighter({ name, start, team, character = null }) {
+  const c = CHARACTERS[character ?? 'basic'];
+  const maxHp = c.hp ?? FIGHTER.hp;
   const fighter = {
-    name: name ?? c?.name, start, team, character: c?.id ?? null, special: special ?? c?.special ?? 'arcana', sub: c?.sub ?? 'missiles', combo: c?.combo ?? null,
-    // 主武器（前）と、横・後ろへ動きながら撃つときの撃ち方。weapon.spec は今の動きの撃ち方に替わる。
-    main: c?.main ?? null, forms: c?.forms ?? null, form: 'front', dashFormT: 0,
-    kind: 'fighter', hitRadius: FIGHTER.radius, respawn: FIGHTER.respawn, maxHp, pace: c?.pace ?? 1,
-    state: createFlightState(start), lock: createLock(c?.lockRange ?? LOCK.range), weapon: createWeapon(c?.main), shield: createShield(c?.guard), arcana: createArcana(), launcher: createLauncher(),
+    name: name ?? c.name, start, team, character: c.id, dir: 'still',
+    kind: 'fighter', hitRadius: FIGHTER.radius, respawn: FIGHTER.respawn, maxHp, pace: c.pace ?? 1,
+    state: createFlightState(start), lock: createLock(c.lockRange ?? LOCK.range), weapon: createWeapon(moveOf(c.id, 'weak', 'front')), shield: createShield(c.shield), arcana: createArcana(),
     hp: maxHp, alive: true, respawnT: 0, guardT: 0, stagger: 0, staggerT: 0, kills: 0,
-    // 能力の状態（abilities.mjs）。
-    clock: 0, phased: false, cloaked: false, recoverT: 0, counterT: 0, stillT: 0, assaultT: 0, assaultEnd: false, replay: [], replayT: 0, echoes: [], lockMemory: null, lastInput: null,
-    // 合わせ技（右と左の同時押し）。
-    held: null, comboT: 0, comboEvent: null, mirroring: false, wall: null, slowT: 0,
+    // 強攻撃と特殊攻撃の待ち（moves.mjs）と、ボタンの押し下げ。
+    strongT: 0, strongMax: 1, specialT: 0, buttons: null, moveEvent: null,
+    // 技の状態（abilities.mjs）。echoing は残響の再生のために撃った場所を覚えるか。
+    clock: 0, phased: false, cloaked: false, mirroring: false, veil: null, recoverT: 0, counterT: 0, stillT: 0, assaultT: 0, assaultEnd: false, replay: [], replayT: 0, echoes: [], lockMemory: null, lastInput: null,
+    echoing: Object.values(c.moves.special ?? {}).some(m => m.kind === 'replay'), wall: null, slowT: 0,
     // 近接（melee.mjs）。
-    melee: null, meleeCooldown: 0, meleeCounterT: 0, meleeCounterTarget: null, fireWas: false,
+    melee: null, meleeCooldown: 0, meleeCounterT: 0, meleeCounterTarget: null, parryT: 0,
     // ロックオンと弾は目標の position・velocity・dashing を読む。
     get position() { return this.state.position; },
     get velocity() { return this.state.velocity; },
@@ -2414,9 +2721,9 @@ function createFighter({ name, start, team, character = null, special = null }) 
   return fighter;
 }
 
-// キャラを替える（開始画面で選んだとき）。名前・基地・撃墜数はそのまま、能力と体力は新しいキャラの物にする。
-function equip(fighter, character, special = null) {
-  const fresh = createFighter({ name: fighter.name, start: fighter.start, team: fighter.team, character, special });
+// キャラを替える（開始画面で選んだとき）。名前・基地・撃墜数はそのまま、技と体力は新しいキャラの物にする。
+function equip(fighter, character) {
+  const fresh = createFighter({ name: fighter.name, start: fighter.start, team: fighter.team, character });
   for (const [key, d] of Object.entries(Object.getOwnPropertyDescriptors(fresh))) if (!d.get && !['name', 'kills'].includes(key)) fighter[key] = fresh[key];
   return fighter;
 }
@@ -2424,74 +2731,73 @@ function equip(fighter, character, special = null) {
 // 基地の上空へ戻す。体力・ゲージ・シールドは満タン、ロックは外す。
 function respawn(fighter, guard = FIGHTER.guard) {
   Object.assign(fighter, { state: createFlightState(fighter.start), hp: fighter.maxHp ?? FIGHTER.hp, alive: true, respawnT: 0, guardT: guard, stagger: 0, staggerT: 0,
-    phased: false, cloaked: false, recoverT: 0, counterT: 0, stillT: 0, assaultT: 0, assaultEnd: false, replay: [], echoes: [], lockMemory: null, mirroring: false, wall: null, slowT: 0,
-    melee: null, meleeCooldown: 0, meleeCounterT: 0, meleeCounterTarget: null });
-  Object.assign(fighter.shield, createShield(fighter.shield.spec));
-  // 大魔法のゲージは撃墜されても残す（詠唱は途切れる）。
+    phased: false, cloaked: false, mirroring: false, veil: null, recoverT: 0, counterT: 0, stillT: 0, assaultT: 0, assaultEnd: false, replay: [], echoes: [], lockMemory: null, wall: null, slowT: 0,
+    melee: null, meleeCooldown: 0, meleeCounterT: 0, meleeCounterTarget: null, parryT: 0, strongT: 0, specialT: 0 });
+  fighter.shield = createShield(fighter.shield.max);
+  // 魔力のゲージは撃墜されても残す（詠唱は途切れる）。
   fighter.arcana.castT = 0;
   fighter.weapon.cooldown = 0;
-  fighter.launcher.cooldown = 0;
   releaseLock(fighter.lock);
 }
 
-// 1フレーム分、魔法少女を動かす。自分も Bot も同じ手順：特別 → ロック → 視点の追従 → 補助 → 近接 → 飛行 → 合わせ技 → 副武器 → 射撃。
-// controls は { input（WASD などの移動）, cycle（Q）, fire（左クリック）, shield（右クリック、補助）, missile（F を押した瞬間、副武器）, arcana（E を押した瞬間、特別の枠）}。
+// 位相潜行が解けてから撃てない秒。
+const PHASE_RECOVER = 0.5;
+
+// 1フレーム分、魔法少女を動かす。自分も Bot も同じ手順：ボタン → ロック → 特殊 → 受け → 近接 → 飛行 → 強 → 弱。
+// controls は { input（WASD などの移動）, cycle（Q）, weak（右クリック、押している間）, strong（左クリック、押している間）}。特殊は両方の同時押し（moves.mjs）。
 // world は stepFlight に渡す空域、sees(a, b) は街に遮られていないか。撃った弾を返す。missiles は誘導弾、rains は流星雨を入れる配列。
-// arena は試合で共有する物（abilities.mjs）：デコイ・プリズム・街の線の判定など。
-// 大魔法の詠唱中はその場に浮いて止まり、移動・射撃・補助・副武器の入力を受けない（視点とロックは動く）。撃てない補助を張っている間は誘導弾も撃てない。
-// 位相潜行と潜行強襲の間は建物をすり抜ける（建物の中では解けない）。
+// arena は試合で共有する物（abilities.mjs）：デコイ・使い魔・プリズム・街の線の判定など。
+// 大魔法の詠唱中はその場に浮いて止まり、移動とボタンを受けない（視点とロックは動く）。
+// 位相潜行と潜行強襲の間は建物をすり抜け、撃てない（建物の中では解けない）。
 function stepFighter(fighter, controls, dt, world, targets, bolts, sees, missiles = null, rains = null, arena = {}) {
   if (!fighter.alive) return null;
   fighter.clock += dt;
   const field = { bolts, missiles, rains, sees, free: world?.free, ...arena };
-  if (controls.arcana) useSpecial(fighter, field);
+  stepShield(fighter.shield, dt);
+  fighter.strongT = Math.max(0, fighter.strongT - dt);
+  fighter.specialT = Math.max(0, fighter.specialT - dt);
+  fighter.familiarT = Math.max(0, (fighter.familiarT ?? 0) - dt);
   const still = casting(fighter);
   let input = still ? {} : controls.input || {};
+  const buttons = readButtons(fighter, still ? { input } : controls, dt);
   updateLock(fighter.lock, fighter.state, targets, { cycle: !!controls.cycle }, dt, sees);
   trackLock(fighter.lock, fighter.state, dt);
   if (fighter.lock.target && fighter.lock.visible) fighter.lockMemory = { target: fighter.lock.target, t: fighter.clock };
-  const kind = fighter.shield.spec?.kind;
-  stepShield(fighter.shield, !still && controls.shield && !(kind === 'phase' && fighter.recoverT > 0), fighter.state, dt);
+  if (buttons.special && !fighter.melee) useSpecial(fighter, buttons.special, targets, field);
   const wasPhased = fighter.phased;
   const inside = wasPhased && world?.free && !world.free(fighter.state.position, FLIGHT.radius * 0.9);
-  fighter.phased = (kind === 'phase' && fighter.shield.active) || fighter.assaultT > 0 || !!inside;
+  fighter.phased = veiled(fighter, 'phase') || fighter.assaultT > 0 || !!inside;
   const air = fighter.phased ? { ...world, collide: null, free: null } : world;
-  // 近接：ロック中の相手が近いときに左を押し直すと殴りかかる。最中は移動と射撃の入力を受けない（踏み込みで進む）。
-  const meleeFire = startMelee(fighter, !still && controls.fire, attackBlocked(fighter), guardHolds(fighter.shield));
+  // 受け：殴りかかられている間に右を押し直す。近接：ロック中の相手が近いときの強（左）は殴りかかりになる。最中は移動と射撃の入力を受けない（踏み込みで進む）。
+  parry(fighter, buttons.weakPressed, (field.fighters ?? targets).filter(g => g !== fighter && g.kind === 'fighter'), dt);
+  const blocked = attackBlocked(fighter);
+  let strong = buttons.strong;
+  if (startMelee(fighter, !!strong, blocked)) strong = null;
   if (fighter.melee) { input = {}; driveMelee(fighter, dt); }
   fighter.lastInput = input;
-  // 潜行強襲の間は、進みたい向きへブーストより速く進む（ゲージは使わない）。
+  // 潜行強襲の間は、進みたい向きへいつもより速く進む（ゲージは使わない）。
   if (fighter.assaultT > 0 && (input.forward || input.back || input.left || input.right || input.up || input.down)) surge(fighter.state, wishDirection(fighter.state, input), ASSAULT.speed, 0.1);
   // 零速の波を受けている間は遅くなる。pace はキャラの飛ぶ速さの倍率（チュートリアルのボスは遅い）。
-  const slow = (fighter.slowT > 0 ? COMBO.wave.slow : 1) * fighter.pace;
+  const slow = (fighter.slowT > 0 ? SPECIAL.wave.slow : 1) * fighter.pace;
   const slowed = slow < 1 ? { ...air, slow } : air;
   stepFlight(fighter.state, input, dt, still ? { ...slowed, sink: 0 } : slowed);
-  if (wasPhased && !fighter.phased) fighter.recoverT = fighter.shield.spec?.recover ?? 0;
-  // 合わせ技（右と左の同時押し）。詠唱中は出せない。
-  const both = !still && !!controls.fire && !!controls.shield;
-  // 近接に使った押し下げでは出さない（ガードからのカウンターは右を押したまま左を押す）。
-  const pressed = comboPressed(fighter, still ? {} : controls);
-  useCombo(fighter, pressed && !meleeFire, both && !meleeFire, targets, { ...field, dt });
-  const blocked = attackBlocked(fighter) || guardHolds(fighter.shield) || meleeFire;
-  if (fighter.sub === 'missiles') { if (missiles) launch(fighter.launcher, missiles, fighter.state, fighter.lock, !still && controls.missile, dt, fighter, blocked); }
-  else useSub(fighter, !still && controls.missile, dt, targets, field);
-  // 動きで撃ち方を替える（前・横・後ろ・止まる・踏み込み）。
-  // 前（機首の向き）へのクイックブースト中と、その後 DASH_FORM_TIME 秒は踏み込みの撃ち方。
-  const st = fighter.state, n = { x: Math.sin(st.yaw), z: -Math.cos(st.yaw) };
-  if (st.drive === 'dash' && st.dashDir.x * n.x + st.dashDir.z * n.z > 0.6) fighter.dashFormT = DASH_FORM_TIME;
-  else fighter.dashFormT = Math.max(0, fighter.dashFormT - dt);
-  fighter.form = stance(input, fighter.dashFormT > 0);
-  if (fighter.main) fighter.weapon.spec = fighter.forms?.[fighter.form] ?? fighter.main;
-  const bolt = fire(fighter.weapon, bolts, fighter.state, fighter.lock, !blocked && controls.fire, dt, fighter.shield, fighter, fighter.counterT > 0 ? BRAKE.power : 1);
+  if (wasPhased && !fighter.phased) fighter.recoverT = PHASE_RECOVER;
+  fighter.dir = direction(input);
+  // 強攻撃（押した瞬間の向き）と弱攻撃（今の向き）。撃つと光学迷彩は解ける。
+  if (strong && !blocked && useStrong(fighter, strong, targets, field)) uncover(fighter);
+  fighter.weapon.spec = moveOf(fighter.character, 'weak', fighter.dir);
+  const bolt = fire(fighter.weapon, bolts, fighter.state, fighter.lock, !blocked && !fighter.melee && buttons.weak, dt, fighter, fighter.counterT > 0 ? BRAKE.power : 1);
+  if (bolt) uncover(fighter);
   // 残響の再生のために、撃った場所を覚えておく。
-  if (bolt && fighter.special === 'replay') {
+  if (bolt && fighter.echoing) {
     fighter.echoes.push({ from: { ...bolt.position }, t: fighter.clock });
     while (fighter.echoes.length && fighter.clock - fighter.echoes[0].t > REPLAY.window) fighter.echoes.shift();
   }
   return bolt;
 }
 
-// stepBolts・stepMissiles と大魔法の当たりを試合に入れる：魔法少女はよろけ、たまるとダウンする（大魔法の詠唱中はよろけない）。大魔法（heavy）は必ずダウンさせる。
+// stepBolts・stepMissiles と大技の当たりを試合に入れる：魔法少女はよろけ、たまるとダウンする（大魔法の詠唱中はよろけない）。大技（heavy）は必ずダウンさせる。
+// よろけはシールドを抜けた分だけ（strike が減らした値）。
 // 撃墜は撃った側の点。魔法弾を当てた側・受けた側とも、大魔法のゲージがたまる。
 function applyHits(hits) {
   for (const hit of hits) {
@@ -2560,20 +2866,22 @@ function stepDuel(duel, fighters, dt) {
   }
 }
 
-return { FIGHTER, DUEL, createFighter, equip, respawn, stepFighter, applyHits, stepArcanas, stepFighters, createDuel, stepDuel };
+return { FIGHTER, DUEL, createFighter, equip, respawn, PHASE_RECOVER, stepFighter, applyHits, stepArcanas, stepFighters, createDuel, stepDuel };
 })();
 modules['rival.mjs'] = (() => {
 // 敵の魔法少女の Bot。プレイヤーと同じ決まりで動く：出せるのはキー入力（WASD・Space・Ctrl・Shift）、
-// 視点の向き（マウスと同じく回せる速さに上限）、撃つ・補助（右クリック）・副武器（F）・特別（E）のボタンだけ。
-// ロックオン・弾・ゲージ・ダウンは自分と同じ物（combat・flight-model）を使う。キャラの能力（characters.mjs）ごとに使い方を変える。
+// 視点の向き（マウスと同じく回せる速さに上限）、弱（右クリック）・強（左クリック）のボタンと、その同時押し（特殊）だけ。
+// 強と特殊は向き（前・横・後ろ・静止）で技が変わるので、出す瞬間だけ WASD をその向きにする（moves.mjs）。
+// ロックオン・弾・ゲージ・ダウンは自分と同じ物（combat・flight-model）を使う。キャラの技（characters.mjs）ごとに、使える場面かを見て選ぶ。
 // 相手が光学迷彩で消えている間は、最後に見えた所を追う（見えない相手の位置は使わない）。
-const { BOLT, anglesTo } = modules['combat.mjs'];
+const { anglesTo } = modules['combat.mjs'];
 const { SETTINGS: FLIGHT, kickNormal } = modules['flight-model.mjs'];
 const { ARCANA, casting } = modules['arcana.mjs'];
 const { METEOR, skyOf } = modules['meteors.mjs'];
-const { ASSAULT, COMBO, PRISM, STILLNESS, canCombo, canSpecial } = modules['abilities.mjs'];
-const { CHARACTERS } = modules['characters.mjs'];
+const { ASSAULT, PRISM, SPECIAL, STILLNESS, canReplay, veiled } = modules['abilities.mjs'];
+const { CHARACTERS, DIRECTIONS, direction, moveOf } = modules['characters.mjs'];
 const { MELEE, meleeTarget } = modules['melee.mjs'];
+const { WINDOW, canSpecial, specialOf } = modules['moves.mjs'];
 
 const RIVAL = Object.freeze({
   turnRate: 2.4,       // 視点を回す速さの上限（ラジアン/秒）
@@ -2590,18 +2898,12 @@ const RIVAL = Object.freeze({
   floorMargin: 9,      // 地面・屋根からこれだけ離れていたい（m）。沈んだり急降下したりすれば蹴れる近さ（壁蹴り 6m）まで降りる
   danger: 70,          // この距離までの相手の弾を避ける（m）
   boltReact: 0.2,      // 撃たれてからこの秒たった弾にだけ気づく（人と同じく、速い弾は見てから避けられない）
-  dodgeChance: 0.4,    // 迫る弾を見つけたとき、クイックブーストで避ける割合
-  shieldChance: 0.35,  // 避けなかったとき、シールドで受ける割合
+  dodgeChance: 0.45,   // 迫る弾を見つけたとき、クイックブーストで避ける割合
   dodgeCooldown: 1.0,  // 避けてから次に避けるまでの秒
   dodgeBoost: 250,     // ゲージがこれ以上ないとクイックブーストで避けない
-  shieldTime: 0.7,     // 避けられないときにシールドを張る秒
-  shieldCharge: 35,    // シールドがこれ以上残っていれば張る
   lookAhead: 0.8,      // この秒だけ先の道に建物があれば昇って避ける
   castRange: 200,      // 大魔法は、ロック中の相手が castMin〜castRange にいれば使う（m）
   castMin: 60,         // 近すぎると隠れる前に寄られるので、少し下がってから使う
-  castDelay: [0.5, 2.5], // ゲージが満タンになってから使うまでの秒（この間で選ぶ）
-  missileRange: [12, 140], // 誘導弾は、ロック中の相手がこの距離にいれば撃つ（m。翠は近くで戦うので短くまで）
-  missileWait: [0.5, 3],   // 撃てるようになってから撃つまでの秒
   missileDodge: 40,    // 自分を追う誘導弾がこの距離まで来たら、クイックブーストで横へ避ける（m）
   coverPerFrame: 40,   // 隠れる場所の候補を 1フレームに試す数
   stillThreat: 3,      // 三秒間の静止：迫る相手の弾がこれだけあれば使う
@@ -2609,28 +2911,25 @@ const RIVAL = Object.freeze({
   brakeRange: 35,      // 急制動：相手がこの距離より近く、迫ってくるか後ろへ回ったら使う（m）
   brakeClosing: 20,    // 迫ってくる速さ（m/s）
   brakeTurn: 80,       // 相手がこの距離より近くで後ろの方へ回ったら、止まって向き直る（m）
-  brakeSpeed: 70,      // これより速く飛んでいて、捕捉した相手が近ければ止まって撃ち返す（m/s）
-  phaseGauge: 60,      // 位相潜行で建物を抜けるのは、ゲージがこれ以上あるとき
-  cloakTime: 1.5,      // 光学迷彩で消える秒
-  cloakChance: 0.5,    // 捕捉されて弾が迫るとき、消える割合
-  stillGuardChance: 0.6, // 零速の膜で受ける割合（張ったまま撃てる）
+  brakeSpeed: 49,      // これより速く飛んでいて、捕捉した相手が近ければ止まって撃ち返す（m/s）
   react: [0.3, 0.9],   // 相手の詠唱に気づいて動き出すまでの秒（この間で選ぶ）
   homingCover: 2,      // これより強く曲がる相手の弾（ラジアン/秒）に追われたら、ビルの陰へ回って切る
   homingCoverTime: 1.5, // 陰へ向かう秒
-  comboChance: 1.5,    // 合わせ技を使える形になったとき、毎秒これだけの割合で使う
-  mirrorChance: 0.5,   // 迫る弾を見つけたとき、反射の膜で跳ね返す割合（透子）
-  mirrorEarly: 0.15,   // 捕捉されて弾を撃たれたとき、まだ気づく前でも毎フレームこの割合で反射の膜を張る（透子）
   kickDodgeChance: 0.8, // 近くに蹴れる面があるとき、迫る弾をクイックブーストで避ける割合（ゲージを使わない）
   holdChance: 0.25,    // 回り込む向きを選び直すとき、止まって撃つ（止まり撃ちの弾）割合
-  lungeChance: 0.5,    // 捕捉して届く距離にいるとき、毎秒これだけの割合で前へ踏み込んで撃つ（踏み込みの弾）
-  lungeBoost: 450,     // 蹴れる面が無いとき、ゲージがこれ以上あれば踏み込む
   wallSeek: 0.7,       // 回り込む向きを選び直すとき、近くにビルの壁がある側を選ぶ割合（壁を蹴って避けられるように）
   wallProbe: 14,       // 左右のこの距離（m）先に壁があるかを見る
   kickHop: 1.5,        // 蹴れる面のそばで、弾が来ていなくても毎秒これだけの割合で横へ蹴る
+  // 強と特殊（moves.mjs）。
+  strongChance: 1.2,   // 強が出せて使える場面のとき、毎秒これだけの割合で出す
+  specialChance: 0.9,  // 特殊が出せて使える場面のとき、毎秒これだけの割合で出す
+  saveChance: 0.45,    // ゲージが減ったとき、大きな技（cost 100）のためにためる割合
+  mineRange: 35,       // 機雷（その場に残る弾）は、相手がこれより近いときに置く（m）
+  meleeShy: 0.15,      // 殴りかかれる近さで、殴らずに強（向きの技）を出す割合（毎秒）
   // 近接（melee.mjs）。
   meleeChance: 0.6,    // 殴りかかれる近さで、毎秒これだけの割合で殴りかかる
   meleeReact: [0.15, 0.4], // 相手が構えてから気づくまでの秒（この間で選ぶ）。近くから殴られると間に合わない
-  meleeGuard: 0.3,     // 殴りかかられたとき、補助で受ける割合（受けられる補助のとき）
+  meleeGuard: 0.3,     // 殴りかかられたとき、右の押し直しで受ける割合
   meleeStep: 0.3,      // クイックブーストで横へ外す割合
   meleeClash: 0.15,    // 殴り返して相殺する割合。残りは何もできずに殴られる
   meleeCounter: 0.85,  // ガードできたとき、カウンターを入れる割合
@@ -2684,7 +2983,8 @@ function keysToward(state, d, input) {
 }
 
 function createRival(random = Math.random) {
-  return { random, meleeReact: -1, meleeAnswer: null, meleePress: false, counterT: -1, strafe: 1, strafeT: 1, height: 5, castWait: -1, missileWait: -1, cover: null, search: null, reactT: -1, rainCover: null, rainSearch: null, burstT: RIVAL.burst, resting: false, combo: false, dodgeT: 0, dashFrames: 0, shieldT: 0, boltCover: null, boltSearch: null, boltCoverT: 0, ghost: null, passing: false, assaultReact: -1 };
+  return { random, meleeReact: -1, meleeAnswer: null, counterT: -1, strafe: 1, strafeT: 1, height: 5, cover: null, search: null, reactT: -1, rainCover: null, rainSearch: null, burstT: RIVAL.burst, resting: false, dodgeT: 0, dashFrames: 0, boltCover: null, boltSearch: null, boltCoverT: 0, ghost: null, assaultReact: -1,
+    press: null, weakWas: false, strongWas: false };
 }
 
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
@@ -2729,31 +3029,63 @@ function seenPosition(brain, foe, dt) {
 }
 
 // 1フレーム分の操作を決める。world は { sees(a, b), clear(a, b, r), free(p, r), floorAt(x, z) }。
-// 視点（me.state.yaw・pitch）はここで回し、返す { input, fire, shield, arcana, missile } を自分と同じ手順に渡す。
-// 相手が大魔法を詠唱し始めたら、近くてロックしていれば撃って止めに行き、ほかはビルの陰へ隠れる。
-// meteors は降っている流星（三秒間の静止を使うかどうかに使う）。
+// 視点（me.state.yaw・pitch）はここで回し、返す { input, weak, strong } を自分と同じ手順（stepFighter）に渡す。
+// 相手が大魔法を詠唱し始めたら、ビルの陰へ隠れる。meteors は降っている流星（三秒間の静止を使うかどうかに使う）。
 function driveRival(brain, me, foe, bolts, dt, world, missiles = [], rains = [], meteors = []) {
-  const out = steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors);
-  meleePlan(brain, me, foe, out, dt, world);
+  const ctx = steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors);
+  const out = ctx.out;
+  if (ctx.fight) {
+    attackPlan(brain, me, foe, ctx, dt, world, bolts, missiles, rains, meteors);
+    meleePlan(brain, me, foe, out, dt, world);
+  }
+  pressButtons(brain, me, out);
   return out;
 }
 
-// 近接：左の押し直しで殴りかかるので、殴りかかれる近さでは撃ちっぱなしにし、殴るときだけ一度離して押す。
-// 相手が構えたら少し遅れて気づき、補助で受ける・横へステップ・殴り返して相殺のどれか（または何もできない）。ガードできたらカウンター。
+// 向きの WASD。横は今回り込んでいる側へ。
+function aim(input, dir, strafe) {
+  Object.assign(input, { forward: dir === 'front', back: dir === 'back', left: dir === 'side' && strafe < 0, right: dir === 'side' && strafe >= 0 });
+}
+
+// ボタンを押す予定（brain.press）を、押し直しになるよう1フレームずつ進める。
+// strong・special は「離したフレーム → 押すフレーム」。特殊は右と左を同じフレームで押す。押すフレームは向きの WASD にする。
+function pressButtons(brain, me, out) {
+  const p = brain.press;
+  if (p) {
+    const ready = !brain.strongWas && (p.kind !== 'special' && p.kind !== 'parry' || !brain.weakWas);
+    if (!ready) {
+      out.strong = false;
+      if (p.kind === 'special' || p.kind === 'parry') out.weak = false;
+    } else {
+      if (p.kind === 'strong' || p.kind === 'special') out.strong = true;
+      if (p.kind === 'special' || p.kind === 'parry') out.weak = true;
+      // 強だけを押すフレームに右を押し始めると特殊になるので、押し始めない。
+      else if (!brain.weakWas) out.weak = false;
+      if (p.dir) aim(out.input, p.dir, brain.strafe);
+      brain.press = null;
+    }
+  }
+  // 強を押した直後に右を押し始めると特殊になってしまうので、押し始めない。
+  if (out.weak && !brain.weakWas && me.clock - (me.buttons?.strongAt ?? -Infinity) < WINDOW + 0.05) out.weak = false;
+  brain.weakWas = !!out.weak;
+  brain.strongWas = !!out.strong;
+}
+
+// 近接：近いロック相手への強（左）は殴りかかりになる。
+// 相手が構えたら少し遅れて気づき、右の押し直しで受ける・横へステップ・殴り返して相殺のどれか（または何もできない）。ガードできたらカウンター。
 function meleePlan(brain, me, foe, out, dt, world) {
-  if (!me.alive || me.state.downT > 0 || casting(me)) { brain.meleePress = false; return; }
+  if (!me.alive || me.state.downT > 0 || casting(me) || me.melee) return;
   const r = brain.random, R = tuning(me.character), state = me.state, input = out.input;
-  const press = () => { if (me.fireWas) { out.fire = false; brain.meleePress = true; } else { out.fire = true; brain.meleePress = false; } };
-  if (me.melee) { out.fire = false; brain.meleePress = false; return; }
-  if (brain.meleePress) { out.shield = me.meleeCounterT > 0 && out.shield; press(); return; }
   // ガードできた：少し遅れて、カウンターを入れる。
   if (me.meleeCounterT > 0) {
     // はじいた相手から離れないよう、横へ回るのをやめて前へ。
     Object.assign(input, { forward: true, back: false, left: false, right: false });
     if (brain.counterT < 0) brain.counterT = r() < R.meleeCounter ? R.meleeReact[0] + r() * (R.meleeReact[1] - R.meleeReact[0]) : Infinity;
     brain.counterT -= dt;
-    if (brain.counterT <= 0) { brain.counterT = Infinity; press(); return; }
-  } else brain.counterT = -1;
+    if (brain.counterT <= 0) { brain.counterT = Infinity; brain.press = { kind: 'strong' }; }
+    return;
+  }
+  brain.counterT = -1;
   // 相手が自分へ殴りかかってきた。
   const fm = foe.melee, lunged = !!fm && ['windup', 'lunge'].includes(fm.phase) && fm.target === me && !fm.counter;
   if (!lunged) { brain.meleeReact = -1; brain.meleeAnswer = null; }
@@ -2764,37 +3096,97 @@ function meleePlan(brain, me, foe, out, dt, world) {
   } else brain.meleeReact = Math.max(0, brain.meleeReact - dt);
   if (lunged && brain.meleeReact === 0) {
     let answer = brain.meleeAnswer;
-    const guardReady = !me.shield.broken && me.shield.charge > MELEE.guardCost && ['shield', 'still'].includes(me.shield.spec?.kind ?? 'shield');
     const canDash = !!kickNormal(state.position, world) || (!state.overheat && state.boost >= FLIGHT.dashCost);
-    if (answer === 'clash' && (!meleeTarget(me) || me.meleeCooldown > 0)) answer = guardReady ? 'guard' : 'step';
-    if (answer === 'guard' && !guardReady) answer = 'step';
-    if (answer === 'step' && !canDash) answer = guardReady ? 'guard' : 'none';
-    if (answer === 'guard') { out.shield = true; out.fire = false; brain.shieldT = Math.max(brain.shieldT, R.shieldTime); }
+    if (answer === 'clash' && (!meleeTarget(me) || me.meleeCooldown > 0)) answer = 'guard';
+    if (answer === 'step' && !canDash) answer = 'guard';
+    brain.meleeAnswer = 'none';
+    if (answer === 'guard') brain.press = { kind: 'parry' };
     else if (answer === 'step') {
-      // 相手の向きに対して横へ。押し続けていれば押し直す。
-      if (!state.boostHeld) { brain.meleeAnswer = 'none'; brain.strafe = r() < 0.5 ? -1 : 1; }
+      // 相手の向きに対して横へ。
+      brain.strafe = r() < 0.5 ? -1 : 1;
       Object.assign(input, { boost: !state.boostHeld, forward: false, back: false, left: brain.strafe < 0, right: brain.strafe >= 0 });
-    } else if (answer === 'clash') { out.shield = false; press(); brain.meleeAnswer = 'none'; return; }
-    // 押し直すと殴りかかってしまうので、撃っていなければ押さない。
-    if (!me.fireWas) out.fire = false;
+    } else if (answer === 'clash') brain.press = { kind: 'strong' };
     return;
   }
-  // 殴りかかれる近さ：撃っている途中なら撃ち続け、ときどき離して殴りかかる。撃っていなければ、殴りかかるときだけ押す。
-  // ロックはこの後の stepFighter で付くこともあるので、距離でも見る。
+  // 殴りかかれる近さ：ときどき殴りかかる。ロックはこの後の stepFighter で付くこともあるので、距離でも見る。
   const near = Math.hypot(foe.position.x - state.position.x, foe.position.y - state.position.y, foe.position.z - state.position.z) < MELEE.range;
-  if (!(near || meleeTarget(me)) || me.meleeCooldown > 0) return;
-  const holding = out.shield && me.shield.spec?.kind !== 'still';
-  if (meleeTarget(me) && !holding && r() < R.meleeChance * dt) { press(); return; }
-  if (!me.fireWas) out.fire = false;
+  if (!near || me.meleeCooldown > 0 || brain.press) return;
+  if (meleeTarget(me) && r() < R.meleeChance * dt) brain.press = { kind: 'strong' };
+}
+
+// 強と特殊：出せるときに、使える場面の技を向きから選ぶ（今の向きの技を先に）。
+function attackPlan(brain, me, foe, ctx, dt, world, bolts, missiles, rains, meteors) {
+  if (brain.press || me.melee || me.state.downT > 0) return;
+  const r = brain.random, R = tuning(me.character), { distance, locked, pref, foeLocks, near } = ctx;
+  const state = me.state, to = ctx.to;
+  const ahead = (Math.cos(state.pitch) * (Math.sin(state.yaw) * to.x - Math.cos(state.yaw) * to.z) + Math.sin(state.pitch) * to.y) / (distance || 1);
+  const threat = incoming(me, bolts, 3, R.boltReact), hunted = chased(me, missiles);
+  const order = [direction(ctx.out.input), ...DIRECTIONS.filter(d => d !== direction(ctx.out.input))];
+  // 特殊：大きな技（cost 100）を先に。
+  if ((me.specialT ?? 0) <= 0 && r() < R.specialChance * dt) {
+    const rain = rains.find(x => x.target === me && x.caster !== me && x.t < METEOR.delay + METEOR.duration);
+    const falling = meteors.some(m => m.alive && m.owner !== me && Math.hypot(m.position.x - state.position.x, m.position.y - state.position.y, m.position.z - state.position.z) < STILLNESS.radius);
+    const useful = move => {
+      switch (move.kind) {
+        case 'stillness': return threat >= R.stillThreat || hunted || falling || (rain && rain.t > METEOR.delay) || (threat > 0 && distance < STILLNESS.radius);
+        case 'arcana': return locked && distance > R.castMin && distance < Math.min(R.castRange, ARCANA.range);
+        case 'meteor': return locked && distance < 200;
+        case 'replay': return locked && canReplay(me);
+        case 'assault': return distance < R.assaultRange && distance > ASSAULT.trigger * 2;
+        case 'wave': return (locked && distance < SPECIAL.wave.radius * 0.9 && distance > 6) || threat >= 2;
+        case 'veil': return move.veil === 'phase' ? distance > pref.far && !world.clear(state.position, ctx.foePosition, 1)
+          : move.veil === 'cloak' ? foeLocks && (threat > 0 || hunted)
+          : threat > 0 || hunted;
+        case 'familiar': return !(me.familiarT > 0) && (locked || foeLocks);
+        case 'ambush': return locked && distance < pref.fire;
+        case 'circus': return locked && distance > 15 && distance < 140;
+        case 'barrage': return locked && distance < 120;
+        case 'wall': return locked && distance < SPECIAL.wall.speed * SPECIAL.wall.time * 0.8 && distance > 6 && ahead > 0.8;
+        case 'burst': return locked && distance < 30;
+        default: return false;
+      }
+    };
+    // ゲージが少なくなったら、大きな技のためにためるか（saveChance）を決め直す。ためている間は小さな技を使わない。
+    if (me.arcana.charge < 35) brain.saving = r() < R.saveChance;
+    const options = order.map(dir => ({ dir, move: specialOf(me, dir) })).filter(o => o.move && canSpecial(me, o.move) && useful(o.move) && (o.move.cost >= 100 || !brain.saving));
+    const pick = options.find(o => o.move.cost >= 100) ?? options[0];
+    if (pick) { brain.press = { kind: 'special', dir: pick.dir }; if (pick.move.cost >= 100) brain.saving = false; return; }
+  }
+  // 強：近いロック相手への強は殴りかかりになるので、近いときはたまにだけ。
+  if (me.strongT > 0 || r() >= (near ? R.meleeShy : R.strongChance) * dt) return;
+  const closing = -(foe.velocity.x - state.velocity.x) * to.x / (distance || 1) - (foe.velocity.y - state.velocity.y) * to.y / (distance || 1) - (foe.velocity.z - state.velocity.z) * to.z / (distance || 1);
+  const useful = move => {
+    switch (move.kind) {
+      case 'shot': return locked && (move.mine ? distance < R.mineRange : distance < move.speed * (move.life - (move.accel?.delay ?? 0)) * 0.9);
+      case 'pincer': return locked && distance < 120;
+      case 'brake': {
+        const fast = Math.hypot(state.velocity.x, state.velocity.y, state.velocity.z) > R.brakeSpeed && locked && distance < R.brakeTurn;
+        return !foe.cloaked && ((distance < R.brakeRange && (closing > R.brakeClosing || ahead < 0)) || (distance < R.brakeTurn && ahead < -0.3) || fast);
+      }
+      case 'prism': {
+        const memory = me.lockMemory;
+        return (!me.lock.visible && memory && memory.target === foe && me.clock - memory.t <= PRISM.memory && distance < PRISM.range) || (locked && distance < PRISM.range);
+      }
+      case 'circus': return locked && distance > 15 && distance < 140;
+      case 'decoy': return hunted || (foeLocks && threat > 0);
+      case 'surge': return hunted || threat > 0 || distance < pref.near;
+      default: return false;
+    }
+  };
+  const options = order.map(dir => ({ dir, move: moveOf(me.character, 'strong', dir) })).filter(o => o.move && useful(o.move));
+  // 同じ技ばかりにならないよう、使える中から選ぶ（今の向きは少し選ばれやすい）。
+  const pick = options.length ? (r() < 0.4 ? options[0] : options[Math.floor(r() * options.length)]) : null;
+  if (pick) brain.press = { kind: 'strong', dir: pick.dir };
 }
 
 function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
   const state = me.state, input = {};
-  const out = { input, fire: false, shield: false, arcana: false, missile: false };
-  if (!me.alive || state.downT > 0 || !foe.alive) { brain.dashFrames = 0; return out; }
+  const out = { input, weak: false, strong: false };
+  const ctx = { out, fight: false };
+  if (!me.alive || state.downT > 0 || !foe.alive) { brain.dashFrames = 0; return ctx; }
   const r = brain.random, R = tuning(me.character);
   const pref = { near: R.near, far: R.far, fire: R.fireRange, ...CHARACTERS[me.character]?.bot };
-  const guard = me.shield.spec?.kind ?? 'shield', spec = me.weapon.spec ?? BOLT;
+  const spec = moveOf(me.character, 'weak', 'front');
   const foePosition = seenPosition(brain, foe, dt);
   // 視点：相手の方へ、マウスで回せるくらいの速さで向ける。ロック中の追従は trackLock が自分と同じにする。
   const want = anglesTo(state.position, foePosition), cap = R.turnRate * dt;
@@ -2804,11 +3196,15 @@ function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
   // デコイは見分けられないので、デコイを捕捉していても相手を捕捉しているつもりで撃つ。
   const lt = me.lock.target;
   const locked = !!lt && me.lock.visible && (lt === foe || (lt.kind === 'decoy' && lt.owner === foe));
-  if (casting(me)) return out;
-  // 潜行強襲の間：建物を気にせず、相手へまっすぐ向かう。
-  if (me.assaultT > 0) {
+  const foeLocks = foe.lock?.target === me && foe.lock.visible;
+  const near = distance < MELEE.range;
+  Object.assign(ctx, { to, distance, locked, pref, foeLocks, near, foePosition });
+  if (casting(me)) return ctx;
+  // 潜行強襲と位相潜行の間：建物を気にせず、相手へまっすぐ向かう。
+  if (me.assaultT > 0 || veiled(me, 'phase')) {
     keysToward(state, to, input);
-    return out;
+    ctx.fight = !(me.assaultT > 0);
+    return ctx;
   }
   // 相手の潜行強襲：すり抜けて近づいてくるので、少し遅れて気づき、クイックブーストで離れる。
   if (!(foe.assaultT > 0)) brain.assaultReact = -1;
@@ -2817,7 +3213,7 @@ function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
   if (foe.assaultT > 0 && brain.assaultReact === 0) {
     keysToward(state, { x: -to.x, y: Math.max(0, -to.y) + 5, z: -to.z }, input);
     input.boost = !state.overheat && distance < ASSAULT.radius * 5;
-    return out;
+    return ctx;
   }
   // 相手の大魔法：少し遅れて気づき、隠れる。詠唱中の相手には何も効かないので、止めには行かない。詠唱中の相手は動かないので、隠れる場所は一度見つければよい。
   if (casting(foe)) {
@@ -2828,33 +3224,24 @@ function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
       if (!brain.search || brain.search.done) brain.search = coverSearch(state.position, foe.position);
       brain.cover = stepCoverSearch(brain.search, world, R.coverPerFrame);
     }
-    if (brain.reactT > 0) { out.fire = locked; return out; }
+    if (brain.reactT > 0) { out.weak = locked; return ctx; }
     if (brain.cover) {
       const d = sub(brain.cover, state.position);
       if (Math.hypot(d.x, d.y, d.z) > 2) keysToward(state, d, input);
       else input.up = state.position.y < brain.cover.y - 1;
       input.boost = Math.hypot(d.x, d.y, d.z) > 20 && !state.overheat;
-      return out;
+      return ctx;
     }
     // 隠れる場所が無ければ、届く距離の外へ逃げる。
     keysToward(state, { x: -to.x, y: Math.max(0, -to.y), z: -to.z }, input);
-    return out;
+    return ctx;
   }
   brain.cover = brain.search = null;
   brain.reactT = -1;
+  ctx.fight = true;
   const rain = rains.find(x => x.target === me && x.caster !== me && x.t < METEOR.delay + METEOR.duration);
-  const special = me.special;
-  // 三秒間の静止：弾が何発も迫るか、誘導弾に追われるか、流星雨が降り始めたら使う。満タンになって少し待っても使わなければ、弾が1発でも迫れば使い、さらに 3 秒たてば相手が近いだけで使う。
-  if (special === 'stillness' && canSpecial(me)) {
-    if (brain.castWait < 0) brain.castWait = R.castDelay[0] + r() * (R.castDelay[1] - R.castDelay[0]);
-    brain.castWait -= dt;
-    brain.readyT = (brain.readyT ?? 0) + dt;
-    const falling = meteors.some(m => m.alive && m.owner !== me && Math.hypot(m.position.x - state.position.x, m.position.y - state.position.y, m.position.z - state.position.z) < STILLNESS.radius);
-    const threat = incoming(me, bolts, R.stillThreat);
-    if (threat >= R.stillThreat || chased(me, missiles) || falling || (rain && rain.t > METEOR.delay) || (brain.castWait <= 0 && threat > 0) || (brain.readyT > R.castDelay[1] + 3 && distance < STILLNESS.radius)) { out.arcana = true; brain.castWait = -1; brain.readyT = 0; }
-  }
   // 自分を狙う流星雨：上が開いていれば、雨の来る側から隠れる場所（屋根や高架の下、ビルの陰）へ行く。そこでも撃てる。止めていれば逃げなくてよい。
-  if (rain && !(me.stillT > 0) && !out.arcana) {
+  if (rain && !(me.stillT > 0)) {
     if (!brain.rainCover) {
       if (!brain.rainSearch || brain.rainSearch.done) brain.rainSearch = coverSearch(state.position, p => skyOf(rain, p));
       brain.rainCover = stepCoverSearch(brain.rainSearch, world, R.coverPerFrame);
@@ -2864,8 +3251,8 @@ function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
       if (n > 2) keysToward(state, d, input);
       else input.up = state.position.y < brain.rainCover.y - 1;
       input.boost = n > 20 && !state.overheat;
-      out.fire = locked && distance < pref.fire && !(guard !== 'still' && me.shield.active);
-      return out;
+      out.weak = locked && distance < pref.fire;
+      return ctx;
     }
   } else brain.rainCover = brain.rainSearch = null;
   // 強く曲がる弾に追われたら、相手から見えない所（ビルの陰）へ回る。間がふさがると弾は追うのをやめる（ユーザー指定 2026-10-27）。
@@ -2879,25 +3266,13 @@ function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
   if (brain.boltCover && brain.boltCoverT > 0) {
     const d = sub(brain.boltCover, state.position), n = Math.hypot(d.x, d.y, d.z);
     if (n > 2) keysToward(state, d, input);
-    out.fire = locked && distance < pref.fire && !(guard !== 'still' && me.shield.active);
-    return out;
+    out.weak = locked && distance < pref.fire;
+    return ctx;
   }
   if (!homed) brain.boltCover = brain.boltSearch = null;
-  // 特別の枠：ゲージが満タンになって少し待ち、ロックした相手が届く所にいれば使う。
-  // 大魔法は詠唱を止められにくいよう離れてから、流星雨・残響の再生は詠唱が無いのでそのまま、潜行強襲は近ければ使う。
-  const cast = special === 'arcana';
-  if (special !== 'stillness' && canSpecial(me)) {
-    if (brain.castWait < 0) brain.castWait = R.castDelay[0] + r() * (R.castDelay[1] - R.castDelay[0]);
-    brain.castWait -= dt;
-    let use = false;
-    if (brain.castWait <= 0) {
-      if (special === 'assault') use = distance < R.assaultRange && distance > ASSAULT.trigger * 2;
-      else if (special === 'replay') use = locked && distance < pref.fire;
-      else use = locked && distance > (cast ? R.castMin : R.near) && distance < Math.min(R.castRange, ARCANA.range);
-    }
-    if (use) { out.arcana = true; brain.castWait = -1; if (cast) return out; }
-  }
-  const backingOff = cast && canSpecial(me) && brain.castWait <= 0 && distance < R.castMin;
+  // 大魔法を使えるときは、詠唱を止められにくいよう少し離れる。
+  const big = specialOf(me, 'still');
+  const backingOff = big?.kind === 'arcana' && canSpecial(me, big) && distance < R.castMin;
   // 距離を保ちつつ、左右へ回り込む。
   input.forward = distance > pref.far && !backingOff;
   input.back = distance < pref.near || backingOff;
@@ -2910,20 +3285,11 @@ function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
   const height = Math.max(Math.min(foePosition.y + brain.height, R.ceiling), floor + R.floorMargin);
   input.up = state.position.y < height - 3;
   input.down = state.position.y > height + 10;
-  // 位相潜行：相手との間がビルでふさがっていて遠ければ、すり抜けてまっすぐ向かう。
-  if (guard === 'phase') {
-    if (brain.passing) brain.passing = me.shield.active && distance > pref.far && !world.clear(state.position, foePosition, 1);
-    else brain.passing = distance > pref.far && !me.shield.broken && me.shield.charge > R.phaseGauge && !(me.recoverT > 0) && !world.clear(state.position, foePosition, 1);
-    if (brain.passing) { keysToward(state, to, input); out.shield = true; }
-  }
   // 先の道が建物でふさがっていれば、昇って越える（すり抜けている間は越えなくてよい）。
   const ahead = { x: state.position.x + state.velocity.x * R.lookAhead, y: state.position.y + state.velocity.y * R.lookAhead, z: state.position.z + state.velocity.z * R.lookAhead };
   if (!me.phased && (state.contact || !world.clear(state.position, ahead, 1))) { input.up = true; input.down = false; input.forward = false; }
-  // 迫る弾は、クイックブーストで横へ避けるか、補助で受ける。追ってくる誘導弾は、近くまで引きつけてから避ける。
+  // 迫る弾は、クイックブーストで横へ避ける。追ってくる誘導弾は、近くまで引きつけてから避ける。
   brain.dodgeT = Math.max(0, brain.dodgeT - dt);
-  brain.shieldT = Math.max(0, brain.shieldT - dt);
-  const guardReady = !me.shield.broken && me.shield.charge > R.shieldCharge && !(guard === 'phase' && me.recoverT > 0);
-  const foeLocks = foe.lock?.target === me && foe.lock.visible;
   // 地面やビルが近ければ、蹴ってゲージを使わずに避けられる。
   const kick = !me.phased && !!kickNormal(state.position, world);
   const canDash = kick || (!state.overheat && state.boost > R.dodgeBoost);
@@ -2935,84 +3301,23 @@ function steer(brain, me, foe, bolts, dt, world, missiles, rains, meteors) {
   };
   if (brain.dodgeT <= 0 && chased(me, missiles)) {
     brain.dodgeT = R.dodgeCooldown;
-    // 残響デコイは誘導弾を偽物へ移し、光学迷彩と零速の膜は見失わせる。ほかは横へダッシュ。
-    if (me.sub === 'decoy' && me.launcher.cooldown <= 0) out.missile = true;
-    else if ((guard === 'cloak' || guard === 'still') && guardReady) brain.shieldT = guard === 'cloak' ? R.cloakTime : R.shieldTime;
-    else if (me.sub === 'surge' && me.launcher.cooldown <= 0) { sideStep(); brain.dashFrames = 0; out.missile = true; }
-    else if (canDash && !state.boostHeld) { sideStep(); input.up = r() < 0.5; }
-    else if (guardReady) brain.shieldT = R.shieldTime;
+    if (canDash && !state.boostHeld) { sideStep(); input.up = r() < 0.5; }
   } else if (brain.dodgeT <= 0 && incoming(me, bolts, 1, R.boltReact)) {
     brain.dodgeT = R.dodgeCooldown;
-    if (guard === 'still' && guardReady && r() < R.stillGuardChance) brain.shieldT = R.shieldTime;
-    else if (guard === 'cloak' && guardReady && foeLocks && r() < R.cloakChance) brain.shieldT = R.cloakTime;
-    else if (me.sub === 'decoy' && foeLocks && me.launcher.cooldown <= 0) out.missile = true;
-    else if (me.combo === 'mirror' && guardReady && canCombo(me) && r() < R.mirrorChance) brain.shieldT = R.shieldTime;
-    else if (canDash && r() < (kick ? R.kickDodgeChance : R.dodgeChance)) sideStep();
-    else if (guardReady && r() < R.shieldChance) brain.shieldT = R.shieldTime;
-  }
-  // 捕捉して届く所にいれば、ときどき前へ踏み込んで重い弾を撃つ。
-  if (brain.dashFrames === 0 && brain.dodgeT <= 0 && locked && !brain.resting && distance > pref.near && distance < pref.fire && (kick || (!state.overheat && state.boost > R.lungeBoost)) && r() < R.lungeChance * dt) {
-    brain.dashFrames = 2;
-    Object.assign(input, { forward: true, back: false, left: false, right: false });
+    if (canDash && r() < (kick ? R.kickDodgeChance : R.dodgeChance)) sideStep();
   }
   // 蹴れる面のそばでは、ゲージを使わないので、弾が来ていなくてもときどき横へ蹴って動きを読ませない。
   else if (brain.dashFrames === 0 && kick && !state.boostHeld && r() < R.kickHop * dt) sideStep();
   // クイックブーストは Shift の押し始めで出るので、1フレーム押して離す。
   input.boost = brain.dashFrames === 2;
   if (brain.dashFrames > 0) brain.dashFrames--;
-  out.shield ||= brain.shieldT > 0;
-  // 張ったまま撃てない補助を張っている間は撃たない。相手が三秒間の静止で弾を止めている間も撃たない。
-  const holding = out.shield && guard !== 'still';
+  // 相手が三秒間の静止で弾を止めている間は撃たない。ロック中で見えていれば、間をあけながら撃つ。
   const stilled = foe.stillT > 0 && distance < STILLNESS.radius + 20;
-  // ロック中で見えていれば、間をあけながら撃つ。
   brain.burstT -= dt;
   if (brain.burstT <= 0) { brain.resting = !brain.resting; brain.burstT = brain.resting ? R.rest : R.burst; }
-  out.fire = locked && !brain.resting && !holding && !stilled && distance < Math.min(pref.fire, spec.speed * spec.life);
-  // 副武器。
-  if (me.launcher.cooldown <= 0 && !out.missile && !holding && !stilled) {
-    if (me.sub === 'missiles') {
-      // 誘導弾：撃てるようになって少し待ち、ロックした相手が届く所にいれば撃つ（近くで戦うキャラは、保つ距離より少し遠くから）。
-      if (brain.missileWait < 0) brain.missileWait = R.missileWait[0] + r() * (R.missileWait[1] - R.missileWait[0]);
-      brain.missileWait -= dt;
-      if (brain.missileWait <= 0 && locked && distance > Math.min(R.missileRange[0], pref.near + 10) && distance < R.missileRange[1]) { out.missile = true; brain.missileWait = -1; }
-    } else if (me.sub === 'brake') {
-      // 急制動：近くの相手が迫ってくるか、後ろへ回ったら、止まって向き直る。
-      const closing = -dot(sub(foe.velocity, state.velocity), to) / (distance || 1);
-      const ahead = (Math.cos(state.pitch) * (Math.sin(state.yaw) * to.x - Math.cos(state.yaw) * to.z) + Math.sin(state.pitch) * to.y) / (distance || 1);
-      // 速く飛んでいる所から止まって、強くなった弾で撃ち返すのにも使う。
-      const fast = Math.hypot(state.velocity.x, state.velocity.y, state.velocity.z) > R.brakeSpeed && locked && distance < R.brakeTurn;
-      if (!foe.cloaked && ((distance < R.brakeRange && (closing > R.brakeClosing || ahead < 0)) || (distance < R.brakeTurn && ahead < -0.3) || fast)) out.missile = true;
-    } else if (me.sub === 'prism') {
-      // 屈折射：見失ったばかりの相手へ、曲げて撃つ。
-      const memory = me.lockMemory;
-      if (!me.lock.visible && memory && memory.target === foe && me.clock - memory.t <= PRISM.memory && distance < PRISM.range) out.missile = true;
-    } else if (me.sub === 'surge') {
-      // 水圧突進：遠ければ一気に寄る。
-      if (distance > pref.far + 40 && world.clear(state.position, foePosition, 1)) { keysToward(state, to, input); out.missile = true; }
-    }
-  }
-  // 合わせ技（右と左の同時押し）。同時押しは、一度両方を離したフレームの次に、両方を押す。
-  if (brain.combo) { brain.combo = false; out.fire = out.shield = true; return out; }
-  const comboReady = canCombo(me);
-  if (me.combo === 'wave' || me.combo === 'wall') {
-    // 零速の波は届く所まで寄った相手に、水の壁は前にいる相手に。
-    const reach = me.combo === 'wave' ? COMBO.wave.radius : COMBO.wall.speed * COMBO.wall.time * 0.8;
-    if (comboReady && locked && !stilled && distance < reach && distance > 6 && r() < R.comboChance * dt) { brain.combo = true; out.fire = out.shield = false; }
-    // 零速の波が届かなければ、寄って入れる。
-    else if (me.combo === 'wave' && comboReady && locked && distance < pref.far * 1.5) { input.forward = true; input.back = false; }
-  } else if (me.combo === 'ambush') {
-    // 不意打ち：届く所で消えたら、迷彩の中から撃つ。ときどき、そのために自分から消える。
-    if (comboReady && guardReady && locked && brain.shieldT <= 0 && distance < pref.fire && r() < R.comboChance * dt) brain.shieldT = R.cloakTime;
-    if (comboReady && me.cloaked && locked && distance < pref.fire) out.fire = true;
-  } else if (me.combo === 'burst') {
-    // 抜け際の一斉射：すり抜けて近づき、近くで建物の外なら出て撃つ。
-    if (comboReady && me.shield.active && me.phased && locked && distance < pref.far + 8 && world.free(state.position, FLIGHT.radius)) { out.shield = true; out.fire = true; }
-  } else if (me.combo === 'mirror') {
-    // 反射の膜：膜で受けている所へ弾が迫れば、跳ね返す。速い狙撃弾は見てから避けられないので、撃たれそうな所で先に張る。
-    if (out.shield && (me.mirroring || (comboReady && incoming(me, bolts, 1, R.boltReact)))) out.fire = true;
-    else if (comboReady && guardReady && foeLocks && incoming(me, bolts, 1, 0) && r() < R.mirrorEarly) { out.shield = true; out.fire = true; brain.shieldT = R.shieldTime; }
-  }
-  return out;
+  out.weak = locked && !brain.resting && !stilled && distance < Math.min(pref.fire, spec.speed * spec.life);
+  ctx.fight = !stilled;
+  return ctx;
 }
 
 return { RIVAL, coverSearch, stepCoverSearch, findCover, createRival, driveRival };
@@ -3076,6 +3381,13 @@ function createEffects(T, scene) {
     for (let i = 0; i < count; i++) {
       const u = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2, s = speed * (0.35 + Math.random() * 0.65), c = Math.sqrt(1 - u * u);
       particle(big, at, { x: Math.cos(a) * c * s, y: u * s * spread, z: Math.sin(a) * c * s }, color, life * (0.6 + Math.random() * 0.6), 2.5, gravity);
+    }
+  }
+  // dir（長さ 1）の向きへ円錐に吹き出す火花。spread は広がり（0 でまっすぐ）。
+  function jet(at, dir, color, count, speed, { big = false, life = 0.4, spread = 0.35 } = {}) {
+    for (let i = 0; i < count; i++) {
+      const s = speed * (0.4 + Math.random() * 0.6), r = () => (Math.random() * 2 - 1) * spread;
+      particle(big, at, { x: (dir.x + r()) * s, y: (dir.y + r()) * s, z: (dir.z + r()) * s }, color, life * (0.6 + Math.random() * 0.6), 3);
     }
   }
   // 飛んでいる物の後ろに残る光（誘導弾・流星）。
@@ -3228,7 +3540,7 @@ function createEffects(T, scene) {
     };
   }
 
-  return { glow, sigil, sparks, trail, ribbon, flash, shockwave, circle, impact, explode, shake, step, count: () => pools[0].list.length + pools[1].list.length };
+  return { glow, sigil, sparks, jet, trail, ribbon, flash, shockwave, circle, impact, explode, shake, step, count: () => pools[0].list.length + pools[1].list.length };
 }
 
 function canvasTexture(T, size, draw) {
@@ -3293,16 +3605,16 @@ const GRUNT = Object.freeze({
   hp: 30,          // 連射弾 3 発
   radius: 2.2,     // 弾が当たる半径（m）
   range: 110,      // この距離まで来て見えていれば撃つ（m）
-  bolt: Object.freeze({ name: '使い魔の弾', speed: 60, life: 1.9, damage: 6, stagger: 8, homing: 0.4, size: 0.3 }),
+  bolt: Object.freeze({ name: '使い魔の弾', speed: 42, life: 2.71, damage: 6, stagger: 8, homing: 0.28, size: 0.3 }),
 });
 
 // 波：center の周りを radius で回る count 体（回る道は建物に当たらない、tutorial.test.mjs で確認）。fire は撃つ間隔（秒、0 は撃たない）、dash は速くなる体の数。
 // hint は画面の下に出す、その波で覚える操作。
 const TUTORIAL = Object.freeze({
   waves: Object.freeze([
-    Object.freeze({ center: { x: 205, y: 50, z: 210 }, radius: 14, height: 4, speed: 0.35, count: 3, fire: 0, dash: 0, hint: '照準を向けると自動でロックオン。左クリックで撃つ' }),
-    Object.freeze({ center: { x: 125, y: 62, z: 125 }, radius: 22, height: 6, speed: 0.4, count: 4, fire: 2.6, dash: 0, hint: '紫の弾が来たら Shift で横へ避けるか、右クリックで受ける' }),
-    Object.freeze({ center: { x: 45, y: 70, z: 45 }, radius: 26, height: 8, speed: 0.45, count: 5, fire: 2, dash: 2, hint: 'Q でロックを切り替え。F の副武器、E の特別（ゲージが満タンのとき）も使える' }),
+    Object.freeze({ center: { x: 205, y: 50, z: 210 }, radius: 14, height: 4, speed: 0.35, count: 3, fire: 0, dash: 0, hint: '照準を向けると自動でロックオン。右クリックで弱、左クリックで強' }),
+    Object.freeze({ center: { x: 125, y: 62, z: 125 }, radius: 22, height: 6, speed: 0.4, count: 4, fire: 2.6, dash: 0, hint: '紫の弾は Shift で横へ避ける。シールドが受けても、割れると体に届く' }),
+    Object.freeze({ center: { x: 45, y: 70, z: 45 }, radius: 26, height: 8, speed: 0.45, count: 5, fire: 2, dash: 2, hint: 'Q でロック切替。右+左で特殊（ゲージを使う）。A/D・S・止まるで技が変わる' }),
   ]),
   gap: 1.5,        // 波を倒してから次の波が出るまでの秒
   bossIntro: 2.5,  // 最後の波を倒してから、ボスが来るまでの秒
@@ -3369,13 +3681,15 @@ modules['main.mjs'] = (() => {
 const { SETTINGS, kickNormal, knockDown, updateLook } = modules['flight-model.mjs'];
 const { createCity } = modules['city.mjs'];
 const { START, RIVAL_START, GATES, TARGETS } = modules['course.mjs'];
-const { LOCK, SHIELD, TARGET, createTarget, lockCandidates, stepBolts, stepTargets } = modules['combat.mjs'];
+const { LOCK, MIRROR_RADIUS, SHIELD, TARGET, createTarget, lockCandidates, stepBolts, stepTargets } = modules['combat.mjs'];
 const { DUEL, applyHits, createDuel, createFighter, equip, respawn, stepArcanas, stepDuel, stepFighter, stepFighters } = modules['duel.mjs'];
 const { ARCANA, castLeft, casting } = modules['arcana.mjs'];
 const { stepMissiles } = modules['missiles.mjs'];
 const { METEOR, skyOf, stepMeteors } = modules['meteors.mjs'];
-const { ASSAULT, COMBO, STILLNESS, SUB_COOLDOWN, canCombo, canSpecial, stepAbilities } = modules['abilities.mjs'];
-const { CHARACTERS, ROSTER, SLOT_NAMES } = modules['characters.mjs'];
+const { ASSAULT, SPECIAL, STILLNESS, stepAbilities, veiled } = modules['abilities.mjs'];
+const { CHARACTERS, DIRECTIONS, DIRECTION_NAMES, ROSTER, direction, moveOf } = modules['characters.mjs'];
+const { canSpecial, specialOf } = modules['moves.mjs'];
+const { FAMILIAR, shields, stepFamiliars } = modules['familiars.mjs'];
 const { createRival, driveRival } = modules['rival.mjs'];
 const { createEffects } = modules['effects.mjs'];
 const { TUTORIAL, createTutorial, stepTutorial } = modules['tutorial.mjs'];
@@ -3425,13 +3739,14 @@ const bossOn = () => mode === 'tutorial' && tut.phase === 'boss';
 // 敵の魔法少女が戦いに出ているか（1vs1 と、チュートリアルのボス）。
 const rivalOn = () => mode === 'duel' || bossOn();
 const gruntsAlive = () => mode === 'tutorial' ? tut.grunts.filter(g => g.alive) : [];
-// 練習用の的と、飛んでいる魔法弾（自分の弾も敵の弾も入る）、デコイ、プリズム。
+// 練習用の的と、飛んでいる魔法弾（自分の弾も敵の弾も入る）、デコイ、使い魔、プリズム。
 let targets = TARGETS.map(createTarget);
-const bolts = [], missiles = [], rains = [], meteors = [], decoys = [], prisms = [];
-let firing = false, shielding = false, cyclePressed = false, arcanaPressed = false, missilePressed = false, destroyed = 0, hurtT = 0, releases = 0, seen = false, seenT = 0, exposed = false;
+const bolts = [], missiles = [], rains = [], meteors = [], decoys = [], familiars = [], prisms = [];
+// 押しているボタン：strongHeld は左クリック（強）、weakHeld は右クリック（弱）。
+let strongHeld = false, weakHeld = false, cyclePressed = false, destroyed = 0, hurtT = 0, releases = 0, seen = false, seenT = 0, exposed = false;
 const sees = (a, b) => city.clear(a, b);
 const rivalWorld = { sees, clear: (a, b, r) => city.clear(a, b, r), free: (p, r) => city.free(p, r), floorAt: city.floorAt };
-const arena = { bolts, missiles, rains, meteors, decoys, prisms, fighters, sees, clear: rivalWorld.clear, free: rivalWorld.free };
+const arena = { bolts, missiles, rains, meteors, decoys, familiars, prisms, fighters, sees, clear: rivalWorld.clear, free: rivalWorld.free };
 // 自分が狙える物：1vs1 は敵と、敵の出したデコイ。チュートリアルは使い魔かボス。
 const lockables = () => mode === 'duel' ? [rival, ...decoys.filter(d => d.owner === rival)] : mode === 'tutorial' ? (bossOn() ? [rival] : gruntsAlive()) : targets;
 let renderer;
@@ -3612,11 +3927,8 @@ function makeGirl(colors) {
     box(g, hair, [0.08, 0.06, 0.5], [0, 0.1, 0.05]);
   }
   for (const g of Object.values(rides)) { g.visible = false; girl.add(g); }
-  // 穂の後ろの光の輪。速さに合わせて広がり、ダッシュ・ブースト中は橙。
+  // 光る所（頭の輪は 2026-10-28 にやめた、ユーザー指定）。
   const glow = new T.MeshBasicMaterial({ color: colors.glow });
-  const halo = new T.Mesh(new T.TorusGeometry(0.3, 0.025, 6, 32), glow);
-  halo.position.set(0, -0.2, 1.2);
-  girl.add(halo);
   // シールド：体を包む光の球。
   const shieldMaterial = new T.MeshBasicMaterial({ color: colors.shield, transparent: true, opacity: 0.22, depthWrite: false, side: T.DoubleSide });
   const edge = new T.LineBasicMaterial({ color: colors.shieldEdge, transparent: true, opacity: 0.5 });
@@ -3663,23 +3975,20 @@ function makeGirl(colors) {
   slash.visible = false;
   ship.add(slash);
   const body = [wood, straw, skin, dress, accent, hair, glow, metal];
-  return { ship, girl, halo, glow, shieldMesh, field, circle, inner, outer, body, dress, accent, hair, shieldMaterial, edge, rune, pillar: pillar.material, floor: floor.material, sigil, faded: 1,
+  return { ship, girl, glow, shieldMesh, field, circle, inner, outer, body, dress, accent, hair, shieldMaterial, edge, rune, pillar: pillar.material, floor: floor.material, sigil, faded: 1,
     blade, edgeLight, slash, slashMaterial, slashCore, act: null, rides, ride: null };
 }
-// 乗り方ごとの、穂（光の輪）の場所と、体の倒し方（lean は速さで前へ倒す量、bank は横へ動くときに傾ける量）。
+// 乗り方ごとの、体の倒し方（lean は速さで前へ倒す量、bank は横へ動くときに傾ける量）。
 const RIDES = {
-  broom: { halo: [0, -0.2, 1.2], flat: false, lean: 0.25, bank: 0.25 },
-  stand: { halo: [0, -0.9, 0.02], flat: true, lean: 0.6, bank: 0.35 },
-  prone: { halo: [0, -0.16, 1.15], flat: false, lean: 0.08, bank: 0.2 },
-  surf: { halo: [0, -0.78, 0.9], flat: false, lean: 0.2, bank: 0.6 },
-  dive: { halo: [0, 0, 1.2], flat: false, lean: 0.12, bank: 0.45 },
+  broom: { lean: 0.25, bank: 0.25 },
+  stand: { lean: 0.6, bank: 0.35 },
+  prone: { lean: 0.08, bank: 0.2 },
+  surf: { lean: 0.2, bank: 0.6 },
+  dive: { lean: 0.12, bank: 0.45 },
 };
 function paint(look, colors, ride = 'broom') {
   look.ride = RIDES[ride] ? ride : 'broom';
   for (const [name, g] of Object.entries(look.rides)) g.visible = name === look.ride;
-  const r = RIDES[look.ride];
-  look.halo.position.set(...r.halo);
-  look.halo.rotation.set(r.flat ? Math.PI / 2 : 0, 0, 0);
   look.dress.color.setHex(colors.dress);
   look.accent.color.setHex(colors.accent);
   look.hair.color.setHex(colors.hair);
@@ -3713,8 +4022,29 @@ function drawKicks() {
     if (f === player) fx.shake(0.25);
   });
 }
+// クイックブースト（ユーザー指定 2026-10-28「クイックブースト時にエフェクト発生させたい」）：踏み切った所に、進む向きと逆へ吹き出す火花と、
+// 向きに立つ衝撃波の輪。踏み込んでいる間は後ろへ光の粒を引く。敵の光学迷彩の間は見せない。見た目は提案。
+const boostsSeen = [0, 0];
+function drawBoosts() {
+  [player, rival].forEach((f, i) => {
+    const s = f.state, fresh = s.boosts !== boostsSeen[i];
+    boostsSeen[i] = s.boosts;
+    if (!f.alive || (f === rival && (f.cloaked || !rivalOn()))) return;
+    const d = s.dashDir, back = { x: -d.x, y: -d.y, z: -d.z }, color = CHARACTERS[f.character].colors.glow;
+    const behind = k => ({ x: s.position.x + back.x * k, y: s.position.y + back.y * k, z: s.position.z + back.z * k });
+    if (fresh) {
+      const at = behind(1.2);
+      fx.jet(at, back, color, 26, 40, { life: 0.35 });
+      fx.jet(at, back, 0xffffff, 10, 30, { big: true, life: 0.25, spread: 0.2 });
+      fx.shockwave(at, color, f === player ? 2.2 : 4, 0.3);
+      fx.flash(at, color, f === player ? 2 : 5, 0.12);
+    }
+    if (s.drive === 'dash' || (s.dashT > 0 && s.kicked)) for (let k = 0; k < 2; k++) fx.trail(behind(0.8 + Math.random()), color, false, 0.3);
+  });
+}
 function drawTrails(dt) {
   drawKicks();
+  drawBoosts();
   [player, rival].forEach((f, i) => {
     const t = trails[i];
     // 撃墜されている間と、敵の光学迷彩の間は消す（消えていた間の軌跡も残さない）。
@@ -3736,8 +4066,8 @@ function poseGirl(look, fighter, now) {
   look.ship.visible = fighter.alive && !(fighter.guardT > 0 && Math.floor(now / 90) % 2);
   // 光学迷彩は敵ならほとんど見えず、自分なら薄く。すり抜けている間は半分透ける。
   fade(look, fighter.cloaked ? (fighter === player ? 0.3 : 0.06) : fighter.phased ? 0.4 : 1);
-  look.field.visible = fighter.shield.active && fighter.shield.spec?.kind === 'still';
-  if (look.field.visible) { look.field.scale.setScalar(fighter.shield.spec.radius); look.field.rotation.y = now / 700; }
+  look.field.visible = veiled(fighter, 'still');
+  if (look.field.visible) { look.field.scale.setScalar(fighter.veil.move.radius); look.field.rotation.y = now / 700; }
   look.ship.position.set(s.position.x, s.position.y, s.position.z);
   look.ship.rotation.set(0, -s.yaw, 0, 'YXZ');
   const lean = Math.min(1, Math.hypot(s.velocity.x, s.velocity.y, s.velocity.z) / SETTINGS.dashSpeed);
@@ -3749,13 +4079,13 @@ function poseGirl(look, fighter, now) {
   look.bank = (look.bank ?? 0) + (bank - (look.bank ?? 0)) * Math.min(1, dt * 8);
   const brace = look.ride === 'stand' && fighter.counterT > 0 ? 0.7 : 0;
   look.girl.rotation.set(s.pitch * 0.5 - lean * ride.lean + brace, 0, s.downT > 0 ? now / 160 : look.bank);
-  if (look.ride === 'stand') look.halo.rotation.z = now / 300;
-  look.halo.scale.setScalar(1 + lean * 0.8);
-  look.halo.material = s.drive === 'dash' ? amber : look.glow;
-  look.shieldMesh.visible = fighter.shield.active && fighter.shield.spec?.blocks !== false;
-  // 反射の膜（合わせ技）の間は、膜が大きく速く回る。
+  // シールド（いつも張っている）：うっすら見え、当たると揺らいで明るくなる。消えている間は見えない。反射の膜の間は大きく速く回る。
+  const sh = fighter.shield, glowing = sh.hitT / 0.3;
+  look.shieldMesh.visible = fighter.mirroring || sh.charge > 0;
+  look.shieldMaterial.opacity = fighter.mirroring ? 0.3 : (fighter === player ? 0.02 : 0.05) * (sh.charge / sh.max) + 0.35 * glowing;
+  look.edge.opacity = fighter.mirroring ? 0.6 : (fighter === player ? 0.06 : 0.15) * (sh.charge / sh.max) + 0.6 * glowing;
   look.shieldMesh.rotation.y = now / (fighter.mirroring ? 120 : 900);
-  look.shieldMesh.scale.setScalar(fighter.mirroring ? 1.25 : 1);
+  look.shieldMesh.scale.setScalar((fighter.mirroring ? MIRROR_RADIUS / SHIELD.radius : 1) * (1 + 0.12 * glowing * Math.sin(now / 25)));
   look.circle.visible = casting(fighter);
   if (look.circle.visible) {
     const grown = 0.4 + (1 - castLeft(fighter)) * 1.6;
@@ -3985,6 +4315,38 @@ const wallMeshes = [player, rival].map(() => {
   return disc;
 });
 const frozenMaterial = new T.MeshBasicMaterial({ color: 0x9aa4ad });
+// 使い魔（特殊で呼ぶ）：迎撃は小さな星、砲台（プリズム・小魚）は光る八面体、盾（影）は相手の方を向く六角の板。形は提案。
+const familiarMeshes = [];
+const familiarGeometry = { intercept: new T.OctahedronGeometry(0.55, 0), gunner: new T.OctahedronGeometry(0.8, 0), guard: new T.CircleGeometry(FAMILIAR.radius * 1.3, 6) };
+function drawFamiliars(dt, now) {
+  while (familiarMeshes.length < familiars.length) {
+    const m = new T.Mesh(familiarGeometry.gunner, new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, depthWrite: false, side: T.DoubleSide }));
+    const glow = new T.Sprite(new T.SpriteMaterial({ map: fx.glow, color: 0xffffff, transparent: true, opacity: 0.7, depthWrite: false, blending: T.AdditiveBlending }));
+    glow.scale.setScalar(3);
+    m.add(glow);
+    scene.add(m);
+    familiarMeshes.push(m);
+  }
+  familiarMeshes.forEach((m, i) => {
+    const x = familiars[i];
+    m.visible = !!x && (x.owner === player || rivalOn()) && !(x.owner.cloaked && x.owner !== player);
+    if (!m.visible) return;
+    const color = CHARACTERS[x.owner.character].colors.glow;
+    m.geometry = familiarGeometry[x.role] ?? familiarGeometry.gunner;
+    m.material.color.setHex(x.role === 'guard' ? 0x1c2a24 : color);
+    m.material.opacity = x.role === 'guard' ? 0.55 + 0.25 * Math.sin(now / 90) : 0.9;
+    m.children[0].material.color.setHex(color);
+    m.children[0].scale.setScalar(x.role === 'guard' ? 6 : 3);
+    m.position.set(x.position.x, x.position.y, x.position.z);
+    if (x.role === 'guard') {
+      const t = x.owner.lock?.target;
+      if (t) m.lookAt(t.position.x, t.position.y, t.position.z); else m.rotation.set(0, -x.owner.state.yaw, 0);
+    } else m.rotation.set(now / 300 + i, now / 200, 0);
+    // 消える前の 1.5 秒は点滅する。
+    if (x.t < 1.5 && Math.floor(now / 100) % 2) m.visible = false;
+    if (dt > 0 && Math.random() < 0.5) fx.trail(x.position, color, false, 0.35);
+  });
+}
 // 屈折射のプリズム：弾が曲がる所に出る、光る八面体。
 const prismGeometry = new T.OctahedronGeometry(1.4, 0);
 const prismMeshes = [];
@@ -4048,6 +4410,7 @@ function drawCombat(dt, now) {
     m.rotation.y = now / 200;
     m.material.opacity = 0.8 * (1 - x.age / 1.2);
   });
+  drawFamiliars(dt, now);
   while (boltMeshes.length < bolts.length) {
     const m = new T.Mesh(boltGeometry, boltMaterials[0]);
     m.add(new T.Mesh(boltTailGeometry, boltTailMaterials[0]));
@@ -4093,7 +4456,10 @@ function drawCombat(dt, now) {
     m.children[0].material = tailMaterials[k];
     m.position.set(x.position.x, x.position.y, x.position.z);
     m.quaternion.setFromUnitVectors(forwardZ, boltDirection.set(-x.velocity.x, -x.velocity.y, -x.velocity.z).normalize());
-    if (!x.frozen) fx.trail(x.position, missileMaterials[k].color.getHex());
+    if (x.frozen) return;
+    fx.trail(x.position, missileMaterials[k].color.getHex());
+    // 板野サーカス風の誘導弾は、太く長く残る白い煙を引く（うねった道が見えるように）。
+    if (x.circus) fx.trail(x.position, 0xf4f1ea, true, 1.1);
   });
   while (meteorMeshes.length < meteors.length) { const m = new T.Mesh(meteorGeometry, meteorMaterials[0]); scene.add(m); meteorMeshes.push(m); }
   meteorMeshes.forEach((m, i) => {
@@ -4199,7 +4565,7 @@ function drawMarks() {
 }
 
 function controls() {
-  return { input: input(), cycle: cyclePressed, fire: firing, shield: shielding, arcana: arcanaPressed, missile: missilePressed };
+  return { input: input(), cycle: cyclePressed, weak: weakHeld, strong: strongHeld };
 }
 
 function input() {
@@ -4235,11 +4601,22 @@ const picker = $('characters');
 for (const id of ROSTER) {
   const c = CHARACTERS[id], label = document.createElement('label');
   label.innerHTML = `<input type="radio" name="character" value="${id}"${id === player.character ? ' checked' : ''}> <b>${c.name}</b>／${c.code} <small>${c.role}</small>`
-    + `<span class="kit">${c.main.name} · ${c.guard.name} · ${SLOT_NAMES[c.sub]} · ${SLOT_NAMES[c.special]}</span>`;
+    + `<span class="kit">シールド ${c.shield} · 体力 ${c.hp}</span>`;
   label.style.setProperty('--tint', `#${c.colors.accent.toString(16).padStart(6, '0')}`);
   picker.appendChild(label);
 }
 const chosenCharacter = () => document.querySelector('input[name="character"]:checked')?.value || player.character;
+// 選んだキャラの技の表（弱・強・特殊 × 前・横・後・静止）。
+function showMoves() {
+  const id = chosenCharacter(), rows = [['weak', '弱（右）'], ['strong', '強（左）'], ['special', '特殊（右+左）']];
+  $('move-table').innerHTML = `<thead><tr><th></th>${DIRECTIONS.map(d => `<th>${DIRECTION_NAMES[d]}</th>`).join('')}</tr></thead><tbody>`
+    + rows.map(([input, name]) => `<tr><th>${name}</th>${DIRECTIONS.map(d => {
+      const m = CHARACTERS[id].moves[input]?.[d];
+      return `<td>${m ? m.name + (input === 'special' ? `<small>${m.cost}</small>` : '') : '—'}</td>`;
+    }).join('')}</tr>`).join('') + '</tbody>';
+}
+picker.addEventListener('change', showMoves);
+showMoves();
 
 // 試合を初めからにする。character を渡すと自分のキャラを替え、敵のキャラも選び直す。
 function reset(character = player.character) {
@@ -4263,6 +4640,7 @@ function reset(character = player.character) {
   rains.length = 0;
   meteors.length = 0;
   decoys.length = 0;
+  familiars.length = 0;
   prisms.length = 0;
   destroyed = 0;
   hurtT = 0;
@@ -4307,19 +4685,19 @@ document.addEventListener('pointerlockerror', () => {
 document.addEventListener('mousemove', event => {
   if (active && player.alive) updateLook(player.state, event.movementX, event.movementY);
 });
-// 左ボタンで連射、右ボタンを押している間シールド、真ん中のボタン（か F）で誘導弾。ロックオンは自動。
+// 右ボタンで弱攻撃（押している間）、左ボタンで強攻撃、両方の同時押しで特殊攻撃（moves.mjs）。ロックオンは自動。
 document.addEventListener('mousedown', event => {
   if (!active) return;
-  if (event.button === 0) firing = true;
-  else if (event.button === 1) { missilePressed = true; event.preventDefault(); }
-  else if (event.button === 2) shielding = true;
+  if (event.button === 0) strongHeld = true;
+  else if (event.button === 2) weakHeld = true;
+  else if (event.button === 1) event.preventDefault();
 });
 document.addEventListener('mouseup', event => {
-  if (event.button === 0) firing = false;
-  else if (event.button === 2) shielding = false;
+  if (event.button === 0) strongHeld = false;
+  else if (event.button === 2) weakHeld = false;
 });
 document.addEventListener('contextmenu', event => event.preventDefault());
-const handled = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'ControlLeft', 'ControlRight', 'KeyC', 'ShiftLeft', 'ShiftRight', 'KeyR', 'KeyG', 'KeyQ', 'KeyE', 'KeyF']);
+const handled = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'ControlLeft', 'ControlRight', 'KeyC', 'ShiftLeft', 'ShiftRight', 'KeyR', 'KeyG', 'KeyQ']);
 document.addEventListener('keydown', event => {
   if (active && event.code === 'Escape') { suspend(); return; }
   if (!active || !handled.has(event.code)) return;
@@ -4328,14 +4706,12 @@ document.addEventListener('keydown', event => {
   // 試験用：G でダウン（自由落下）を試せる。
   else if (event.code === 'KeyG') knockDown(player.state);
   else if (event.code === 'KeyQ') cyclePressed = true;
-  else if (event.code === 'KeyE') arcanaPressed = true;
-  else if (event.code === 'KeyF') missilePressed = true;
   else keys.add(event.code);
 });
 document.addEventListener('keyup', event => { keys.delete(event.code); });
 function suspend() {
   keys.clear();
-  firing = shielding = false;
+  strongHeld = weakHeld = false;
   if (document.pointerLockElement === canvas) document.exitPointerLock();
   pause();
 }
@@ -4383,15 +4759,21 @@ function fight(dt) {
     if (!tutorial) stepTargets(targets, dt);
     stepFighter(player, controls(), dt, world, lockables(), bolts, sees, missiles, rains, arena);
   }
-  // 補助と特別の効き目（零速の膜・光学迷彩・三秒間の静止・残響の再生・潜行強襲、デコイ）。弾を進める前に。
+  // 技の効き目（膜・迷彩・静止・残響・強襲・水の壁、デコイ）と使い魔。弾を進める前に。
   const ability = stepAbilities(list, enemiesOf, arena, dt);
   for (const e of ability.events) {
     const color = CHARACTERS[e.owner.character]?.colors.glow ?? 0xffffff;
-    if (e.kind === 'assault') { release(e, color, ASSAULT.radius); if (e.hits.some(h => h.target === player)) hurtT = 0.6; }
-    else if (e.kind === 'still-end') burst(e.at, color, 6);
-    else if (e.kind === 'combo') comboFx(e, color);
+    if (e.kind === 'strong' || e.kind === 'special') moveFx(e, color);
+    else if (e.kind === 'assault') { release(e, color, ASSAULT.radius); if (e.hits.some(h => h.target === player)) hurtT = 0.6; }
+    else if (e.kind === 'still-end' || e.kind === 'veil-end') burst(e.at, color, e.kind === 'still-end' ? 6 : 1.5);
     else if (e.kind === 'wall-end' || e.kind === 'wall-block') burst(e.at, 0x9fdcff, 2.5);
     else burst(e.at, color, e.kind === 'echo' ? 1.2 : 0.7);
+  }
+  for (const e of stepFamiliars(arena, dt)) {
+    const color = CHARACTERS[e.owner.character]?.colors.glow ?? 0xffffff;
+    if (e.kind === 'intercept') { beam(e.from, e.at, color); burst(e.at, color, 1.2); }
+    else if (e.kind === 'familiar-shot') fx.sparks(e.at, color, 5, 6, { life: 0.2 });
+    else burst(e.at, color, 1.4);
   }
   // 近接（弾を進める前に。相殺の衝撃波は周りの弾を消す）。
   const close = stepMelee(list, { bolts, missiles }, dt);
@@ -4399,12 +4781,15 @@ function fight(dt) {
   // 踏み込みの間は、体から光の粒がこぼれる。
   for (const f of list) if (f.melee?.phase === 'lunge' && !(f.cloaked && f !== player)) fx.sparks(f.position, CHARACTERS[f.character]?.colors.glow ?? 0xffffff, 3, 5, { life: 0.3 });
   const blocked = (a, b) => !city.clear(a, b, 0.05);
-  const all = facing ? [...fighters, ...decoys] : tutorial ? [player, ...grunts, ...decoys] : [player, ...targets];
+  const all = (facing ? [...fighters, ...decoys] : tutorial ? [player, ...grunts, ...decoys] : [player, ...targets]).concat(shields(arena));
   const hits = ability.hits.concat(close.hits, stepBolts(bolts, all, dt, blocked), stepMissiles(missiles, all, dt, blocked), stepMeteors(rains, meteors, all, dt, blocked, sees));
   const hpBefore = player.hp;
   applyHits(hits);
   for (const hit of hits) {
     if (hit.meteor) { if (hit.kind === 'target' && hit.destroyed && hit.target.kind !== 'fighter') destroyed++; burst(hit.at, hit.owner === rival ? 0xffa0d0 : 0xfff1a8, hit.kind === 'target' ? 3 : 2.5); continue; }
+    if (hit.kind === 'launch') { fx.sparks(hit.at, 0xffffff, 8, 10, { life: 0.25 }); continue; }
+    if (hit.kind === 'familiar') { burst(hit.at, 0xcffbff, hit.broke ? 3 : 1); continue; }
+    if (hit.kind === 'target' && hit.target.kind === 'fighter') shieldFx(hit);
     if (hit.missile && hit.kind !== 'shield') { if (hit.kind === 'target' && hit.destroyed && hit.target.kind !== 'fighter') destroyed++; burst(hit.at, hit.kind === 'expired' ? 0x8899aa : 0xffb36b, hit.kind === 'target' ? 3 : 1.6); continue; }
     if (hit.melee) { if (hit.destroyed) { if (hit.target.kind !== 'fighter') destroyed++; burst(hit.at, 0xff5fa2, hit.target.kind === 'fighter' ? 3 : 1.4); } continue; }
     if (hit.heavy) { if (hit.destroyed && hit.target.kind !== 'fighter') destroyed++; continue; }
@@ -4432,42 +4817,47 @@ function fight(dt) {
     fx.shake(hit.target === player ? 2 : Math.max(0, 1.2 - distanceToPlayer(hit.at) / 150));
   }
   if (duelling) stepDuel(duel, fighters, dt);
-  announceSpecials(list);
 }
 
 const distanceToPlayer = p => Math.hypot(p.x - player.state.position.x, p.y - player.state.position.y, p.z - player.state.position.z);
-// 特別を使った瞬間（ゲージが満タンから空になったとき）：技名のカットインと、足もとに広がる魔法陣。
-const charges = new Map();
-let cutInT = 0;
-function announceSpecials(list) {
-  for (const f of list) {
-    const before = charges.get(f) ?? 0, now = f.arcana.charge;
-    charges.set(f, now);
-    if (!(before >= ARCANA.max && now < ARCANA.max / 2)) continue;
-    const c = CHARACTERS[f.character], color = c?.colors.glow ?? 0x9ff4e4;
-    fx.circle(f.position, color, 4, 40, 1.2);
-    fx.flash(f.position, color, 12, 0.35);
-    fx.sparks(f.position, color, 40, 25, { life: 0.8 });
-    cutIn(f, c, color);
-  }
+// 使い魔が誘導弾を撃ち落とす光の筋（粒を並べる）。
+function beam(from, to, color) {
+  const n = Math.min(24, Math.ceil(Math.hypot(to.x - from.x, to.y - from.y, to.z - from.z) / 1.2));
+  for (let i = 0; i <= n; i++) { const k = i / n; fx.trail({ x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k, z: from.z + (to.z - from.z) * k }, color, false, 0.25); }
 }
-// 合わせ技を使った瞬間：技ごとの光と、技名の小さな知らせ。
-let comboPopT = 0;
-function comboFx(e, color) {
-  const at = e.at;
-  if (e.combo === 'wave') {
-    fx.shockwave(at, color, COMBO.wave.radius, 0.7);
-    fx.circle(at, color, 4, COMBO.wave.radius * 2, 0.7);
-    fx.sparks(at, color, 50, 40, { life: 0.6 });
-  } else if (e.combo === 'wall') fx.flash(at, 0x9fdcff, 14, 0.3);
-  else {
-    fx.flash(at, color, e.combo === 'mirror' ? 8 : 16, 0.25);
-    fx.sparks(at, color, 30, 30, { life: 0.5 });
+// 強と特殊を出した瞬間：技名の小さな知らせと光。ゲージを満タン使う大技は、技名のカットインと足もとの魔法陣。
+let cutInT = 0;
+function moveFx(e, color) {
+  const at = e.at, move = e.move, big = e.kind === 'special' && (move.cost ?? 0) >= ARCANA.max;
+  const seen = e.owner === player || !(e.owner.cloaked);
+  if (big) {
+    fx.circle(at, color, 4, 40, 1.2);
+    fx.flash(at, color, 12, 0.35);
+    fx.sparks(at, color, 40, 25, { life: 0.8 });
+    cutIn(e.owner, CHARACTERS[e.owner.character], color, move.name);
+    return;
   }
-  fx.shake(e.owner === player ? 0.5 : Math.max(0, 0.8 - distanceToPlayer(at) / 120));
-  pop(`${e.owner === player ? '' : 'ライバル · '}${SLOT_NAMES[e.combo]}`, color);
+  if (e.kind === 'special') {
+    if (move.kind === 'wave') {
+      fx.shockwave(at, color, SPECIAL.wave.radius, 0.7);
+      fx.circle(at, color, 4, SPECIAL.wave.radius * 2, 0.7);
+      fx.sparks(at, color, 50, 40, { life: 0.6 });
+    } else if (move.kind === 'wall') fx.flash(at, 0x9fdcff, 14, 0.3);
+    else if (seen) { fx.flash(at, color, 10, 0.25); fx.sparks(at, color, 30, 30, { life: 0.5 }); fx.circle(at, color, 2, 10, 0.5); }
+    fx.shake(e.owner === player ? 0.4 : Math.max(0, 0.7 - distanceToPlayer(at) / 120));
+  } else if (seen) fx.sparks(at, color, 10, 12, { life: 0.3 });
+  if (e.owner === player || e.kind === 'special') pop(`${e.owner === player ? '' : 'ライバル · '}${e.kind === 'special' ? '特殊' : '強'} · ${move.name}`, color);
+}
+// 魔法少女の膜（パッシブのシールド）に当たった光。割れたら破片が散る。
+function shieldFx(hit) {
+  if (hit.broke) {
+    fx.sparks(hit.target.position, 0xcffbff, 50, 26, { big: true, life: 0.7, gravity: -10 });
+    fx.flash(hit.target.position, 0xcffbff, 10, 0.2);
+    if (hit.target === player || hit.owner === player) pop(hit.target === player ? 'シールドが割れた' : 'シールド破壊', 0xcffbff);
+  } else if (hit.shield > 0) fx.sparks(hit.at, 0xcffbff, Math.min(14, 3 + Math.round(hit.shield / 4)), 10, { life: 0.25 });
 }
 // 画面の真ん中の下に出す、技名などの小さな知らせ。
+let comboPopT = 0;
 function pop(text, color) {
   const el = $('combo-pop');
   el.textContent = text;
@@ -4513,10 +4903,10 @@ function meleeFx(e) {
     if (mine) pop('相殺', 0xffffff);
   } else if (e.kind === 'whiff') { act(e.owner, 'whiff'); burst(e.at, 0x8899aa, 0.8); }
 }
-function cutIn(f, c, color) {
+function cutIn(f, c, color, name) {
   const el = $('cutin');
   el.querySelector('b').textContent = c ? `${c.code}　${c.name}` : f.name;
-  el.querySelector('strong').textContent = SLOT_NAMES[f.special] ?? '';
+  el.querySelector('strong').textContent = name ?? '';
   el.style.setProperty('--tint', `#${color.toString(16).padStart(6, '0')}`);
   el.classList.toggle('rival', f !== player);
   el.hidden = false;
@@ -4596,7 +4986,7 @@ function frame(now) {
     if (mode === 'tutorial' && tut.phase === 'clear' && (clearT -= dt) <= 0) suspend();
     tutBannerT = Math.max(0, tutBannerT - dt);
   }
-  cyclePressed = arcanaPressed = missilePressed = false;
+  cyclePressed = false;
   hurtT = Math.max(0, hurtT - dt);
   if (cutInT > 0 && (cutInT -= dt) <= 0) $('cutin').hidden = true;
   if (comboPopT > 0 && (comboPopT -= dt) <= 0) $('combo-pop').hidden = true;
@@ -4662,35 +5052,29 @@ function frame(now) {
   $('boost-value').textContent = Math.ceil(s.boost);
   $('boost-bar').style.width = `${s.boost / SETTINGS.maxBoost * 100}%`;
   $('boost-gauge').classList.toggle('overheat', s.overheat);
-  $('shield-label').textContent = shield.spec.name;
+  $('shield-label').textContent = shield.broken ? 'SHIELD · 割れた' : 'SHIELD';
   $('shield-value').textContent = Math.ceil(shield.charge);
-  $('shield-bar').style.width = `${shield.charge / shield.spec.max * 100}%`;
+  $('shield-bar').style.width = `${shield.charge / shield.max * 100}%`;
   $('shield-gauge').classList.toggle('overheat', shield.broken);
-  $('shield-gauge').classList.toggle('active', shield.active);
-  $('form-label').textContent = `主武器 · ${{ front: '前', side: '横', back: '後ろ', still: '止まる', dash: '踏み込み' }[player.form] ?? '前'}`;
-  $('form-value').textContent = player.weapon.spec?.name ?? '';
-  const combo = player.combo && COMBO[player.combo];
-  $('combo-gauge').hidden = !combo;
-  if (combo) {
-    const comboReady = canCombo(player);
-    $('combo-label').textContent = SLOT_NAMES[player.combo];
-    $('combo-value').textContent = player.mirroring ? '反射中' : player.comboT > 0 ? player.comboT.toFixed(1) : comboReady ? '右+左' : '—';
-    $('combo-bar').style.width = `${(1 - (combo.cooldown ? player.comboT / combo.cooldown : 0)) * 100}%`;
-    $('combo-gauge').classList.toggle('ready', comboReady || player.mirroring);
-  }
-  const ready = player.launcher.cooldown <= 0;
-  $('missile-label').textContent = SLOT_NAMES[player.sub];
-  $('missile-value').textContent = ready ? 'F' : player.launcher.cooldown.toFixed(1);
-  $('missile-bar').style.width = `${(1 - player.launcher.cooldown / SUB_COOLDOWN[player.sub]) * 100}%`;
-  $('missile-gauge').classList.toggle('ready', ready);
+  $('shield-gauge').classList.toggle('active', shield.hitT > 0);
+  // 3つの入力：今の向きで出る技。
+  const dir = active ? player.dir ?? direction(input()) : direction(input());
+  const weak = moveOf(player.character, 'weak', dir), strong = moveOf(player.character, 'strong', dir), special = specialOf(player, dir);
+  $('weak-label').textContent = `右 弱 · ${DIRECTION_NAMES[dir]}`;
+  $('weak-value').textContent = weak?.name ?? '—';
+  $('strong-label').textContent = `左 強 · ${strong?.name ?? '—'}`;
+  $('strong-value').textContent = player.strongT > 0 ? player.strongT.toFixed(1) : '○';
+  $('strong-bar').style.width = `${(1 - player.strongT / (player.strongMax || 1)) * 100}%`;
+  $('strong-gauge').classList.toggle('ready', player.strongT <= 0);
   const chasing = missiles.filter(m => m.target === player && m.homing).length;
   $('alert').hidden = !(active && chasing);
   $('alert').textContent = `誘導弾 ×${chasing}`;
   const arcana = player.arcana;
-  $('arcana-label').textContent = SLOT_NAMES[player.special];
-  $('arcana-value').textContent = casting(player) ? '詠唱中' : canSpecial(player) ? 'E' : Math.floor(arcana.charge);
+  const specialReady = canSpecial(player, special);
+  $('arcana-label').textContent = `右+左 特殊 · ${special ? `${special.name}（${special.cost}）` : '—'}`;
+  $('arcana-value').textContent = casting(player) ? '詠唱中' : player.familiarT > 0 ? `使い魔 ${player.familiarT.toFixed(0)}` : Math.floor(arcana.charge);
   $('arcana-bar').style.width = `${casting(player) ? castLeft(player) * 100 : arcana.charge / ARCANA.max * 100}%`;
-  $('arcana-gauge').classList.toggle('ready', canSpecial(player) || casting(player));
+  $('arcana-gauge').classList.toggle('ready', specialReady || casting(player));
   $('hp-gauge').hidden = mode === 'practice';
   $('hp-value').textContent = player.hp;
   $('hp-bar').style.width = `${player.hp / player.maxHp * 100}%`;
@@ -4727,18 +5111,19 @@ requestAnimationFrame(frame);
 
 // 読み取り専用の観測口。ブラウザで実際の入力・移動・一時停止を確認する。
 const fighterView = f => ({ position: f.position, hp: f.hp, alive: f.alive, kills: f.kills, drive: f.state.drive, downT: f.state.downT, guardT: f.guardT, arcana: { ...f.arcana },
-  maxHp: f.maxHp, character: f.character, phased: f.phased, cloaked: f.cloaked, stillT: f.stillT, assaultT: f.assaultT, counterT: f.counterT, subCooldown: f.launcher.cooldown, guard: f.shield.active,
-  comboT: f.comboT, mirroring: f.mirroring, wall: !!f.wall, slowT: f.slowT, form: f.form, weapon: f.weapon.spec?.name, melee: f.melee?.phase ?? null, meleeCooldown: f.meleeCooldown });
+  maxHp: f.maxHp, character: f.character, phased: f.phased, cloaked: f.cloaked, stillT: f.stillT, assaultT: f.assaultT, counterT: f.counterT, shield: { ...f.shield },
+  dir: f.dir, strongT: f.strongT, specialT: f.specialT, veil: f.veil?.kind ?? null, familiarT: f.familiarT, parryT: f.parryT,
+  mirroring: f.mirroring, wall: !!f.wall, slowT: f.slowT, melee: f.melee?.phase ?? null, meleeCooldown: f.meleeCooldown });
 window.flight = Object.freeze({
   snapshot: () => structuredClone({ ...player.state, mode, active, passed, gateIndex, destroyed, bolts: bolts.length, shield: { ...player.shield },
     lock: player.lock.target ? lockables().indexOf(player.lock.target) : -1, lockVisible: player.lock.visible, fov: camera.fov,
     hp: player.hp, alive: player.alive, kills: player.kills, rival: fighterView(rival), arcana: { ...player.arcana }, releases, seen,
     duel: { phase: duel.phase, time: duel.time, winner: duel.winner === 'draw' ? 'draw' : duel.winner?.name ?? null },
     rivalBolts: bolts.filter(b => b.owner === rival).length,
-    special: player.special, rivalSpecial: rival.special, character: player.character, rivalCharacter: rival.character, me: fighterView(player),
+    character: player.character, rivalCharacter: rival.character, me: fighterView(player),
     decoys: decoys.length, prisms: prisms.length, echoes: bolts.filter(b => b.echo).length, frozen: bolts.filter(b => b.frozen).length, rains: rains.map(r => ({ mine: r.caster === player, onMe: r.target === player, t: r.t })), meteors: meteors.length, exposed,
     sparks: fx.count(), cutIn: !$('cutin').hidden && $('cutin').querySelector('strong').textContent,
-    missiles: missiles.filter(m => m.owner === player).length, rivalMissiles: missiles.filter(m => m.owner === rival).length, missileCooldown: player.launcher.cooldown,
+    missiles: missiles.filter(m => m.owner === player).length, rivalMissiles: missiles.filter(m => m.owner === rival).length, familiars: familiars.map(x => ({ role: x.role, mine: x.owner === player })),
     targets: targets.map(t => ({ position: t.position, alive: t.alive, hp: t.hp, dashing: t.dashing })),
     tutorial: { phase: tut.phase, wave: tut.wave, time: tut.time, grunts: tut.grunts.map(g => ({ position: g.position, alive: g.alive, hp: g.hp })), gruntBolts: bolts.filter(b => b.owner === tut.swarm).length } }),
   floorAt: (x, z) => city.floorAt(x, z),
