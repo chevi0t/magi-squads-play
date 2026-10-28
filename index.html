@@ -1319,10 +1319,11 @@ const GUARDS = Object.freeze({
 
 const CHARACTERS = Object.freeze({
   natsume: {
-    id: 'natsume', name: '乾 夏芽', code: 'アルタイル', role: '迎撃・急減速・反撃', hp: 250,
+    id: 'natsume', ride: 'stand', name: '乾 夏芽', code: 'アルタイル', role: '迎撃・急減速・反撃', hp: 250,
     colors: { dress: 0x1e1a20, accent: 0xc98a99, hair: 0x2b2326, glow: 0xf3b4c4, shield: 0xf6c9d4, shieldEdge: 0xffe6ee },
     main: WEAPONS.rapid, forms: FORMS.natsume, guard: GUARDS.still, sub: 'brake', special: 'stillness', combo: 'wave',
     notes: {
+      ride: '提案：何にも乗らず、立ったまま体を倒して飛ぶ。「魔法少女」の肩書きを嫌う現実主義者なので箒に乗らない。急制動ではのけぞって踏ん張る',
       forms: '提案：横は左右から挟む2発、後ろは下がりながら置いていく遅い追尾弾（迎撃）。前へ踏み込むと重い弾、止まると漂う追尾弾',
       main: '提案：原文に主武器の記載が無いので、今の連射弾',
       guard: '原案：慣性制御《零速領域》の「飛来する魔法弾の減速」。通常技は短時間の減速・偏向まで',
@@ -1333,10 +1334,11 @@ const CHARACTERS = Object.freeze({
     bot: { near: 35, far: 65 },
   },
   mashiro: {
-    id: 'mashiro', name: '鷺沢 真白', code: 'ミラージュ', role: '長距離狙撃・光学迷彩・曲射', hp: 210, lockRange: 200,
+    id: 'mashiro', ride: 'prone', name: '鷺沢 真白', code: 'ミラージュ', role: '長距離狙撃・光学迷彩・曲射', hp: 210, lockRange: 200,
     colors: { dress: 0x2b2a4a, accent: 0x9a6cff, hair: 0xd9dbe8, glow: 0xc49bff, shield: 0xd2b8ff, shieldEdge: 0xeadcff },
     main: WEAPONS.lance, forms: FORMS.mashiro, guard: GUARDS.cloak, sub: 'prism', special: 'arcana', combo: 'ambush',
     notes: {
+      ride: '提案：銀の長い杖に伏せ、狙撃の構えのまま滑るように飛ぶ（高所を転々とする狙撃手）',
       forms: '提案：横は軽い光の速射、後ろは下がりながらの重い一撃（引き撃ち）。前へ踏み込むとさらに重い光槍、止まると曲がる光',
       main: '原案：長距離狙撃。弾が速く、連射は遅い',
       guard: '原案：光学迷彩。接近されると脆いので、受け止める膜は持たない',
@@ -1347,10 +1349,11 @@ const CHARACTERS = Object.freeze({
     bot: { near: 55, far: 85, fire: 150 },
   },
   toko: {
-    id: 'toko', name: '江波 透子', code: 'リリィ', role: '撹乱・デコイ・追尾妨害', hp: 250,
+    id: 'toko', ride: 'broom', name: '江波 透子', code: 'リリィ', role: '撹乱・デコイ・追尾妨害', hp: 250,
     colors: { dress: 0xfff1a0, accent: 0x7fd3f0, hair: 0x5a4230, glow: 0xfff38a, shield: 0xbfeeff, shieldEdge: 0xe6f9ff },
     main: WEAPONS.light, forms: FORMS.toko, guard: GUARDS.shield, sub: 'decoy', special: 'replay', combo: 'mirror',
     notes: {
+      ride: '提案：魔法少女に憧れていた新人なので、昔ながらの箒に横向きに腰かける',
       forms: '提案：横は扇に広がる3発、後ろは遅く強く曲がる弾の群れ（撹乱）。前へ踏み込むと重ね撃ち、止まると漂う光',
       main: '原案：直接火力が最初の6人で一番低い。今の連射弾の威力を下げた物',
       guard: '提案：今の全方位の膜',
@@ -1361,10 +1364,11 @@ const CHARACTERS = Object.freeze({
     bot: { near: 45, far: 80 },
   },
   shiori: {
-    id: 'shiori', name: '深町 汐里', code: 'ネレイド', role: '重火力・面制圧・水圧の突進', hp: 290,
+    id: 'shiori', ride: 'surf', name: '深町 汐里', code: 'ネレイド', role: '重火力・面制圧・水圧の突進', hp: 290,
     colors: { dress: 0x1f4a3a, accent: 0x2f7fd0, hair: 0x1b2633, glow: 0x7fd8ff, shield: 0x9fdcff, shieldEdge: 0xd6f1ff },
     main: WEAPONS.tide, forms: FORMS.shiori, guard: GUARDS.hard, sub: 'surge', special: 'meteor', combo: 'wall',
     notes: {
+      ride: '提案：水の板に横向きに立ち、膝を曲げて波に乗るように飛ぶ（水流の反動で突進する港の隊長）。横へ大きく傾く',
       forms: '提案：横は細い水の3本、後ろはその場に残る水の機雷。前へ踏み込むと太い激流、止まるとしつこく追う水',
       main: '原案：海水を巨大な槍として射出する。遅く大きい弾。遅いぶん強く曲がって追う（ビルの角で切れる）',
       guard: '提案：生存力が高いので、長く張れる硬い膜',
@@ -1375,10 +1379,11 @@ const CHARACTERS = Object.freeze({
     bot: { near: 30, far: 60 },
   },
   midori: {
-    id: 'midori', name: '蓮見 翠', code: 'ファントム', role: '透過・奇襲・至近の連続攻撃', hp: 240,
+    id: 'midori', ride: 'dive', name: '蓮見 翠', code: 'ファントム', role: '透過・奇襲・至近の連続攻撃', hp: 240,
     colors: { dress: 0xeef3ef, accent: 0x2fae7f, hair: 0x23302b, glow: 0x7ff0c2, shield: 0xa8f5d6, shieldEdge: 0xdafbee },
     main: WEAPONS.scatter, forms: FORMS.midori, guard: GUARDS.phase, sub: 'missiles', special: 'assault', combo: 'burst',
     notes: {
+      ride: '提案：何にも乗らず、腕を後ろへ流して水平に突き進む（壁をすり抜ける奇襲）',
       forms: '提案：横は広い薙ぎ払い、後ろは置いていく強く曲がる2発。前へ踏み込むと零距離の砲、止まると曲がる3発（種まき）',
       main: '原案：至近距離からの連続攻撃。届く距離の短い散弾にした',
       guard: '原案：物質透過《位相潜行》。透過中は攻撃できず、解ける瞬間が隙。弾もすり抜けるのは仮の決め（原文の確認事項）',
@@ -1392,10 +1397,11 @@ const CHARACTERS = Object.freeze({
   // 飛ぶのはみんなの半分の速さ（pace）。弾は遅く軽く、副武器と合わせ技は無い。特別は流星雨（屋根の下で防ぐ練習）。
   // Bot は近くで戦い、振り向きが遅く、あまり避けず、よく止まる（bot.tune で RIVAL を上書き）。
   apprentice: {
-    id: 'apprentice', name: '見習いの魔女', code: 'ノービス', role: 'チュートリアルのボス', hp: 160, playable: false, pace: 0.5,
+    id: 'apprentice', ride: 'broom', name: '見習いの魔女', code: 'ノービス', role: 'チュートリアルのボス', hp: 160, playable: false, pace: 0.5,
     colors: { dress: 0x3b3150, accent: 0x9c86c9, hair: 0x6f5e86, glow: 0xc3b0f0, shield: 0xd8ccf5, shieldEdge: 0xefe8ff },
     main: WEAPONS.novice, forms: null, guard: GUARDS.shield, sub: 'none', special: 'meteor', combo: null,
     notes: {
+      ride: '提案：見習いなので箒',
       main: '提案：遅く軽い魔法弾。見てから避けられる',
       guard: '提案：全方位の膜。Bot はあまり張らない',
       sub: '提案：無し',
@@ -3408,6 +3414,13 @@ let duel = newDuel();
 let tut = createTutorial(), clearT = 0, tutBanner = '', tutBannerT = 0;
 // 試験用：?tutorial=boss でチュートリアルをボスの前から始める。
 const testBoss = params.get('tutorial') === 'boss';
+// ?slow=倍 で時間をゆっくり進める（動きを見る試験用）。
+const testSlow = Math.max(1, Number(params.get('slow')) || 1);
+// ?orbit=度 で、カメラを自分の周りへ回して近くから見る（姿を見る試験用。0 は真後ろ、90 は右）。
+// ?near=1 で、1vs1 の敵を自分の 45m 前から始める（近接を見る試験用）。
+const testNear = params.get('near') === '1';
+const NEAR_START = Object.freeze({ position: Object.freeze({ x: START.position.x + Math.sin(START.yaw) * 45, y: START.position.y, z: START.position.z - Math.cos(START.yaw) * 45 }), yaw: START.yaw + Math.PI });
+const testOrbit = params.has('orbit') ? Number(params.get('orbit')) * Math.PI / 180 : null;
 const bossOn = () => mode === 'tutorial' && tut.phase === 'boss';
 // 敵の魔法少女が戦いに出ているか（1vs1 と、チュートリアルのボス）。
 const rivalOn = () => mode === 'duel' || bossOn();
@@ -3477,37 +3490,128 @@ function makeGirl(colors) {
   scene.add(ship);
   const girl = new T.Group();
   ship.add(girl);
-  // 箒：柄は前（-z）へ伸び、穂は後ろ。
-  const handle = new T.Mesh(new T.CylinderGeometry(0.025, 0.03, 1.7, 6).rotateX(Math.PI / 2), wood);
-  handle.position.set(0, -0.2, -0.2);
-  girl.add(handle);
-  const bristles = new T.Mesh(new T.ConeGeometry(0.16, 0.6, 10).rotateX(-Math.PI / 2), straw);
-  bristles.position.set(0, -0.2, 0.85);
-  girl.add(bristles);
-  box(girl, accent, [0.07, 0.07, 0.04], [0, -0.2, 0.52]);
-  // 腰から上は前を向き、脚は右へそろえて下ろす。
-  box(girl, dress, [0.28, 0.36, 0.18], [0, 0.04, 0]);
-  const skirt = new T.Mesh(new T.ConeGeometry(0.3, 0.28, 10, 1, true), accent);
-  skirt.position.set(0.04, -0.18, 0);
-  girl.add(skirt);
-  for (const z of [-0.06, 0.06]) {
-    box(girl, skin, [0.3, 0.1, 0.1], [0.16, -0.2, z]);
-    box(girl, skin, [0.09, 0.4, 0.09], [0.3, -0.42, z]);
-    box(girl, accent, [0.12, 0.08, 0.16], [0.32, -0.64, z - 0.03]);
+  // 乗り方（キャラごと、characters.mjs の ride）。どれも同じ材質で作り、選んだ物だけを見せる（提案）。
+  const metal = new T.MeshStandardMaterial({ color: 0xc9ccd8, roughness: 0.35, metalness: 0.6 });
+  const rides = {};
+  const head = (group, at) => {
+    const h = new T.Mesh(new T.SphereGeometry(0.13, 12, 10), skin);
+    h.position.set(...at);
+    group.add(h);
+    return h;
+  };
+  // broom：箒に横向きに腰かける。柄は前（-z）へ伸び、穂は後ろ。
+  {
+    const g = rides.broom = new T.Group();
+    const handle = new T.Mesh(new T.CylinderGeometry(0.025, 0.03, 1.7, 6).rotateX(Math.PI / 2), wood);
+    handle.position.set(0, -0.2, -0.2);
+    g.add(handle);
+    const bristles = new T.Mesh(new T.ConeGeometry(0.16, 0.6, 10).rotateX(-Math.PI / 2), straw);
+    bristles.position.set(0, -0.2, 0.85);
+    g.add(bristles);
+    box(g, accent, [0.07, 0.07, 0.04], [0, -0.2, 0.52]);
+    // 腰から上は前を向き、脚は右へそろえて下ろす。
+    box(g, dress, [0.28, 0.36, 0.18], [0, 0.04, 0]);
+    const skirt = new T.Mesh(new T.ConeGeometry(0.3, 0.28, 10, 1, true), accent);
+    skirt.position.set(0.04, -0.18, 0);
+    g.add(skirt);
+    for (const z of [-0.06, 0.06]) {
+      box(g, skin, [0.3, 0.1, 0.1], [0.16, -0.2, z]);
+      box(g, skin, [0.09, 0.4, 0.09], [0.3, -0.42, z]);
+      box(g, accent, [0.12, 0.08, 0.16], [0.32, -0.64, z - 0.03]);
+    }
+    // 両手で前の柄をつかむ。
+    for (const x of [-0.12, 0.12]) {
+      const arm = box(g, dress, [0.07, 0.07, 0.34], [x * 0.8, -0.06, -0.2]);
+      arm.rotation.x = 0.45;
+      box(g, skin, [0.06, 0.06, 0.06], [x * 0.3, -0.18, -0.36]);
+    }
+    head(g, [0, 0.36, 0]);
+    box(g, hair, [0.3, 0.3, 0.3], [0, 0.4, 0.05]).geometry = new T.SphereGeometry(0.15, 12, 10);
+    box(g, hair, [0.14, 0.42, 0.06], [0, 0.16, 0.12]);
   }
-  // 両手で前の柄をつかむ。
-  for (const x of [-0.12, 0.12]) {
-    const arm = box(girl, dress, [0.07, 0.07, 0.34], [x * 0.8, -0.06, -0.2]);
-    arm.rotation.x = 0.45;
-    box(girl, skin, [0.06, 0.06, 0.06], [x * 0.3, -0.18, -0.36]);
+  // stand：何にも乗らず、立ったまま進む向きへ体を倒して飛ぶ。黒い上着の裾がなびく（夏芽）。
+  {
+    const g = rides.stand = new T.Group();
+    box(g, dress, [0.3, 0.4, 0.2], [0, 0.12, 0]);
+    const coat = box(g, dress, [0.34, 0.62, 0.04], [0, -0.12, 0.12]);
+    coat.rotation.x = 0.35;
+    box(g, accent, [0.31, 0.06, 0.21], [0, -0.06, 0]);
+    for (const x of [-0.08, 0.08]) {
+      const leg = box(g, skin, [0.1, 0.62, 0.1], [x, -0.42, 0.02]);
+      leg.rotation.x = 0.12;
+      box(g, accent, [0.12, 0.1, 0.2], [x, -0.76, -0.02]);
+      // 腕は脇へ下ろし、少し後ろへ流す。
+      const arm = box(g, dress, [0.07, 0.4, 0.07], [x * 2.6, -0.02, 0.06]);
+      arm.rotation.set(0.35, 0, x > 0 ? 0.15 : -0.15);
+    }
+    head(g, [0, 0.46, 0]);
+    box(g, hair, [0.28, 0.16, 0.3], [0, 0.55, 0.03]);
+    box(g, hair, [0.26, 0.2, 0.06], [0, 0.38, 0.12]);
   }
-  const head = new T.Mesh(new T.SphereGeometry(0.13, 12, 10), skin);
-  head.position.set(0, 0.36, 0);
-  girl.add(head);
-  const back = new T.Mesh(new T.SphereGeometry(0.15, 12, 10), hair);
-  back.position.set(0, 0.4, 0.04);
-  girl.add(back);
-  box(girl, hair, [0.14, 0.42, 0.06], [0, 0.16, 0.12]);
+  // prone：銀の長い杖に伏せて、狙撃の構えのまま滑るように飛ぶ（真白）。
+  {
+    const g = rides.prone = new T.Group();
+    const staff = new T.Mesh(new T.CylinderGeometry(0.03, 0.04, 2.6, 8).rotateX(Math.PI / 2), metal);
+    staff.position.set(0, -0.16, -0.25);
+    g.add(staff);
+    const lens = new T.Mesh(new T.TorusGeometry(0.09, 0.02, 6, 16), metal);
+    lens.position.set(0, -0.16, -1.45);
+    g.add(lens);
+    box(g, dress, [0.28, 0.18, 0.4], [0, 0, 0.02]);
+    box(g, accent, [0.3, 0.12, 0.22], [0, -0.02, 0.28]);
+    for (const x of [-0.08, 0.08]) {
+      box(g, skin, [0.09, 0.09, 0.62], [x, -0.02, 0.62]);
+      box(g, accent, [0.11, 0.16, 0.1], [x, -0.02, 0.96]);
+      // 両手を前へ伸ばして杖を持つ。
+      box(g, dress, [0.07, 0.07, 0.36], [x * 1.6, -0.08, -0.32]);
+    }
+    head(g, [0, 0.08, -0.3]);
+    box(g, hair, [0.3, 0.14, 0.34], [0, 0.14, -0.26]);
+    box(g, hair, [0.24, 0.06, 0.4], [0, 0.04, 0.0]);
+  }
+  // surf：水の板に横向きに立ち、膝を曲げて波に乗るように飛ぶ（汐里）。
+  {
+    const g = rides.surf = new T.Group();
+    const board = box(g, accent, [0.5, 0.07, 1.6], [0, -0.78, 0.05]);
+    board.geometry = new T.CylinderGeometry(0.5, 0.5, 0.07, 20).scale(0.5, 1, 1.6);
+    const rider = new T.Group();
+    rider.rotation.y = -1.1;
+    g.add(rider);
+    box(rider, dress, [0.32, 0.38, 0.2], [0, 0.02, 0]);
+    box(rider, accent, [0.34, 0.1, 0.22], [0, -0.18, 0]);
+    for (const x of [-0.16, 0.16]) {
+      // 膝を曲げて、足を前後に開く。
+      const thigh = box(rider, skin, [0.11, 0.34, 0.11], [x, -0.34, -0.06]);
+      thigh.rotation.set(-0.5, 0, x * 1.2);
+      const shin = box(rider, skin, [0.1, 0.34, 0.1], [x * 1.35, -0.6, 0.04]);
+      shin.rotation.set(0.45, 0, x * 0.5);
+      // 腕は前と後ろへ広げて釣り合いを取る。
+      const arm = box(rider, dress, [0.4, 0.07, 0.07], [x * 2.1, 0.12, 0]);
+      arm.rotation.z = x > 0 ? -0.35 : 0.35;
+    }
+    head(rider, [0, 0.36, -0.02]);
+    box(rider, hair, [0.28, 0.14, 0.3], [0, 0.45, 0.02]);
+    box(rider, hair, [0.1, 0.36, 0.1], [0, 0.2, 0.16]);
+  }
+  // dive：何にも乗らず、腕を後ろへ流して水平に突き進む（翠）。
+  {
+    const g = rides.dive = new T.Group();
+    box(g, dress, [0.28, 0.18, 0.42], [0, 0, 0]);
+    box(g, accent, [0.3, 0.12, 0.2], [0, -0.01, 0.28]);
+    for (const x of [-0.08, 0.08]) {
+      const leg = box(g, skin, [0.09, 0.09, 0.62], [x * 1.4, -0.02, 0.66]);
+      leg.rotation.y = x * 0.8;
+      box(g, accent, [0.11, 0.1, 0.16], [x * 2, -0.02, 1.0]);
+      // 腕は体に沿って後ろへ。
+      const arm = box(g, dress, [0.07, 0.07, 0.42], [x * 3, 0.0, 0.18]);
+      arm.rotation.y = -x * 1.2;
+    }
+    head(g, [0, 0.06, -0.32]);
+    box(g, hair, [0.3, 0.14, 0.32], [0, 0.12, -0.28]);
+    // 結んだ髪が後ろへなびく。
+    box(g, hair, [0.08, 0.06, 0.5], [0, 0.1, 0.05]);
+  }
+  for (const g of Object.values(rides)) { g.visible = false; girl.add(g); }
   // 穂の後ろの光の輪。速さに合わせて広がり、ダッシュ・ブースト中は橙。
   const glow = new T.MeshBasicMaterial({ color: colors.glow });
   const halo = new T.Mesh(new T.TorusGeometry(0.3, 0.025, 6, 32), glow);
@@ -3542,14 +3646,44 @@ function makeGirl(colors) {
   sigil.position.set(0, 0.4, -3.5);
   sigil.visible = false;
   ship.add(sigil);
-  const body = [wood, straw, skin, dress, accent, hair, glow];
-  return { ship, girl, halo, glow, shieldMesh, field, circle, inner, outer, body, dress, accent, hair, shieldMaterial, edge, rune, pillar: pillar.material, floor: floor.material, sigil, faded: 1 };
+  // 近接：右手に出る光の刃（長さ約 2.4m、遠くからも分かるよう大きく）と、振り抜いた所に残る斬撃の弧（提案）。
+  // 刃と弧は箒の傾き（girl）に付けず、水平な ship に付ける（振り抜きがいつも横に見えるように）。
+  const blade = new T.Group();
+  blade.position.set(0.2, 0, -0.25);
+  const edgeLight = new T.MeshBasicMaterial({ color: colors.glow, transparent: true, opacity: 0.7, depthWrite: false });
+  const core = new T.MeshBasicMaterial({ color: 0xffffff });
+  blade.add(new T.Mesh(new T.BoxGeometry(0.3, 0.08, 2.6).translate(0, 0, -1.3), edgeLight));
+  blade.add(new T.Mesh(new T.BoxGeometry(0.07, 0.05, 2.5).translate(0, 0, -1.25), core));
+  blade.visible = false;
+  ship.add(blade);
+  const slashMaterial = new T.MeshBasicMaterial({ color: colors.glow, transparent: true, opacity: 0, depthWrite: false, side: T.DoubleSide });
+  const slashCore = new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, side: T.DoubleSide });
+  const slash = new T.Mesh(new T.RingGeometry(1.4, 3.2, 40, 1, Math.PI * 0.1, Math.PI * 0.8), slashMaterial);
+  slash.add(new T.Mesh(new T.RingGeometry(2.7, 2.95, 40, 1, Math.PI * 0.1, Math.PI * 0.8), slashCore));
+  slash.visible = false;
+  ship.add(slash);
+  const body = [wood, straw, skin, dress, accent, hair, glow, metal];
+  return { ship, girl, halo, glow, shieldMesh, field, circle, inner, outer, body, dress, accent, hair, shieldMaterial, edge, rune, pillar: pillar.material, floor: floor.material, sigil, faded: 1,
+    blade, edgeLight, slash, slashMaterial, slashCore, act: null, rides, ride: null };
 }
-function paint(look, colors) {
+// 乗り方ごとの、穂（光の輪）の場所と、体の倒し方（lean は速さで前へ倒す量、bank は横へ動くときに傾ける量）。
+const RIDES = {
+  broom: { halo: [0, -0.2, 1.2], flat: false, lean: 0.25, bank: 0.25 },
+  stand: { halo: [0, -0.9, 0.02], flat: true, lean: 0.6, bank: 0.35 },
+  prone: { halo: [0, -0.16, 1.15], flat: false, lean: 0.08, bank: 0.2 },
+  surf: { halo: [0, -0.78, 0.9], flat: false, lean: 0.2, bank: 0.6 },
+  dive: { halo: [0, 0, 1.2], flat: false, lean: 0.12, bank: 0.45 },
+};
+function paint(look, colors, ride = 'broom') {
+  look.ride = RIDES[ride] ? ride : 'broom';
+  for (const [name, g] of Object.entries(look.rides)) g.visible = name === look.ride;
+  const r = RIDES[look.ride];
+  look.halo.position.set(...r.halo);
+  look.halo.rotation.set(r.flat ? Math.PI / 2 : 0, 0, 0);
   look.dress.color.setHex(colors.dress);
   look.accent.color.setHex(colors.accent);
   look.hair.color.setHex(colors.hair);
-  for (const m of [look.glow, look.rune, look.pillar, look.floor, look.sigil.material]) m.color.setHex(colors.glow);
+  for (const m of [look.glow, look.rune, look.pillar, look.floor, look.sigil.material, look.edgeLight, look.slashMaterial]) m.color.setHex(colors.glow);
   look.shieldMaterial.color.setHex(colors.shield);
   look.edge.color.setHex(colors.shieldEdge);
 }
@@ -3559,7 +3693,7 @@ function fade(look, opacity) {
   for (const m of look.body) { m.transparent = opacity < 1; m.opacity = opacity; m.depthWrite = opacity >= 1; m.needsUpdate = true; }
 }
 // looks[0] は自分、looks[1] は敵。残りはデコイ（出したキャラの色で塗る）。
-const looks = [player, rival].map(f => makeGirl(CHARACTERS[f.character].colors));
+const looks = [player, rival].map(f => { const look = makeGirl(CHARACTERS[f.character].colors); paint(look, CHARACTERS[f.character].colors, CHARACTERS[f.character].ride); return look; });
 const decoyLooks = [0, 1, 2, 3].map(() => makeGirl(CHARACTERS[rival.character].colors));
 // 飛んだ軌跡（自分・敵・デコイ）。デコイにも付けて、軌跡では見分けられないようにする。
 const trails = [player, rival].map(f => fx.ribbon(CHARACTERS[f.character].colors.glow));
@@ -3607,7 +3741,15 @@ function poseGirl(look, fighter, now) {
   look.ship.position.set(s.position.x, s.position.y, s.position.z);
   look.ship.rotation.set(0, -s.yaw, 0, 'YXZ');
   const lean = Math.min(1, Math.hypot(s.velocity.x, s.velocity.y, s.velocity.z) / SETTINGS.dashSpeed);
-  look.girl.rotation.set(s.pitch * 0.5 - lean * 0.25, 0, s.downT > 0 ? now / 160 : 0);
+  // 乗り方ごとに、速さで前へ倒れ、横へ動くと傾く。夏芽は急制動の間、のけぞって踏ん張る。
+  const ride = RIDES[look.ride] ?? RIDES.broom, input = fighter.lastInput ?? {};
+  const dt = Math.min(0.1, (now - (look.lastNow ?? now)) / 1000);
+  look.lastNow = now;
+  const bank = (Number(!!input.left) - Number(!!input.right)) * ride.bank;
+  look.bank = (look.bank ?? 0) + (bank - (look.bank ?? 0)) * Math.min(1, dt * 8);
+  const brace = look.ride === 'stand' && fighter.counterT > 0 ? 0.7 : 0;
+  look.girl.rotation.set(s.pitch * 0.5 - lean * ride.lean + brace, 0, s.downT > 0 ? now / 160 : look.bank);
+  if (look.ride === 'stand') look.halo.rotation.z = now / 300;
   look.halo.scale.setScalar(1 + lean * 0.8);
   look.halo.material = s.drive === 'dash' ? amber : look.glow;
   look.shieldMesh.visible = fighter.shield.active && fighter.shield.spec?.blocks !== false;
@@ -3631,7 +3773,93 @@ function poseGirl(look, fighter, now) {
     look.sigil.rotation.z = now / 500;
     look.sigil.material.opacity = 0.6 + 0.4 * Math.sin(now / 70) ** 2;
   }
+  if (s.downT > 0) { look.blade.visible = look.slash.visible = false; look.act = null; }
+  else poseMelee(look, fighter, now);
 }
+
+// 近接の動き（提案）：構えで体をひねって右手に光の刃を出し、踏み込みは前へ倒れ込み、届いた・空振り・相殺で横へ振り抜いて斬撃の弧を残す。
+// ガードした側は身構えて膜が広がり、はじかれた側は後ろへのけぞってぐらつく。殴られた側は横へ回ってはじき飛ばされる。
+// look.act は meleeFx が知らせから入れる、少しの間の動き（kind・始まった時刻・長さ）。
+const MELEE_ACTS = { swing: 260, counter: 380, whiff: 520, clash: 420, guard: 320, hurt: 420, bounce: 200 };
+const easeOut = x => 1 - (1 - x) ** 3;
+// 動きの時計（ミリ秒）。試合の時間で進むので、一時停止中は止まる。
+let meleeClock = 0;
+function poseMelee(look, fighter, now) {
+  const m = fighter.melee, g = look.girl, act = look.act;
+  let q = act ? (meleeClock - act.at) / MELEE_ACTS[act.kind] : 1;
+  if (q >= 1) { look.act = null; q = 1; }
+  const acting = q < 1 ? act.kind : null;
+  look.blade.visible = look.slash.visible = false;
+  look.blade.scale.setScalar(1);
+  look.edgeLight.opacity = 0.7;
+  // 刃の向き aim（ship の上から見て、0 は前、- は右、+ は左）と、体のひねり twist（同じ向き。体は少しだけ）。
+  const hold = (aim, twist, dip = -0.15) => { look.blade.visible = true; look.blade.rotation.set(dip, aim, 0, 'YXZ'); g.rotation.y += twist; };
+  const pulse = () => 0.45 + 0.55 * Math.abs(Math.sin(meleeClock / 35));
+  if (acting && acting !== 'guard' && acting !== 'hurt') {
+    // 振り抜き：右から前を通って左へ一気に。カウンターは体ごと一回転して大きく。空振りは振り抜いたままつんのめる。
+    const k = easeOut(Math.min(1, q * (acting === 'whiff' ? 2.5 : 1.8)));
+    const spin = acting === 'counter' ? Math.PI * 2 * k : 0;
+    const aim = -1.7 + 3.4 * k + spin;
+    hold(aim, -0.5 + 1.2 * k + spin, -0.15 + 0.25 * k);
+    g.rotation.x -= 0.5 * Math.sin(Math.PI * Math.min(1, q * 1.5));
+    if (acting === 'whiff') g.rotation.z += 0.35 * Math.sin(Math.PI * q);
+    if (acting === 'bounce') { g.rotation.x += 0.8 * q; look.edgeLight.opacity = 0.7 * (1 - q); return; }
+    look.slash.visible = true;
+    const big = acting === 'counter' ? 1.5 : acting === 'clash' ? 1.3 : 1;
+    look.slash.position.set(0, 0.05, 0);
+    // 弧は前を中心に右から左へ流れる。少し斜めに傾ける。
+    look.slash.rotation.set(-Math.PI / 2 + 0.25, 0, -1.2 + 1.2 * k + spin);
+    look.slash.scale.setScalar(big * (0.85 + 0.35 * k));
+    const fadeOut = (1 - q) ** 1.5;
+    look.slashMaterial.opacity = (acting === 'whiff' ? 0.35 : 0.75) * fadeOut;
+    look.slashCore.opacity = (acting === 'whiff' ? 0.4 : 1) * fadeOut;
+    look.edgeLight.opacity = 0.7 * (1 - q * 0.7);
+    return;
+  }
+  if (m?.phase === 'windup') {
+    // 構え：右へ刃を引き、体を少しひねってのけぞる。刃は伸びながら明滅する。
+    const p = easeOut(1 - Math.max(0, m.t) / MELEE.windup);
+    hold(-1.7 * p, -0.5 * p, -0.15 - 0.35 * p);
+    g.rotation.x += 0.35 * p;
+    look.blade.scale.set(1, 1, 0.3 + 0.7 * p);
+    look.edgeLight.opacity = pulse();
+    return;
+  }
+  if (m?.phase === 'lunge') {
+    // 踏み込み：前へ倒れ込み、刃は右へ引いたまま。カウンターはもっと低く鋭く。
+    hold(-1.7, -0.5, -0.45);
+    g.rotation.x -= m.counter ? 1.0 : 0.7;
+    return;
+  }
+  if (m?.phase === 'recoil') {
+    // はじかれた：後ろへのけぞり、ぐらぐら揺れる。刃は消える。
+    const w = Math.sin(meleeClock / 45);
+    g.rotation.x += 0.9 + 0.15 * w;
+    g.rotation.z += 0.35 * w;
+    return;
+  }
+  if (m?.phase === 'whiff') {
+    // 空振りの後：振り抜いたまま前へつんのめる。
+    hold(1.6, 0.7, 0.1);
+    g.rotation.x -= 0.5;
+    look.edgeLight.opacity = 0.3;
+    return;
+  }
+  if (acting === 'guard') {
+    // 身構え：少し後ろへ押され、膜が大きく広がって戻る。
+    g.rotation.x += 0.5 * Math.sin(Math.PI * q);
+    look.shieldMesh.visible = true;
+    look.shieldMesh.scale.setScalar(1 + 0.6 * Math.sin(Math.PI * q));
+  } else if (acting === 'hurt') {
+    // 殴られた：横へ回りながらのけぞる。
+    g.rotation.z += 2.4 * easeOut(q) * (1 - q);
+    g.rotation.x += 0.8 * Math.sin(Math.PI * q);
+  }
+  // カウンターを出せる間は、右手の刃が光って誘う。
+  if (fighter.meleeCounterT > 0) { hold(-1.2, -0.3, -0.3); look.edgeLight.opacity = pulse(); }
+}
+const lookOf = f => f === player ? looks[0] : f === rival ? looks[1] : null;
+function act(f, kind) { const look = lookOf(f); if (look) look.act = { kind, at: meleeClock }; }
 
 const points = GATES;
 const gates = points.map((point, i) => {
@@ -3791,7 +4019,7 @@ function drawCombat(dt, now) {
     const d = decoys[i];
     look.ship.visible = !!d;
     if (!d) return;
-    if (look.owner !== d.owner.character) { paint(look, CHARACTERS[d.owner.character].colors); look.owner = d.owner.character; }
+    if (look.owner !== d.owner.character) { paint(look, CHARACTERS[d.owner.character].colors, CHARACTERS[d.owner.character].ride); look.owner = d.owner.character; }
     look.ship.position.set(d.position.x, d.position.y, d.position.z);
     look.ship.rotation.set(0, -Math.atan2(d.velocity.x, -d.velocity.z), 0, 'YXZ');
     look.girl.rotation.set(-0.25, 0, 0);
@@ -4017,10 +4245,10 @@ const chosenCharacter = () => document.querySelector('input[name="character"]:ch
 function reset(character = player.character) {
   equip(player, character);
   // チュートリアルのボスは操作できない見習いの魔女。街の真ん中から来る。
-  rival.start = mode === 'tutorial' ? TUTORIAL.boss : RIVAL_START;
+  rival.start = mode === 'tutorial' ? TUTORIAL.boss : testNear ? NEAR_START : RIVAL_START;
   equip(rival, mode === 'tutorial' ? 'apprentice' : rivalCharacter());
-  paint(looks[0], CHARACTERS[player.character].colors);
-  paint(looks[1], CHARACTERS[rival.character].colors);
+  paint(looks[0], CHARACTERS[player.character].colors, CHARACTERS[player.character].ride);
+  paint(looks[1], CHARACTERS[rival.character].colors, CHARACTERS[rival.character].ride);
   [player, rival].forEach((f, i) => { trails[i].color(CHARACTERS[f.character].colors.glow); trails[i].clear(); });
   for (const f of fighters) { respawn(f, 0); f.kills = 0; f.arcana.charge = testArcana ? ARCANA.max : 0; }
   brain = createRival();
@@ -4139,6 +4367,7 @@ function tutorialEvent(e) {
 // 1フレーム分の戦い：自分と敵を同じ手順で動かし、弾を進めて当たりを入れる。
 // チュートリアルは使い魔を動かして撃たせ、ボスの間は 1vs1 と同じにする。
 function fight(dt) {
+  meleeClock += dt * 1000;
   const duelling = mode === 'duel', facing = rivalOn(), tutorial = mode === 'tutorial';
   if (tutorial) for (const e of stepTutorial(tut, dt, { player, boss: rival, bolts, sees })) tutorialEvent(e);
   const grunts = gruntsAlive();
@@ -4167,6 +4396,8 @@ function fight(dt) {
   // 近接（弾を進める前に。相殺の衝撃波は周りの弾を消す）。
   const close = stepMelee(list, { bolts, missiles }, dt);
   for (const e of close.events) meleeFx(e);
+  // 踏み込みの間は、体から光の粒がこぼれる。
+  for (const f of list) if (f.melee?.phase === 'lunge' && !(f.cloaked && f !== player)) fx.sparks(f.position, CHARACTERS[f.character]?.colors.glow ?? 0xffffff, 3, 5, { life: 0.3 });
   const blocked = (a, b) => !city.clear(a, b, 0.05);
   const all = facing ? [...fighters, ...decoys] : tutorial ? [player, ...grunts, ...decoys] : [player, ...targets];
   const hits = ability.hits.concat(close.hits, stepBolts(bolts, all, dt, blocked), stepMissiles(missiles, all, dt, blocked), stepMeteors(rains, meteors, all, dt, blocked, sees));
@@ -4175,7 +4406,7 @@ function fight(dt) {
   for (const hit of hits) {
     if (hit.meteor) { if (hit.kind === 'target' && hit.destroyed && hit.target.kind !== 'fighter') destroyed++; burst(hit.at, hit.owner === rival ? 0xffa0d0 : 0xfff1a8, hit.kind === 'target' ? 3 : 2.5); continue; }
     if (hit.missile && hit.kind !== 'shield') { if (hit.kind === 'target' && hit.destroyed && hit.target.kind !== 'fighter') destroyed++; burst(hit.at, hit.kind === 'expired' ? 0x8899aa : 0xffb36b, hit.kind === 'target' ? 3 : 1.6); continue; }
-    if (hit.melee) { if (hit.destroyed) { if (hit.target.kind !== 'fighter') destroyed++; burst(hit.at, 0xff5fa2, 3); } continue; }
+    if (hit.melee) { if (hit.destroyed) { if (hit.target.kind !== 'fighter') destroyed++; burst(hit.at, 0xff5fa2, hit.target.kind === 'fighter' ? 3 : 1.4); } continue; }
     if (hit.heavy) { if (hit.destroyed && hit.target.kind !== 'fighter') destroyed++; continue; }
     if (hit.kind === 'decoy') { burst(hit.at, 0xffffff, 2); continue; }
     if (hit.kind === 'bend') { burst(hit.at, 0xeadcff, 1.4); continue; }
@@ -4251,9 +4482,12 @@ function pop(text, color) {
 function meleeFx(e) {
   const color = CHARACTERS[e.owner.character]?.colors.glow ?? 0xffffff, mine = e.owner === player || e.foe === player;
   const near = s => e.owner === player || e.foe === player ? s : Math.max(0, s - distanceToPlayer(e.at) / 150);
-  if (e.kind === 'start' || e.kind === 'counter-start') { fx.flash(e.at, color, e.kind === 'start' ? 6 : 10, 0.2); fx.sparks(e.at, color, 16, 12, { life: 0.3 }); }
+  // 構えの光は、自分のなら小さく（画面を覆わないように）。
+  if (e.kind === 'start' || e.kind === 'counter-start') { fx.flash(e.at, color, (e.kind === 'start' ? 6 : 10) * (e.owner === player ? 0.35 : 1), 0.2); fx.sparks(e.at, color, 16, 12, { life: 0.3 }); }
   else if (e.kind === 'hit' || e.kind === 'counter') {
     const big = e.kind === 'counter';
+    act(e.owner, big ? 'counter' : 'swing');
+    act(e.foe, 'hurt');
     fx.flash(e.at, 0xffffff, big ? 14 : 8, 0.18);
     fx.sparks(e.at, color, big ? 60 : 30, big ? 40 : 28, { life: 0.5 });
     if (big) fx.shockwave(e.at, color, 12, 0.4);
@@ -4261,18 +4495,23 @@ function meleeFx(e) {
     if (e.foe === player) hurtT = Math.max(hurtT, 0.4);
     if (mine) pop(big ? 'カウンター' : e.owner === player ? '近接 命中' : '近接を受けた', big ? 0xffffff : color);
   } else if (e.kind === 'guard') {
+    act(e.owner, 'guard');
+    act(e.foe, 'bounce');
+    fx.sparks(e.at, 0xffffff, 24, 22, { life: 0.4 });
     fx.flash(e.at, 0xcffbff, 10, 0.2);
     fx.circle(e.at, 0xcffbff, 2, 8, 0.3);
     fx.shake(near(0.5));
     if (mine) pop(e.owner === player ? 'ガード　左でカウンター' : 'ガードされた', 0xcffbff);
   } else if (e.kind === 'clash') {
+    act(e.owner, 'clash');
+    act(e.foe, 'clash');
     fx.flash(e.at, 0xffffff, 18, 0.25);
     fx.shockwave(e.at, 0xffffff, MELEE.clashRadius, 0.6);
     fx.circle(e.at, 0xffffff, 3, MELEE.clashRadius * 2, 0.6);
     fx.sparks(e.at, 0xffffff, 60, 45, { life: 0.6 });
     fx.shake(near(1.2));
     if (mine) pop('相殺', 0xffffff);
-  } else if (e.kind === 'whiff') burst(e.at, 0x8899aa, 0.8);
+  } else if (e.kind === 'whiff') { act(e.owner, 'whiff'); burst(e.at, 0x8899aa, 0.8); }
 }
 function cutIn(f, c, color) {
   const el = $('cutin');
@@ -4344,7 +4583,7 @@ const position = new T.Vector3(), before = new T.Vector3(), offset = new T.Vecto
 const relative = new T.Vector3(), intersection = new T.Vector3();
 let last = performance.now();
 function frame(now) {
-  const dt = Math.min((now - last) / 1000, 0.05);
+  const dt = Math.min((now - last) / 1000, 0.05) / testSlow;
   last = now;
   const state = player.state;
   before.set(state.position.x, state.position.y, state.position.z);
@@ -4387,6 +4626,10 @@ function frame(now) {
     reach = i / 24;
   }
   camera.position.copy(position).addScaledVector(offset, reach);
+  if (testOrbit !== null) {
+    camera.quaternion.setFromEuler(view.set(-0.12, -s.yaw + testOrbit, 0, 'YXZ'));
+    camera.position.copy(position).add(offset.set(0, 0.5, 3.6).applyQuaternion(camera.quaternion));
+  }
   const gate = gates[gateIndex];
   if (active && mode === 'practice') {
     const a = relative.copy(before).sub(gate.group.position).dot(gate.normal);
