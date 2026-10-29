@@ -168,6 +168,37 @@ button span { float: right; font-size: 20px; line-height: 16px; }
 @keyframes cutin { 0% { opacity: 0; transform: skewY(-3deg) translateX(-60%); } 15% { opacity: 1; transform: skewY(-3deg) translateX(0); } 80% { opacity: 1; transform: skewY(-3deg) translateX(3%); } 100% { opacity: 0; transform: skewY(-3deg) translateX(30%); } }
 @keyframes cutin-rival { 0% { opacity: 0; transform: skewY(3deg) translateX(60%); } 15% { opacity: 1; transform: skewY(3deg) translateX(0); } 80% { opacity: 1; transform: skewY(3deg) translateX(-3%); } 100% { opacity: 0; transform: skewY(3deg) translateX(-30%); } }
 
+/* 敵に何をされているか（2026-10-28 ユーザー指摘「敵から何されてっかわかんねー」）。 */
+.duel .rival-shield { position: absolute; left: 50%; right: 0; top: 38px; height: 2px; margin: 0; }
+.duel .rival-shield i { background: #9fdcff; margin-left: auto; }
+.rival-state { position: absolute; right: 0; top: 44px; white-space: nowrap; font-size: 10px; letter-spacing: .08em; color: #cfe9f5; }
+.rival-state.broken { color: #ffb3c6; }
+.rival-tag { position: absolute; left: 0; top: 0; pointer-events: none; }
+.rival-tag[hidden] { display: none; }
+.rival-tag span { position: absolute; left: 0; bottom: 22px; transform: translateX(-50%); white-space: nowrap; padding: 3px 9px; font-size: 13px; font-weight: 700; letter-spacing: .08em; color: #fff; background: #4a2f7acc; border: 1px solid #c9a8ff; }
+.rival-tag.weak span { background: #3a2f5acc; border-color: #9f8fd6; font-weight: 400; font-size: 12px; }
+.rival-tag.strong span { background: #7a2f6acc; border-color: #ff9fe0; }
+.rival-tag.special span { background: #a8264fe0; border-color: #ffd0de; font-size: 15px; }
+.rival-tag.melee span { background: #ff3d7ae8; border-color: #fff; font-size: 15px; animation: counter-blink .2s steps(2) infinite; }
+.rival-tag i { display: none; }
+.rival-tag.edge i { display: block; position: absolute; left: -9px; top: -9px; width: 0; height: 0; border: 9px solid transparent; border-left: 16px solid #c9a8ff; border-right: 0; transform-origin: 9px 9px; }
+.rival-tag.edge span { bottom: 16px; }
+.threats, .hit-dirs { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+.threats i { position: absolute; left: -7px; top: -6px; width: 0; height: 0; border: 7px solid transparent; border-bottom: 12px solid #ffb36b; border-top: 0; }
+.threats i.close { border-bottom-color: #ff4d6d; }
+.threats i[hidden], .hit-dirs i[hidden] { display: none; }
+.hit-dirs i { position: absolute; left: -34px; top: -6px; width: 68px; height: 12px; border-top: 4px solid #ff3d6e; border-radius: 50% 50% 0 0 / 100% 100% 0 0; filter: drop-shadow(0 0 6px #ff3d6e); }
+.hit-dirs i.big { left: -48px; width: 96px; border-top-width: 7px; }
+.hit-feed { position: absolute; right: 32px; top: 64%; text-align: right; font-size: 12px; letter-spacing: .06em; color: #fff; text-shadow: 0 0 4px #000a; pointer-events: none; }
+.hit-feed div { margin: 0 0 4px; white-space: nowrap; }
+.hit-feed b { color: #e7d6ff; }
+.hit-feed em { font-style: normal; margin-left: 6px; }
+.hit-feed .sh { color: #9fdcff; }
+.hit-feed .hp { color: #ff8fa8; font-weight: 700; }
+.hit-feed .br { color: #fff; background: #c2264f; padding: 0 5px; }
+.alert { font-size: 13px; font-weight: 700; color: #ffd2a8; text-shadow: 0 0 6px #000a; }
+.rival-tag.below span { bottom: auto; top: 22px; }
+
 </style>
 </head>
 <body>
@@ -204,12 +235,16 @@ button span { float: right; font-size: 20px; line-height: 16px; }
   </main>
   <div id="hud" aria-hidden="true">
     <div id="hurt" class="hurt"></div>
-    <div id="duel" class="duel" hidden><b class="me"><span id="name-me">あなた</span> <strong id="score-me">0</strong></b><span id="clock">3:00</span><b class="them"><strong id="score-rival">0</strong> <span id="name-rival">ライバル</span></b><div class="meter rival-hp"><i id="rival-bar"></i></div></div>
+    <div id="duel" class="duel" hidden><b class="me"><span id="name-me">あなた</span> <strong id="score-me">0</strong></b><span id="clock">3:00</span><b class="them"><strong id="score-rival">0</strong> <span id="name-rival">ライバル</span></b><div class="meter rival-hp"><i id="rival-bar"></i></div><div class="meter rival-shield"><i id="rival-shield-bar"></i></div><small id="rival-state" class="rival-state"></small></div>
     <div id="banner" class="banner" hidden></div>
     <div id="cutin" class="cutin" hidden><b></b><strong></strong></div>
     <div id="combo-pop" class="combo-pop" hidden></div>
     <div id="warning" class="warning" hidden></div>
     <div id="alert" class="alert" hidden></div>
+    <div id="threats" class="threats"></div>
+    <div id="hit-dirs" class="hit-dirs"></div>
+    <div id="hit-feed" class="hit-feed"></div>
+    <div id="rival-tag" class="rival-tag" hidden><i></i><span></span></div>
     <div class="compass"><span>HEADING</span><strong id="heading-value">000°</strong></div>
     <div class="reticle"><i></i><b></b></div>
     <div id="lock-hint" class="lock-hint" hidden></div>
@@ -1190,7 +1225,7 @@ function stepBolts(bolts, targets, dt, blocked) {
       if (target.kind === 'familiar') { hits.push({ kind: 'familiar', target, owner, at: { ...from }, broke: guardTake(target, bolt.damage) }); continue; }
       if (target.kind === 'decoy') { target.alive = false; hits.push({ kind: 'decoy', target, owner, at: { ...target.position } }); continue; }
       const r = strike(target, bolt);
-      hits.push({ kind: 'target', target, owner, ...r, heavy: bolt.heavy && !r.shield, source: bolt.source, at: { ...target.position } });
+      hits.push({ kind: 'target', target, owner, ...r, heavy: bolt.heavy && !r.shield, source: bolt.source, from: { ...bolt.start }, at: { ...target.position } });
       continue;
     }
     if (blocked(from, to)) { bolt.alive = false; hits.push({ kind: 'city', owner, at: to }); continue; }
@@ -1342,7 +1377,7 @@ function stepArcana(fighter, enemies, dt, sees) {
     const p = t.position;
     if (Math.hypot(p.x - from.x, p.y - from.y, p.z - from.z) > ARCANA.range || !sees(from, p)) continue;
     // 大魔法はシールドを貫く。
-    hits.push({ kind: 'target', target: t, owner: fighter, ...strike(t, { damage: ARCANA.damage, pierce: 1 }), heavy: true, at: { ...p } });
+    hits.push({ kind: 'target', target: t, owner: fighter, ...strike(t, { damage: ARCANA.damage, pierce: 1 }), heavy: true, source: '大魔法', from: { ...from }, at: { ...p } });
   }
   return { kind: 'release', caster: fighter, at: { ...from }, hits };
 }
@@ -1446,7 +1481,7 @@ function stepMissiles(missiles, targets, dt, blocked) {
       if (hit.kind === 'familiar') { hits.push({ kind: 'familiar', target: hit, owner: m.owner, at: { ...from }, missile: true, broke: guardTake(hit, spec.damage) }); continue; }
       if (hit.kind === 'decoy') { hit.alive = false; hits.push({ kind: 'decoy', target: hit, owner: m.owner, at: { ...hit.position }, missile: true }); continue; }
       const r = strike(hit, spec);
-      hits.push({ kind: 'target', target: hit, owner: m.owner, ...r, source: m.source ?? '誘導弾', at: { ...hit.position }, missile: true });
+      hits.push({ kind: 'target', target: hit, owner: m.owner, ...r, source: m.source ?? '誘導弾', from: { ...from }, at: { ...hit.position }, missile: true });
       continue;
     }
     if (blocked(from, to)) { m.alive = false; hits.push({ kind: 'city', owner: m.owner, at: to, missile: true }); continue; }
@@ -1768,7 +1803,7 @@ function callMeteors(fighter, rains) {
 
 // 当てる：シールドを通して体力を減らし、倒れたら撃墜。stepBolts と同じ形の当たりを返す。流星はシールドを半分貫く（pierce）。
 function strike(t, owner, damage, stagger, at) {
-  return { kind: 'target', target: t, owner, ...hurt(t, { damage, stagger, pierce: METEOR.pierce }), at, meteor: true };
+  return { kind: 'target', target: t, owner, ...hurt(t, { damage, stagger, pierce: METEOR.pierce }), source: '流星雨', at, meteor: true };
 }
 
 // 雨と降っている流星を進める。targets は当たる相手（使い手には当たらない）。blocked(a, b) は線分が街に当たるか、sees(a, b) は遮られていないか。
@@ -2167,7 +2202,7 @@ function stepAbilities(fighters, enemiesOf, arena, dt) {
         if (length(sub(e.position, w.position)) > w.radius + (e.hitRadius ?? 1.5)) continue;
         end = true;
         if (warded(e)) { events.push({ kind: 'wall-block', owner: f, at: { ...w.position } }); break; }
-        hits.push({ kind: 'target', target: e, owner: f, ...strike(e, { damage: SPECIAL.wall.damage, pierce: 1 }), heavy: true, at: { ...e.position } });
+        hits.push({ kind: 'target', target: e, owner: f, ...strike(e, { damage: SPECIAL.wall.damage, pierce: 1 }), heavy: true, source: '水の壁', from: { ...w.position }, at: { ...e.position } });
         break;
       }
       if (end) { events.push({ kind: 'wall-end', owner: f, at: { ...w.position } }); f.wall = null; }
@@ -2234,7 +2269,7 @@ function stepAbilities(fighters, enemiesOf, arena, dt) {
         for (const e of enemies) {
           if (!e.alive || e.guardT > 0 || e.phased || warded(e) || e.kind === 'familiar') continue;
           if (length(sub(e.position, f.position)) > ASSAULT.radius || (arena.sees && !arena.sees(f.position, e.position))) continue;
-          const hit = { kind: 'target', target: e, owner: f, ...strike(e, { damage: ASSAULT.damage, pierce: 1 }), heavy: true, at: { ...e.position } };
+          const hit = { kind: 'target', target: e, owner: f, ...strike(e, { damage: ASSAULT.damage, pierce: 1 }), heavy: true, source: '潜行強襲', from: { ...f.position }, at: { ...e.position } };
           hits.push(hit);
           struck.push(hit);
         }
@@ -2362,6 +2397,7 @@ function stepFamiliars(arena, dt) {
       const bolt = makeBolt(x.position, unit(sub(lead(x.position, t.position, t.velocity ?? { x: 0, y: 0, z: 0 }, move.bolt.speed), x.position)), move.bolt, f);
       bolt.target = t;
       bolt.familiar = true;
+      bolt.source = move.name;
       arena.bolts.push(bolt);
       x.cooldown = move.interval;
       events.push({ kind: 'familiar-shot', owner: f, at: { ...x.position } });
@@ -2655,7 +2691,7 @@ function stepMelee(fighters, arena, dt) {
       const r = strike(t, { damage: m.counter ? MELEE.counterDamage : MELEE.damage, stagger: MELEE.stagger, pierce: 1 });
       // 当たった相手を、踏み込んだ向きへ押し出す。
       if (t.state && !r.destroyed) { t.melee = null; surge(t.state, sub(t.position, f.position), MELEE.knock, 0.25); }
-      hits.push({ kind: 'target', target: t, owner: f, ...r, heavy: m.counter, melee: true, at });
+      hits.push({ kind: 'target', target: t, owner: f, ...r, heavy: m.counter, melee: true, source: m.counter ? 'カウンター' : '近接', from: { ...f.position }, at });
       events.push({ kind: m.counter ? 'counter' : 'hit', at, owner: f, foe: t });
       continue;
     }
@@ -3744,6 +3780,8 @@ let targets = TARGETS.map(createTarget);
 const bolts = [], missiles = [], rains = [], meteors = [], decoys = [], familiars = [], prisms = [];
 // 押しているボタン：strongHeld は左クリック（強）、weakHeld は右クリック（弱）。
 let strongHeld = false, weakHeld = false, cyclePressed = false, destroyed = 0, hurtT = 0, releases = 0, seen = false, seenT = 0, exposed = false;
+// 敵に何をされているか：自分に当たった物の記録（技名・回数・膜と体の減り）、当たった向き、敵が今出している技。
+let hitLog = [], hitDirs = [], rivalAct = null;
 const sees = (a, b) => city.clear(a, b);
 const rivalWorld = { sees, clear: (a, b, r) => city.clear(a, b, r), free: (p, r) => city.free(p, r), floorAt: city.floorAt };
 const arena = { bolts, missiles, rains, meteors, decoys, familiars, prisms, fighters, sees, clear: rivalWorld.clear, free: rivalWorld.free };
@@ -4082,8 +4120,8 @@ function poseGirl(look, fighter, now) {
   // シールド（いつも張っている）：うっすら見え、当たると揺らいで明るくなる。消えている間は見えない。反射の膜の間は大きく速く回る。
   const sh = fighter.shield, glowing = sh.hitT / 0.3;
   look.shieldMesh.visible = fighter.mirroring || sh.charge > 0;
-  look.shieldMaterial.opacity = fighter.mirroring ? 0.3 : (fighter === player ? 0.02 : 0.05) * (sh.charge / sh.max) + 0.35 * glowing;
-  look.edge.opacity = fighter.mirroring ? 0.6 : (fighter === player ? 0.06 : 0.15) * (sh.charge / sh.max) + 0.6 * glowing;
+  look.shieldMaterial.opacity = fighter.mirroring ? 0.3 : (fighter === player ? 0.02 : 0.05) * (sh.charge / sh.max) + (fighter === player ? 0.05 : 0.35) * glowing;
+  look.edge.opacity = fighter.mirroring ? 0.6 : (fighter === player ? 0.06 : 0.15) * (sh.charge / sh.max) + (fighter === player ? 0.12 : 0.6) * glowing;
   look.shieldMesh.rotation.y = now / (fighter.mirroring ? 120 : 900);
   look.shieldMesh.scale.setScalar((fighter.mirroring ? MIRROR_RADIUS / SHIELD.radius : 1) * (1 + 0.12 * glowing * Math.sin(now / 25)));
   look.circle.visible = casting(fighter);
@@ -4562,6 +4600,77 @@ function drawMarks() {
   // 円は照準の近くにいるかだけで出す（遮蔽は捕捉のときに確かめる）。
   const hint = active && player.alive && !lock.target ? lockCandidates(player.state, lockables(), () => true, lock)[0] : null;
   placeMark($('lock-hint'), hint ? hint.target.position : null);
+  drawThreats();
+}
+
+// 照準の周りの向き（0 が正面で上、右回り）と、画面の縁の位置。
+const local = new T.Vector3();
+function bearing(p) {
+  local.set(p.x, p.y, p.z).applyMatrix4(camera.matrixWorldInverse);
+  return Math.atan2(local.x, -local.z);
+}
+// 画面の中ならその位置。外なら、その向きの画面の縁（矢印の向き angle 付き）。
+function edgeOf(p, margin) {
+  const s = screenOf(p);
+  if (s && s.x > margin && s.x < innerWidth - margin && s.y > margin && s.y < innerHeight - margin) return { ...s, edge: false };
+  local.set(p.x, p.y, p.z).applyMatrix4(camera.matrixWorldInverse);
+  let dx = local.x, dy = -local.y;
+  if (Math.hypot(dx, dy) < 1e-3) dy = 1;
+  const k = Math.min((innerWidth / 2 - margin) / Math.max(Math.abs(dx), 1e-6), (innerHeight / 2 - margin) / Math.max(Math.abs(dy), 1e-6));
+  return { x: innerWidth / 2 + dx * k, y: innerHeight / 2 + dy * k, edge: true, angle: Math.atan2(dy, dx) };
+}
+const threatPips = Array.from({ length: 12 }, () => $('threats').appendChild(document.createElement('i')));
+const hitPips = Array.from({ length: 8 }, () => $('hit-dirs').appendChild(document.createElement('i')));
+let feedText = '';
+// 敵に何をされているか：敵が今出している技（敵の横、画面の外なら縁に矢印）、迫る誘導弾の向き、当たった向き、当たった物の記録。
+function drawThreats() {
+  const on = active && rivalOn();
+  // 敵の技の名札。殴りかかられている間は「受け」の合図。
+  const tag = $('rival-tag'), m = rival.melee;
+  let text = '', kind = '';
+  if (m && (m.phase === 'windup' || m.phase === 'lunge') && m.target === player) { text = '近接！ 右で受け'; kind = 'melee'; }
+  else if (rivalAct) { text = rivalAct.text; kind = rivalAct.kind; }
+  else if (rival.buttons?.weak && !rival.buttons.latch && rival.state.downT <= 0) { const w = moveOf(rival.character, 'weak', rival.dir); if (w) { text = `弱 · ${w.name}`; kind = 'weak'; } }
+  const shown = on && rival.alive && !rival.cloaked;
+  const at = shown && edgeOf(rival.position, 70);
+  tag.hidden = !shown || (!text && !at.edge);
+  if (!tag.hidden) {
+    tag.className = `rival-tag ${kind}${at.edge ? ' edge' : ''}${at.y < 90 ? ' below' : ''}`;
+    tag.style.transform = `translate(${at.x}px, ${at.y}px)`;
+    tag.querySelector('span').textContent = text || CHARACTERS[rival.character].code;
+    tag.querySelector('i').style.transform = at.edge ? `rotate(${at.angle}rad)` : '';
+  }
+  // 敵の状態：シールドと、出している使い魔・膜。
+  $('rival-shield-bar').style.width = `${rival.shield ? rival.shield.charge / rival.shield.max * 100 : 0}%`;
+  const own = familiars.filter(x => x.owner === rival && x.alive).concat(decoys.filter(d => d.owner === rival && d.orbit && d.alive));
+  const state = [rival.shield?.broken ? 'シールド 割れた' : `シールド ${Math.ceil(rival.shield?.charge ?? 0)}`];
+  if (own.length) state.push(`使い魔 ${own[0].move?.name ?? ''} ×${own.length}`);
+  if (rival.veil) state.push({ still: '零速の膜', cloak: '光学迷彩', mirror: '反射の膜', phase: '位相潜行' }[rival.veil.kind] ?? '');
+  $('rival-state').textContent = state.filter(Boolean).join('  ·  ');
+  $('rival-state').classList.toggle('broken', !!rival.shield?.broken);
+  // 自分を追う誘導弾：照準の周りの、来る向きに印。近いほど濃く、近いと赤。
+  const chasing = on || mode === 'tutorial' ? missiles.filter(x => x.target === player && x.homing).map(x => ({ x, d: distanceToPlayer(x.position) })).sort((a, b) => a.d - b.d) : [];
+  threatPips.forEach((el, i) => {
+    const c = active && chasing[i];
+    el.hidden = !c;
+    if (!c) return;
+    el.style.transform = `rotate(${bearing(c.x.position)}rad) translateY(-96px)`;
+    el.style.opacity = Math.max(0.3, Math.min(1, 1.2 - c.d / 100));
+    el.className = c.d < 30 ? 'close' : '';
+  });
+  // 当たった向き：照準の周りの赤い弧。
+  hitPips.forEach((el, i) => {
+    const h = active && hitDirs[i];
+    el.hidden = !h;
+    if (!h) return;
+    el.style.transform = `rotate(${bearing(h.from)}rad) translateY(-120px)`;
+    el.style.opacity = Math.min(1, h.t / 0.5);
+    el.className = h.big ? 'big' : '';
+  });
+  // 当たった物の記録：技名・回数・膜の減り・体の減り。
+  const feed = active ? hitLog.map(r => `<div style="opacity:${Math.min(1, r.t / 0.6).toFixed(2)}"><b>${r.name}</b>${r.count > 1 ? ` ×${r.count}` : ''}`
+    + `${r.shield >= 0.5 ? ` <em class="sh">膜 −${Math.round(r.shield)}</em>` : ''}${r.hp >= 0.5 ? ` <em class="hp">体 −${Math.round(r.hp)}</em>` : ''}${r.broke ? ' <em class="br">膜が割れた</em>' : ''}</div>`).join('') : '';
+  if (feed !== feedText) { $('hit-feed').innerHTML = feed; feedText = feed; }
 }
 
 function controls() {
@@ -4644,6 +4753,9 @@ function reset(character = player.character) {
   prisms.length = 0;
   destroyed = 0;
   hurtT = 0;
+  hitLog = [];
+  hitDirs = [];
+  rivalAct = null;
   releases = 0;
   keys.clear();
   gateIndex = 0;
@@ -4803,13 +4915,16 @@ function fight(dt) {
     else burst(hit.at, 0xffd1e6, 0.8);
   }
   // 大魔法（弾の当たりの後）。1vs1 は相手の魔法少女に、練習は的に当たる。
+  const released = [];
   for (const event of stepArcanas(list, enemiesOf, dt, sees)) {
     if (event.kind === 'broken') { burst(event.caster.position, 0xffffff, 2); continue; }
+    released.push(...event.hits);
     if (event.caster === player) releases++;
     release(event, event.caster === rival ? 0xc49bff : 0x9ff4e4);
     for (const hit of event.hits) if (hit.destroyed && hit.target.kind !== 'fighter') destroyed++;
     if (event.hits.some(h => h.target === player)) hurtT = 0.6;
   }
+  for (const hit of hits.concat(released)) if (hit.kind === 'target' && hit.target === player) feel(hit);
   if (player.hp < hpBefore) { hurtT = Math.max(hurtT, 0.25); fx.shake(Math.min(1.4, 0.2 + (hpBefore - player.hp) / 50)); }
   // 魔法少女の撃墜は大きな爆発。近いほど画面が揺れる。
   for (const hit of hits) if (hit.destroyed && hit.target.kind === 'fighter') {
@@ -4830,6 +4945,7 @@ let cutInT = 0;
 function moveFx(e, color) {
   const at = e.at, move = e.move, big = e.kind === 'special' && (move.cost ?? 0) >= ARCANA.max;
   const seen = e.owner === player || !(e.owner.cloaked);
+  if (e.owner === rival) rivalAct = { text: `${e.kind === 'special' ? '特殊' : '強'} · ${move.name}`, kind: e.kind, t: 1.8 };
   if (big) {
     fx.circle(at, color, 4, 40, 1.2);
     fx.flash(at, color, 12, 0.35);
@@ -4867,6 +4983,23 @@ function pop(text, color) {
   void el.offsetWidth;
   el.classList.add('play');
   comboPopT = 1;
+}
+// 自分に当たった物を記録する。同じ技は、記録が消えるまで1行にまとめて一番上へ（回数と、膜と体の減りの合計）。
+const HIT_LOG = 2.5;
+function feel(hit) {
+  const name = hit.source ?? (hit.meteor ? '流星雨' : hit.missile ? '誘導弾' : hit.melee ? '近接' : '弾');
+  let row = hitLog.find(r => r.name === name);
+  if (row) hitLog.splice(hitLog.indexOf(row), 1);
+  else row = { name, count: 0, shield: 0, hp: 0, broke: false };
+  hitLog.unshift(row);
+  if (hitLog.length > 4) hitLog.pop();
+  row.count++;
+  row.shield += hit.shield ?? 0;
+  row.hp += hit.damage ?? 0;
+  row.broke ||= !!hit.broke;
+  row.t = HIT_LOG;
+  const from = hit.from ?? hit.owner?.position;
+  if (from) { hitDirs.push({ from: { ...from }, t: 0.9, big: (hit.damage ?? 0) >= 20 || !!hit.heavy }); if (hitDirs.length > 8) hitDirs.shift(); }
 }
 // 近接の光と知らせ（melee.mjs の events）。
 function meleeFx(e) {
@@ -4988,6 +5121,11 @@ function frame(now) {
   }
   cyclePressed = false;
   hurtT = Math.max(0, hurtT - dt);
+  for (const r of hitLog) r.t -= dt;
+  hitLog = hitLog.filter(r => r.t > 0);
+  for (const h of hitDirs) h.t -= dt;
+  hitDirs = hitDirs.filter(h => h.t > 0);
+  if (rivalAct && (rivalAct.t -= dt) <= 0) rivalAct = null;
   if (cutInT > 0 && (cutInT -= dt) <= 0) $('cutin').hidden = true;
   if (comboPopT > 0 && (comboPopT -= dt) <= 0) $('combo-pop').hidden = true;
   // 敵から見えているか（詠唱中の警告用）。重いので 0.1 秒ごと。
@@ -5066,9 +5204,9 @@ function frame(now) {
   $('strong-value').textContent = player.strongT > 0 ? player.strongT.toFixed(1) : '○';
   $('strong-bar').style.width = `${(1 - player.strongT / (player.strongMax || 1)) * 100}%`;
   $('strong-gauge').classList.toggle('ready', player.strongT <= 0);
-  const chasing = missiles.filter(m => m.target === player && m.homing).length;
-  $('alert').hidden = !(active && chasing);
-  $('alert').textContent = `誘導弾 ×${chasing}`;
+  const chasing = missiles.filter(m => m.target === player && m.homing);
+  $('alert').hidden = !(active && chasing.length);
+  if (chasing.length) $('alert').textContent = `誘導弾 ×${chasing.length}  ·  ${Math.round(Math.min(...chasing.map(m => distanceToPlayer(m.position))))} m  ·  引きつけて横へ QB かビルの角へ`;
   const arcana = player.arcana;
   const specialReady = canSpecial(player, special);
   $('arcana-label').textContent = `右+左 特殊 · ${special ? `${special.name}（${special.cost}）` : '—'}`;
@@ -5076,7 +5214,7 @@ function frame(now) {
   $('arcana-bar').style.width = `${casting(player) ? castLeft(player) * 100 : arcana.charge / ARCANA.max * 100}%`;
   $('arcana-gauge').classList.toggle('ready', specialReady || casting(player));
   $('hp-gauge').hidden = mode === 'practice';
-  $('hp-value').textContent = player.hp;
+  $('hp-value').textContent = Math.ceil(player.hp);
   $('hp-bar').style.width = `${player.hp / player.maxHp * 100}%`;
   $('hp-gauge').classList.toggle('overheat', player.hp <= player.maxHp * 0.3);
   $('hurt').style.opacity = hurtT > 0 ? hurtT * 3 : 0;
@@ -5120,6 +5258,8 @@ window.flight = Object.freeze({
     hp: player.hp, alive: player.alive, kills: player.kills, rival: fighterView(rival), arcana: { ...player.arcana }, releases, seen,
     duel: { phase: duel.phase, time: duel.time, winner: duel.winner === 'draw' ? 'draw' : duel.winner?.name ?? null },
     rivalBolts: bolts.filter(b => b.owner === rival).length,
+    hitLog: hitLog.map(r => ({ name: r.name, count: r.count, shield: r.shield, hp: r.hp, broke: r.broke })), hitDirs: hitDirs.length,
+    rivalTag: $('rival-tag').hidden ? null : $('rival-tag').querySelector('span').textContent, threats: threatPips.filter(el => !el.hidden).length,
     character: player.character, rivalCharacter: rival.character, me: fighterView(player),
     decoys: decoys.length, prisms: prisms.length, echoes: bolts.filter(b => b.echo).length, frozen: bolts.filter(b => b.frozen).length, rains: rains.map(r => ({ mine: r.caster === player, onMe: r.target === player, t: r.t })), meteors: meteors.length, exposed,
     sparks: fx.count(), cutIn: !$('cutin').hidden && $('cutin').querySelector('strong').textContent,
